@@ -1,0 +1,72 @@
+@import url("https://fonts.googleapis.com/css2?family=McLaren&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
+.navbar {
+  background-color: #50a7a9;
+  box-shadow: 0 0 15px #f6bea0;
+}
+.nav-container {
+  margin: 0 5rem;
+  width: 100%;
+}
+.ml-auto {
+  width: 100vw;
+  margin-left: 50%;
+}
+@media screen and (max-width: 1650px) {
+  .ml-auto {
+    margin-left: 40%;
+  }
+}
+@media screen and (max-width: 1375px) {
+  .ml-auto {
+    margin-left: 30%;
+  }
+}
+@media screen and (max-width: 1170px) {
+  .ml-auto {
+    margin-left: 20%;
+  }
+}
+@media screen and (max-width: 1030px) {
+  .ml-auto {
+    margin-left: 15%;
+  }
+}
+.brand,
+.brand p {
+  font-size: 22px;
+  color: #fff;
+  font-family: "Poppins", sans-serif;
+  /* margin-left: 100px; */
+}
+
+.linkStyle {
+  font-size: 22px;
+  color: #fff;
+  font-family: "Poppins", sans-serif;
+  margin-left: 30px;
+  transition: all 0.2s;
+}
+
+.linkStyle:hover {
+  color: #7b7b7b;
+}
+
+.navbar-nav > .linkStyle.active {
+  color: #fff;
+}
+
+.navbar img {
+  width: 70px;
+  margin: 0 auto;
+}
+
+.icon {
+  color: #fff;
+  background-color: #fff;
+}
+.navbar-toggler {
+  background-color: transparent;
+  border: none;
+}

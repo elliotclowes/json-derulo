@@ -1,0 +1,171 @@
+@import url("https://fonts.googleapis.com/css2?family=McLaren&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
+.wrapper,
+.signup-wrapper {
+  background: #e9ecec;
+  padding: 0 20px 0 20px;
+  overflow: visible !important;
+}
+
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  transform: translateY(-6rem);
+}
+
+header,
+span {
+  color: #fff;
+}
+
+header {
+  font-size: 25px;
+}
+
+.side-image {
+  position: relative;
+}
+
+.row {
+  width: 900px;
+  height: 550px;
+  border-radius: 10px;
+  background-color: #39c9eb;
+  padding: 0px;
+  box-shadow: 5px 5px 10px 1px rgba(0, 0, 0, 0.2);
+}
+
+.right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.input-box {
+  width: 330px;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+.side-image img {
+  position: absolute;
+  top: 50px;
+  left: 30px;
+}
+
+.small-logo {
+  display: none;
+}
+
+.input-box header {
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 45px;
+  font-family: "Poppins", sans-serif;
+}
+
+.input-field {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin-top: 30px;
+}
+
+.submit {
+  border: none;
+  outline: none;
+  height: 45px;
+  background: #fff;
+  border-radius: 5px;
+  transition: 0.2s;
+}
+
+.submit:hover {
+  background: #d3d3d3;
+}
+
+.signup {
+  text-align: center;
+  font-size: 15px;
+  margin-top: 30px;
+  font-family: "Poppins", sans-serif;
+}
+
+span a {
+  font-size: 15px;
+  text-decoration: none;
+  font-weight: 600;
+  color: #fff;
+}
+
+span a:hover {
+  text-decoration: underline;
+}
+
+@media only screen and (max-width: 991px) {
+  .side-image img {
+    width: 300px;
+    position: absolute;
+    top: 120px;
+  }
+
+  .input-box {
+    width: 90%;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .login {
+    max-width: 420px;
+    width: 100%;
+  }
+  .signup {
+    max-width: 420px;
+    width: 100%;
+    height: 700px;
+  }
+  .side-image {
+    display: none;
+  }
+
+  .input-box {
+    width: 85%;
+    font-size: 15px;
+  }
+
+  .input-box header {
+    margin-top: 150px;
+  }
+
+  .small-logo {
+    display: block;
+    position: absolute;
+    align-items: center;
+    top: 20px;
+    /* width: 60px; */
+  }
+
+  .small-logo img {
+    width: 120px;
+  }
+}
+
+@media only screen and (max-width: 425px) {
+  span,
+  span a {
+    font-size: 12px;
+  }
+
+  header {
+    font-size: 20px;
+  }
+}
+
+.name {
+  display: flex;
+  gap: 10px;
+}

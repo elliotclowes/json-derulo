@@ -1,0 +1,55 @@
+{
+  "name": "florin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --setupFiles ./__tests__/integration/config.js",
+    "dev": "nodemon -L ./index.js",
+    "setup-db": "node ./database/setup-db.js",
+    "cypress:open": "cypress open",
+    "setup-test-db": "node ./database/setup-test-db.js",
+    "start": "node ./index.js"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "coverageReporters": [
+      "html",
+      "text"
+    ],
+    "coverageDirectory": "tests/coverage",
+    "collectCoverageFrom": [
+      "./controllers/**",
+      "./models/**",
+      "./routers/**",
+      "./middleware/**",
+      "./database/**"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "lines": 90
+      }
+    }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@sendgrid/mail": "^7.7.0",
+    "bcrypt": "^5.1.0",
+    "cors": "^2.8.5",
+    "cypress": "^12.16.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jest": "^29.5.0",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.22",
+    "path": "^0.12.7",
+    "pg": "^8.11.1",
+    "supertest": "^6.3.3",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "jest-mock-extended": "^3.0.4"
+  }
+}
