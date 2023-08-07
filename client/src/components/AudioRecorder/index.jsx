@@ -22,7 +22,7 @@ export default function AudioRecord() {
         console.log(recording.recordings)
         if(recording.isRecording){
             const blob = await recorder.stopRecording()
-            console.log(blob)
+            //console.log(blob)
             setRecording({
                 isLoading: false,
                 isRecording: false,
