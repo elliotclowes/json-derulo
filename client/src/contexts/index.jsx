@@ -15,3 +15,21 @@ export const AuthProvider = ({ children }) => {
 };
 
 export const useAuth = () => useContext(AuthContext);
+
+
+
+const RecordingsContext = createContext()
+
+export const RecordingsProivder = ({children}) =>{
+  const [recording, setRecording] = useState({
+    isLoading : false,
+    isRecording : false,
+    recordings : [] })
+  return (
+    <RecordingsContext.Provider value={{recording,setRecording}}>
+      {children}
+    </RecordingsContext.Provider>
+  )
+}
+
+export const useRecording = () => useContext(RecordingsContext);
