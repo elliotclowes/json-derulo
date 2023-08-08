@@ -38,6 +38,8 @@ const AudioRecorder = () => {
                         audiosContainer.appendChild(a);
                         audiosContainer.appendChild(document.createElement('hr'));
                         indexRef.current += 1; // Increment the index using the ref
+                      
+                        uploadAudio(blob); // Upload the audio blob to the server
                       };
 
                   var timeInterval = document.querySelector('#time-interval').value;
@@ -66,6 +68,21 @@ const AudioRecorder = () => {
   useEffect(() => {
     setAudiosContainer(document.getElementById('audios-container'));
   }, []);
+
+
+  const uploadAudio = (blob) => {
+    const formData = new FormData();
+    formData.append('audio', blob, `audio-file-${indexRef.current}.wav`); // Appending the blob with filename
+  
+    fetch('http://localhost:3000/audio/save', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => console.log('File uploaded successfully:', data))
+    .catch(error => console.error('Error uploading file:', error));
+  };
+  
 
   const handlers = {
     startRecording: () => {
