@@ -13,7 +13,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/fire" element={<Fire />} />
-          {/* <Route path="/summary" element={<Summary />} /> */}
+          <Route path="/summary" element={<Summary />} />
           {/* Use ProtectedRoute for /dash and its nested routes */}
           <Route
             path="/dash"
