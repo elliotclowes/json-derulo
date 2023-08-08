@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Controls from '../Controls';
 import AudioContainer from '../AudioContainer';
 
 const AudioRecorder = () => {
   const [mediaRecorder, setMediaRecorder] = useState(null);
-  const [index, setIndex] = useState(1);
   const [audiosContainer, setAudiosContainer] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -12,6 +11,8 @@ const AudioRecorder = () => {
   const captureUserMedia = (mediaConstraints, successCallback, errorCallback) => {
     navigator.mediaDevices.getUserMedia(mediaConstraints).then(successCallback).catch(errorCallback);
   };
+
+  const indexRef = useRef(1); // Use a ref to store the index
 
   const onMediaSuccess = (stream) => {
                     var audio = document.createElement('audio');
@@ -29,14 +30,14 @@ const AudioRecorder = () => {
                     newMediaRecorder.audioChannels = !!document.getElementById('left-channel').checked ? 1 : 2;
 
                     newMediaRecorder.ondataavailable = function (blob) {
-                    var a = document.createElement('a');
-                    a.target = '_blank';
-                    a.innerHTML = 'Audio file ' + index + ' (Size: ' + bytesToSize(blob.size) + ')';
-                    a.href = URL.createObjectURL(blob);
-                    audiosContainer.appendChild(a);
-                    audiosContainer.appendChild(document.createElement('hr'));
-                    setIndex(index + 1); // Update the index using the setter
-                  };
+                        var a = document.createElement('a');
+                        a.target = '_blank';
+                        a.innerHTML = 'Audio file ' + indexRef.current + ' (Size: ' + bytesToSize(blob.size) + ')';
+                        a.href = URL.createObjectURL(blob);
+                        audiosContainer.appendChild(a);
+                        audiosContainer.appendChild(document.createElement('hr'));
+                        indexRef.current += 1; // Increment the index using the ref
+                      };
 
                   var timeInterval = document.querySelector('#time-interval').value;
     if (timeInterval) timeInterval = parseInt(timeInterval);
