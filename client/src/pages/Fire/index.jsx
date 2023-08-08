@@ -1,15 +1,17 @@
-import React from 'react';
-import { SummaryInput, BlockInput } from "../../components";
+import { useParams } from 'react-router-dom';
+import { SummaryInput, BlockInput, BlocksDisplay } from "../../components";
 
 function Fire() {
+  const { documentId } = useParams();
+
   return (
     <div>
       <div id="content"></div>
-      <SummaryInput />
+      <SummaryInput documentId={documentId} />
       <hr />
-      <BlockInput />
+      <BlockInput documentId={documentId} />
       <hr />
-      <div id="blocks-display"></div>
+      <BlocksDisplay documentId={documentId} />
     </div>
   );
 }
