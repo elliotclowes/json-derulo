@@ -4,6 +4,7 @@ import AudioContainer from '../AudioContainer';
 
 const AudioRecorder = () => {
   const [mediaRecorder, setMediaRecorder] = useState(null);
+
   const [audiosContainer, setAudiosContainer] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -85,6 +86,7 @@ const AudioRecorder = () => {
       setIsPaused(false);
     },
     saveRecording: () => {
+    mediaRecorder.stop();
       mediaRecorder.save();
     },
   };
