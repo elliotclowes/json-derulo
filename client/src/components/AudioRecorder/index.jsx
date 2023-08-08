@@ -70,9 +70,20 @@ const AudioRecorder = () => {
   }, []);
 
 
+  const generateRandomString = (length) => {
+    const characters = 'abcdefghijklmnopqrstuvwxyz';
+    let randomString = '';
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      randomString += characters[randomIndex];
+    }
+    return randomString;
+  };
+  
   const uploadAudio = (blob) => {
+    const randomFileName = generateRandomString(20) + '.wav';
     const formData = new FormData();
-    formData.append('audio', blob, `audio-file-${indexRef.current}.wav`); // Appending the blob with filename
+    formData.append('audio', blob, `part${indexRef.current}-` + randomFileName); // Appending the blob with a random filename
   
     fetch('http://localhost:3000/audio/save', {
       method: 'POST',
@@ -82,6 +93,7 @@ const AudioRecorder = () => {
     .then(data => console.log('File uploaded successfully:', data))
     .catch(error => console.error('Error uploading file:', error));
   };
+  
   
 
   const handlers = {
