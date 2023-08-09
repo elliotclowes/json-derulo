@@ -10,7 +10,7 @@ async function processAudio(path) {
     try {
       const uploadUrl = await uploadFile(path);
       const transcript = await transcribeAudio(API_TOKEN, uploadUrl);
-      const text = transcript.text;
+      const text = 'I want you to create a summary of the contents of the following transcript' + transcript.text;
   
       // Call summarizeTranscript with text and handle the response
       summarizeTranscript(text).then(async (summary) => {
