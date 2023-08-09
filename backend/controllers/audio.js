@@ -1,18 +1,11 @@
 require('dotenv').config();
 const fs = require('fs');
+const { db } = require('../database/firebase')
 const { uploadFile, transcribeAudio } = require('./assemblyAI');
 const { summarizeTranscript } = require('./chatGPT');
 const { processAudio } = require('./audioProcessing');
 
-const admin = require('firebase-admin');
-
 const API_TOKEN = process.env.AAI_KEY;
-
-const serviceAccount = require('../firebase-credentials.json');
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
-const db = admin.firestore();
 
 
 exports.saveAudio = async (req, res) => {
