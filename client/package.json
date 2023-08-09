@@ -19,7 +19,9 @@
     "react-bootstrap": "^2.8.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.14.2",
-    "vmsg": "^0.4.0"
+    "slate": "^0.94.1",
+    "slate-history": "^0.93.0",
+    "slate-react": "^0.98.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",
