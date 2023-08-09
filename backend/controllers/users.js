@@ -4,6 +4,9 @@ require("dotenv").config();
 const User = require("../models/Users");
 const Token = require("../models/Token");
 const Verification = require("../models/Verification");
+require('dotenv').config();
+
+const frontEndUrl = process.env.FRONTEND_URL;
 class UserController {
   static async getAllUsers(req, res) {
     try {
@@ -139,9 +142,12 @@ class UserController {
       const verifiedToken = await Verification.getOneByToken(token);
       await Verification.deleteByToken(verifiedToken.token_id);
       await User.verifyUser(verifiedToken.user_id);
-      res.status(200).json({ message: "Token is valid" });
+      
+      // Redirecting to a frontend success page
+      res.redirect(frontEndUrl + 'login');
     } catch (error) {
-      res.status(400).json(error);
+      // Redirecting to a frontend error page
+      res.redirect(frontEndUrl + 'signup');
     }
   }
 }

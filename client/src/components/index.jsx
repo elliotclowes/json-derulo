@@ -7,3 +7,4 @@ export { default as AudioContainer} from './AudioContainer';
 export { default as SummaryInput} from './SummaryInput';
 export { default as BlockInput} from './BlockInput';
 export { default as AudioRecorder} from './AudioRecorder';
+export { default as BlocksDisplay} from './BlocksDisplay';
