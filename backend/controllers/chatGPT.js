@@ -8,7 +8,7 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-// THIS FUNCTION MAKES SURE THE TEXT IS UNDER THE TOKEN LIMIT. IF IT ISN'T THEN IT SHORTENS THE TEXT BY 150 CHARACTERS AND THEN TRIES AGAIN. IT DOES THIS UNTIL IT'S UNDER THE LIMIT.
+// This function makes sure the text is under the token limit. If it isn't then it shortens the text by 150 characters and then tries again. It does this until it's under the limit.
 const trimToTokenLimit = (text, limit) => {
   // Encode the text
   let tokens = encoder.encode(text);
