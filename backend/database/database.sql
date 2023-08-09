@@ -31,3 +31,7 @@ INSERT INTO users (user_id, first_name, last_name, email, username, password, is
 VALUES
     (1, 'Elliot', 'Clowes', 'hi@clowes.me', 'elliot', '$2b$10$ESylvA.25PVWUQQk/jLfd.FHiju/U.mxb4pnKxevyY0OYtj8dO3a6', true),
     (2, 'Test', 'User', 'test@example.com', 'test', '$2b$10$WxMO5IfOSvvsNi4rDsPc9uEH.I4y1MuGj6W8.sFyTEq48.maIVuLu', true);
+
+INSERT INTO verification_tokens (token_id, user_id, token)
+VALUES
+    (1, 2, 'd5e7d720-e5be-464b-9254-f6f94099ab6b');

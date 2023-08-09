@@ -31,7 +31,7 @@ class User {
       id,
     ]);
     if (response.rows.length !== 1) {
-      throw new Error("Unable to locate user.");
+      throw new Error("ID: Unable to locate user.");
     }
     return new User(response.rows[0]);
   }
@@ -41,7 +41,7 @@ class User {
       username,
     ]);
     if (response.rows.length !== 1) {
-      throw new Error("Unable to locate user.");
+      throw new Error("Username: Unable to locate user.");
     }
     return new User(response.rows[0]);
   }
@@ -51,7 +51,7 @@ class User {
       email,
     ]);
     if (response.rows.length !== 1) {
-      throw new Error("Unable to locate user.");
+      throw new Error("Email: Unable to locate user.");
     }
     return new User(response.rows[0]);
   }
