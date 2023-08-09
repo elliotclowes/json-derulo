@@ -9,11 +9,11 @@ async function summarizeTranscript(transcriptText) {
   const path = '/v1/engines/text-davinci-003/completions';
 
   // Create a prompt to ask ChatGPT to summarize the transcript text
-  const prompt = `Please summarize the following transcript:\n\n${transcriptText}`;
+  const prompt = `How many words are there?:\n\n${transcriptText}`;
 
   const requestBody = JSON.stringify({
     prompt: prompt,
-    max_tokens: 4096
+    max_tokens: 4000
   });
 
   const options = {
