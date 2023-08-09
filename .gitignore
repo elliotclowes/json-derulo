@@ -30,6 +30,8 @@ chrome-user-data
 *.swp
 *.swo
 firebase-credentials.json
+*.wav
+
 
 packages/react-devtools-core/dist
 packages/react-devtools-extensions/chrome/build
