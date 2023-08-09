@@ -6,6 +6,7 @@ function BlocksDisplay({ documentId }) {
   const [blocks, setBlocks] = useState([]);
   const db = getFirestore(app);
 
+
   useEffect(() => {
     const summariesCollection = collection(db, 'summaries');
     const docRef = doc(summariesCollection, documentId);
