@@ -15,9 +15,8 @@ function Navigation() {
       <Navbar expand="lg">
         <Container className="nav-container">
           <Navbar.Brand href="/">
-            <img src="https://i.imgur.com/APlwr5r.png" alt="" />
             <p className="brand">
-              Super<b>Speech</b>
+              SuperSpeech
             </p>
           </Navbar.Brand>
           <Navbar.Toggle
@@ -25,7 +24,7 @@ function Navigation() {
             className="icon"
           />
           <Navbar.Collapse id="responsive-navbar-nav">
-            <Nav className="me-auto"></Nav>
+            {/* <Nav className="me-auto"></Nav>
             <Nav className="ml-auto" activeKey={location.pathname}>
               <NavLink
                 to="/"
@@ -65,7 +64,7 @@ function Navigation() {
               >
                 Logout
               </NavLink>
-            </Nav>
+            </Nav> */}
           </Navbar.Collapse>
         </Container>
       </Navbar>

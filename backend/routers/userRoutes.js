@@ -9,7 +9,7 @@ router.get("/email", UserController.getUserByEmail);
 router.post("/register", UserController.register);
 router.post("/login", UserController.login);
 router.get("/logout", UserController.logout);
-router.get("/:id", UserController.getUserById); // move this line to the bottom of all specific routes
+router.get("/:id", UserController.getUserById);
 router.get("/", UserController.getAllUsers);
 router.put("/:id", UserController.updateUser);
 router.delete("/:id", UserController.deleteUser);

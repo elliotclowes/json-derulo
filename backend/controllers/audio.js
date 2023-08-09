@@ -23,6 +23,7 @@ exports.saveAudio = async (req, res) => {
       const uploadUrl = await uploadFile(path);
       const transcript = await transcribeAudio(API_TOKEN, uploadUrl); // Pass both API_TOKEN and uploadUrl
       const text = transcript.text; // Extract the text
+      console.log("🚀 ~ file: audio.js:26 ~ exports.saveAudio= ~ text:", text)
 
       // Call the summarizeTranscript function to get the summary
       const summary = await summarizeTranscript(text);
