@@ -1,13 +1,38 @@
-const { Configuration, OpenAIApi } = require("openai");
 require("dotenv").config()
+
+const { Configuration, OpenAIApi } = require("openai");
+const encoder = require('gpt-3-encoder');
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
 
+// THIS FUNCTION MAKES SURE THE TEXT IS UNDER THE TOKEN LIMIT. IF IT ISN'T THEN IT SHORTENS THE TEXT BY 150 CHARACTERS AND THEN TRIES AGAIN. IT DOES THIS UNTIL IT'S UNDER THE LIMIT.
+const trimToTokenLimit = (text, limit) => {
+  // Encode the text
+  let tokens = encoder.encode(text);
+
+  // Check the number of tokens against the limit
+  while (tokens.length > limit) {
+    // Remove the first 150 characters
+    text = text.substring(150);
+
+    // Re-encode the shortened text
+    tokens = encoder.encode(text);
+  }
+
+  return text;
+};
+
+
 const summarizeTranscript = async (transcript) => {
   try {
+    // Set the token limit
+    const TOKEN_LIMIT = 3900;
+    // Trim the transcript to the token limit
+    transcript = trimToTokenLimit(transcript, TOKEN_LIMIT);
+
     const prompt = `I want you to create a summary of the contents of the following transcript. If any formatting is need make sure you use HTML. Don't make any mention of the transcript. Just give your summary. This is the transcript: ${transcript}`;
     
     const chatCompletion = await openai.createChatCompletion({
@@ -15,12 +40,18 @@ const summarizeTranscript = async (transcript) => {
       messages: [{role: "user", content: prompt}],
     });
 
-    const content = chatCompletion.data.choices[0].message;
     
+    const content = chatCompletion.data.choices[0].message.content;
+    console.log("🚀 ~ file: chatGPT.js:20 ~ summarizeTranscript ~ chatCompletion:", chatCompletion.data)
     return content;
     
   } catch (error) {
-    throw { error: 'An error occurred while getting word count.', details: error };
+    if (error.response) {
+      console.log(error.response.status);
+      console.log(error.response.data);
+    } else {
+      console.log(error.message);
+    }
   }
 };
 
