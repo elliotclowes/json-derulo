@@ -2,6 +2,8 @@ require('dotenv').config();
 const { uploadFile, transcribeAudio } = require('./assemblyAI');
 const { summarizeTranscript } = require('./chatGPT');
 const { db } = require('../database/firebase')
+const pathModule = require('path');
+
 
 
 const API_TOKEN = process.env.AAI_KEY;
@@ -14,6 +16,9 @@ async function processAudio(path) {
     const uploadUrl = await uploadFile(path);
     const transcript = await transcribeAudio(API_TOKEN, uploadUrl);
     const text = 'I want you to create a summary of the contents of the following transcript' + transcript.text;
+
+    // Extract filename from path
+    const filename = pathModule.basename(path);
 
     summarizeTranscript(text).then(async (summary) => {
       console.log('Audio processing complete:', summary);
@@ -34,7 +39,7 @@ async function processAudio(path) {
       // Add the new block with the summary text
       data.blocks[newBlockId] = {
         text: summary,
-        audioURL: '',
+        audioURL: filename,
         comments: [] // Initialize with empty comments 
       };
 
