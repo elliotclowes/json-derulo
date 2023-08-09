@@ -1,17 +1,21 @@
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
-import { Login, ProtectedRoute, Signup, Homepage, Dash, Fire, Summary } from "./pages";
+import { Login, ProtectedRoute, Signup, Homepage, Dash, Fire, Summary, Notes } from "./pages";
 import { AuthProvider } from "./contexts";
 import { Navigation } from './components';
+
 
 function App() {
   return (
     <>
       <AuthProvider>
+      <Navigation />
         <Routes>
-          <Route path="/" element={<Homepage />} />
+          <Route path="/" element={<Navigation />} />
+          <Route index element={<Homepage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/notes" element={<Notes/>} />
           <Route path="/fire" element={<Fire />} />
           <Route path="/summary" element={<Summary />} />
           {/* Use ProtectedRoute for /dash and its nested routes */}
