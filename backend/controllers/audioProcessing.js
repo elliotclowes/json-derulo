@@ -1,7 +1,7 @@
 require('dotenv').config();
 const { uploadFile, transcribeAudio } = require('./assemblyAI');
 const { summarizeTranscript } = require('./chatGPT');
-const { db } = require('../database/firebase')
+const { db, bucket } = require('../database/firebase')
 const pathModule = require('path');
 
 
@@ -17,8 +17,15 @@ async function processAudio(path) {
     const transcript = await transcribeAudio(API_TOKEN, uploadUrl);
     const text = 'I want you to create a summary of the contents of the following transcript' + transcript.text;
 
-    // Extract filename from path
     const filename = pathModule.basename(path);
+    const destination = `audio/${filename}`; // Set the destination path in the bucket
+    const [file] = await bucket.upload(path, { destination });
+
+    // Make the file publicly accessible. TODO: NEEDS TO BE MADE ONLY VIEWABLE BY THE USER AT SOME POINT
+    await file.makePublic();
+    
+    // Get the public URL of the file
+    const publicUrl = `https://storage.googleapis.com/${bucket.name}/${file.name}`; // Construct the public URL
 
     summarizeTranscript(text).then(async (summary) => {
       console.log('Audio processing complete:', summary);
@@ -39,7 +46,7 @@ async function processAudio(path) {
       // Add the new block with the summary text
       data.blocks[newBlockId] = {
         text: summary,
-        audioURL: filename,
+        audioURL: publicUrl,
         comments: [] // Initialize with empty comments 
       };
 
