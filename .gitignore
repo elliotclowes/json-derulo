@@ -30,6 +30,7 @@ chrome-user-data
 *.swp
 *.swo
 firebase-credentials.json
+
 *.wav
 
 
