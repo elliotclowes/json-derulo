@@ -5,3 +5,5 @@ export { default as ProtectedRoute } from "./ProtectedRoute";
 export { default as Dash } from "./Dash";
 export { default as UserPage} from "./UserPage"
 export { default as Notes} from "./NotesPage"
+export { default as Summary } from "./Summary";
+export { default as Fire } from "./Fire";
