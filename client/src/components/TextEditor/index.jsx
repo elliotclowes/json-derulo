@@ -1,15 +1,26 @@
-import Editor from "./Editor"
-import { useState } from "react";
+import React, { useState } from "react";
+import Editor from "./Editor";
 
-export default function TextEditor(exampleDocument) {
+export default function TextEditor({ document: initialDocument, onSubmit }) {
+  const [document, updateDocument] = useState(initialDocument);
+  const [editedDocument, setEditedDocument] = useState(initialDocument);
 
-    const [document, updateDocument] = useState(exampleDocument.document);
-  
-    return (
-      <>
-        <div className="App">
-          <Editor document={document} onChange={updateDocument} />
-        </div>
-      </>
-    );
-    }
+  const handleSubmit = () => {
+    onSubmit(editedDocument);
+  };
+
+  return (
+    <>
+      <div className="App">
+        <Editor
+          document={document}
+          onChange={(newDocument) => {
+            updateDocument(newDocument);
+            setEditedDocument(newDocument);
+          }}
+        />
+      </div>
+      <button onClick={handleSubmit}>Submit</button>
+    </>
+  );
+}
