@@ -56,7 +56,8 @@ async function processAudio(path) {
       };
     
       // Update the document with the new data
-      await docRef.set(data);
+      await docRef.update(data);
+
 
     }).catch(error => {
       console.error('Error summarizing transcript:', error);

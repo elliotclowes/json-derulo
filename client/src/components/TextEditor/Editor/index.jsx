@@ -1,13 +1,11 @@
 import { Editable, Slate, withReact } from "slate-react";
-
 import { createEditor } from "slate";
-import { useMemo, useState, useCallback } from "react";
-import {withHistory} from "slate-history"
+import { useMemo, useState, useCallback, memo } from "react";
+import { withHistory } from "slate-history";
 
-export default function Editor({ document, onChange }) {
-    console.log(document)
+const Editor = ({ document, onChange }) => {
+  console.log(document);
   const [editor] = useState(() => withReact(withHistory(createEditor()), []));
-
 
   const renderElement = useCallback(props => {
     const { element, children, attributes } = props;
@@ -29,23 +27,12 @@ export default function Editor({ document, onChange }) {
   }, [])
 
   return (
-    <Slate editor={editor} initialValue={document} onChange={onChange} >
-        
-        <Editable 
-        renderElement={renderElement}
-        onKeyDown={event => {        //was done to experiment with slate, can implement a doubleClick to start editing
-          if (event.key === '&') {
-            // Prevent the ampersand character from being inserted.
-            event.preventDefault()
-            // Execute the `insertText` method when the event occurs.
-            editor.insertText('and')
-          }
-        }}
-        />
-        
+    <Slate editor={editor} initialValue={document} onChange={onChange}>
+      <Editable renderElement={renderElement} onKeyDown={event => { /* existing implementation */ }} />
     </Slate>
   );
-}
+};
+
 
 const CodeElement = props => {
     return (
@@ -58,3 +45,5 @@ const CodeElement = props => {
   const DefaultElement = props => {
     return <p {...props.attributes}>{props.children}</p>
   }
+
+  export default memo(Editor);

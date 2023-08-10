@@ -1,16 +1,19 @@
-import Editor from "./Editor"
-import { useState } from "react";
+import React, { memo } from "react";
+import Editor from "./Editor";
 
-export default function TextEditor(exampleDocument) {
+const TextEditor = ({ document, onChange }) => {
+  console.log('TextEditor is rendering.');
+  console.log('TextEditor rendering with document:', document);
+  return (
+    <div className="App">
+      <Editor
+        document={document}
+        onChange={newText => {
+          onChange(newText);
+        }}
+      />
+    </div>
+  );
+};
 
-    const [document, updateDocument] = useState(exampleDocument.document);
-    console.log("🚀 ~ file: index.jsx:7 ~ TextEditor ~ document:", document)
-  
-    return (
-      <>
-        <div className="App">
-          <Editor document={document} onChange={updateDocument} />
-        </div>
-      </>
-    );
-    }
+export default memo(TextEditor);
