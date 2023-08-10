@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import './TitleInput.css';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
-import { app } from '../../../firebase-config'; 
+import { app } from '../../../firebase-config';
+import { useNavigate } from 'react-router-dom';
 
 const predefinedTags = ['Step by step Guide', 'Tutorial', 'Coding', 'Video', 'Food'];
 
@@ -11,6 +12,7 @@ const TitleInput = () => {
   const [selectedTags, setSelectedTags] = useState([]);
 
   const db = getFirestore(app);
+  const navigate = useNavigate();
 
   const handleTitleChange = (event) => {
     setTitle(event.target.value);
@@ -38,9 +40,10 @@ const TitleInput = () => {
     };
   
     try {
-      const docRef = await addDoc(collection(db, 'Sand-box'), data);
+      const docRef = await addDoc(collection(db, 'Sand-box'), data); 
       console.log('Document written with ID:', docRef.id);
-      window.location.href = '/recorder'; 
+      
+      navigate(`/summary/${docRef.id}`); 
     } catch (error) {
       console.error('Error adding document:', error);
     }
