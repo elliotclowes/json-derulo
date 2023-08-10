@@ -65,6 +65,7 @@ const TitleInput = () => {
           comments: [{}]
         }
       },
+      type: "user",
       userID: userID
       }
     console.log("🚀 ~ file: index.jsx:69 ~ handleSubmit ~ data:", data)
