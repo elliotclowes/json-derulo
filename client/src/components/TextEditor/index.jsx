@@ -1,15 +1,11 @@
 import Editor from "./Editor"
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-export default function TextEditor(exampleDocument) {
-
-    const [document, updateDocument] = useState(exampleDocument.document);
-  
-    return (
-      <>
-        <div className="App">
-          <Editor document={document} onChange={updateDocument} />
-        </div>
-      </>
-    );
-    }
+export default function TextEditor({ document, onChange }) {
+  console.log('TextEditor props:', document, onChange);
+  return (
+    <div className="App">
+      <Editor document={document} onChange={onChange} />
+    </div>
+  );
+}

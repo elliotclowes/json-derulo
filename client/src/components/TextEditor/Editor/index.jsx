@@ -5,6 +5,7 @@ import { useMemo, useState, useCallback } from "react";
 import {withHistory} from "slate-history"
 
 export default function Editor({ document, onChange }) {
+  console.log('Editor onChange:', document);
   const [editor] = useState(() => withReact(withHistory(createEditor()), []));
 
 
