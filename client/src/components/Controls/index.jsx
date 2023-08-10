@@ -2,8 +2,8 @@ import React from 'react';
 
 const Controls = ({ handlers, isRecording, isPaused }) => (
   <section className="experiment" style={{ padding: '5px' }}>
-    <label htmlFor="time-interval">Time Interval (milliseconds):</label>
-    <input type="text" id="time-interval" defaultValue="5000" />ms
+    <label htmlFor="time-interval">Time Interval (seconds):</label>
+    <input type="text" id="time-interval" defaultValue="60" />
 
     <br />
 

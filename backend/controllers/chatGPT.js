@@ -1,55 +1,58 @@
-require('dotenv').config();
-const https = require('https');
+require("dotenv").config()
 
-const apiKey = process.env.OPENAI_API_KEY;
+const { Configuration, OpenAIApi } = require("openai");
+const encoder = require('gpt-3-encoder');
 
-async function summarizeTranscript(transcriptText) {
+const configuration = new Configuration({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+const openai = new OpenAIApi(configuration);
 
-  const apiUrl = 'https://api.openai.com';
-  const path = '/v1/engines/text-davinci-003/completions';
+// This function makes sure the text is under the token limit. If it isn't then it shortens the text by 150 characters and then tries again. It does this until it's under the limit.
+const trimToTokenLimit = (text, limit) => {
+  // Encode the text
+  let tokens = encoder.encode(text);
 
-  // Create a prompt to ask ChatGPT to summarize the transcript text
-  const prompt = `Please summarize the following transcript:\n\n${transcriptText}`;
+  // Check the number of tokens against the limit
+  while (tokens.length > limit) {
+    // Remove the first 150 characters
+    text = text.substring(150);
 
-  const requestBody = JSON.stringify({
-    prompt: prompt,
-    max_tokens: 4096
-  });
+    // Re-encode the shortened text
+    tokens = encoder.encode(text);
+  }
 
-  const options = {
-    hostname: 'api.openai.com',
-    path: path,
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`,
-    },
-  };
+  return text;
+};
 
-  return new Promise((resolve, reject) => {
-    const httpsRequest = https.request(options, (response) => {
-      let data = '';
-      response.on('data', (chunk) => {
-        data += chunk;
-      });
-      response.on('end', () => {
-        const responseJson = JSON.parse(data);
-        if (responseJson.error) {
-          reject(new Error(responseJson.error.message));
-        } else {
-          const summary = responseJson.choices[0].text.trim();
-          resolve(summary);
-        }
-      });
+
+const summarizeTranscript = async (transcript) => {
+  try {
+    // Set the token limit
+    const TOKEN_LIMIT = 3900;
+    // Trim the transcript to the token limit
+    transcript = trimToTokenLimit(transcript, TOKEN_LIMIT);
+
+    const prompt = `I want you to create a summary of the contents of the following transcript. If any formatting is need make sure you use HTML. Don't make any mention of the transcript. Just give your summary. This is the transcript: ${transcript}`;
+    
+    const chatCompletion = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: [{role: "user", content: prompt}],
     });
 
-    httpsRequest.on('error', (error) => {
-      reject({ error: 'An error occurred while summarizing the transcript.', details: error });
-    });
-
-    httpsRequest.write(requestBody);
-    httpsRequest.end();
-  });
-}
+    
+    const content = chatCompletion.data.choices[0].message.content;
+    console.log("🚀 ~ file: chatGPT.js:20 ~ summarizeTranscript ~ chatCompletion:", chatCompletion.data)
+    return content;
+    
+  } catch (error) {
+    if (error.response) {
+      console.log(error.response.status);
+      console.log(error.response.data);
+    } else {
+      console.log(error.message);
+    }
+  }
+};
 
 module.exports = { summarizeTranscript };
