@@ -8,11 +8,11 @@ const pathModule = require('path');
 
 const API_TOKEN = process.env.AAI_KEY;
 
-const DOCUMENT_ID = 'WOengyvFkRiMXPOOiQyF';
+
 
 // OLD: HZpgoFnM6Ht4M16YuTWk
 
-async function processAudio(path) {
+async function processAudio(path, documentId) {
   console.log("🚀 ~ file: audioProcessing.js:12 ~ processAudio ~ path:", path)
   try {
     const uploadUrl = await uploadFile(path);
@@ -33,7 +33,7 @@ async function processAudio(path) {
       console.log('Audio processing complete:', summary);
     
       // Get the document reference
-      const docRef = db.collection('summaries').doc(DOCUMENT_ID);
+      const docRef = db.collection('summaries').doc(documentId);
     
       // Get the current data
       const doc = await docRef.get();

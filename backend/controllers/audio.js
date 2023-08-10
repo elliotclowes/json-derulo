@@ -10,6 +10,7 @@ const API_TOKEN = process.env.AAI_KEY;
 
 exports.saveAudio = async (req, res) => {
   const path = `./uploads/${req.file.originalname}`;
+  const documentId = req.body.documentId; // Extract the documentId from the request
 
   fs.rename(req.file.path, path, async err => {
     if (err) {
@@ -20,8 +21,8 @@ exports.saveAudio = async (req, res) => {
     try {
       res.send('File uploaded and saved.'); // Send immediate response
 
-      // Perform transcription and processing asynchronously
-      processAudio(path);
+      // Pass the documentId to processAudio
+      processAudio(path, documentId);
     } catch (error) {
       res.status(500).send(`Error processing audio file: ${error.message}`);
     }

@@ -7,7 +7,7 @@ function Summary() {
   return (
     <div>
       <div id="content"></div>
-      <AudioRecorder />
+      <AudioRecorder documentId={documentId} />
       <CombinedSummaryNotes documentId={documentId} /> 
     </div>
   );
