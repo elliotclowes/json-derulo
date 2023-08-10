@@ -101,3 +101,29 @@ export const activeMark = (editor,format) =>{
     const defaultValue = defaultMarkData[format];
     return marks?.[format] ?? defaultValue;
 }
+// toggling character styles
+
+
+
+
+//commenting
+export function getCommentThreadsOnTextNode(textNode) {
+    return new Set(
+       // Because marks are just properties on nodes,
+      // we can simply use Object.keys() here.
+      Object.keys(textNode)
+        .filter(isCommentThreadIDMark)
+        .map(getCommentThreadIDFromMark)
+    );
+  }
+  
+  export function getCommentThreadIDFromMark(mark) {
+    if (!isCommentThreadIDMark(mark)) {
+      throw new Error("Expected mark to be of a comment thread");
+    }
+    return mark.replace(COMMENT_THREAD_PREFIX, "");
+  }
+  
+  function isCommentThreadIDMark(mayBeCommentThread) {
+    return mayBeCommentThread.indexOf(COMMENT_THREAD_PREFIX) === 0;
+  }

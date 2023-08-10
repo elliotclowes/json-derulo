@@ -32,7 +32,7 @@ chrome-user-data
 firebase-credentials.json
 
 *.wav
-
+!DO-NOT-DELETE.wav
 
 packages/react-devtools-core/dist
 packages/react-devtools-extensions/chrome/build
