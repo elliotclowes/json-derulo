@@ -4,6 +4,9 @@ const { processAudio } = require('../controllers/audioProcessing');
 const { response } = require('express');
 
 jest.mock('fs');
+jest.mock('gpt-3-encoder', () => ({
+    encode: jest.fn()
+  }));
 jest.mock('../controllers/audioProcessing');
 
 describe('saveAudio function', () => {
@@ -44,7 +47,7 @@ describe('saveAudio function', () => {
     await saveAudio(req, res);
 
     expect(res.status).toHaveBeenCalledWith(500);
-    expect(res.send).toHaveBeenCalledWith('Error saving audio file: rename error');
+    expect(res.send).toHaveBeenCalledWith('Error saving audio file: Error: rename error');
   });
 
 
