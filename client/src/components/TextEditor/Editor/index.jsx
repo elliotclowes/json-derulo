@@ -1,11 +1,10 @@
 import { Editable, Slate, withReact } from "slate-react";
-
+import Toolbar from "../Toolbar";
 import { createEditor } from "slate";
 import { useMemo, useState, useCallback } from "react";
 import {withHistory} from "slate-history"
 
 export default function Editor({ document, onChange }) {
-    console.log(document)
   const [editor] = useState(() => withReact(withHistory(createEditor()), []));
 
 
@@ -28,11 +27,34 @@ export default function Editor({ document, onChange }) {
     }
   }, [])
 
+  function renderLeaf({ attributes, children, leaf }) {
+    let el = <>{children}</>;
+  
+    if (leaf.bold) {
+      el = <strong>{el}</strong>;
+    }
+  
+    if (leaf.code) {
+      el = <code>{el}</code>;
+    }
+  
+    if (leaf.italic) {
+      el = <em>{el}</em>;
+    }
+  
+    if (leaf.underline) {
+      el = <u>{el}</u>;
+    }
+  
+    return <span {...attributes}>{el}</span>;
+  }
+
   return (
     <Slate editor={editor} initialValue={document} onChange={onChange} >
-        
+        <Toolbar/>
         <Editable 
         renderElement={renderElement}
+        renderLeaf={renderLeaf}
         onKeyDown={event => {        //was done to experiment with slate, can implement a doubleClick to start editing
           if (event.key === '&') {
             // Prevent the ampersand character from being inserted.
