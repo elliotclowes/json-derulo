@@ -1,3 +1,8 @@
+import { getMarkForCommentThreadID } from "./EditorCommentUtils";
+import { v4 as uuid } from 'uuid'
+
+const exampleOverlappingCommentThreadID = uuid();   //these ids should be replaced by a backend service rather than as they are currently
+
 const ExampleDocument = [
     {
       type: "h1",
@@ -9,6 +14,21 @@ const ExampleDocument = [
       { text: "Italic text.", italic: true },
       { text: "Bold and underlined text.", bold: true, underline: true },
       { text: "variableFoo", code: true },],
-    }
+    },
+//     {
+//         text: "Lorem ipsum",
+//         [getMarkForCommentThreadID(uuid())]: true,
+//    },
+//    ...
+//    {
+//         text: "Richard McClintock",
+//         // note the two comment threads here.
+//         [getMarkForCommentThreadID(uuid())]: true,
+//         [getMarkForCommentThreadID(exampleOverlappingCommentThreadID)]: true,
+//    },
+//    {
+//         text: ", a Latin scholar",
+//         [getMarkForCommentThreadID(exampleOverlappingCommentThreadID)]: true,
+//    },
 ]
 export default ExampleDocument;

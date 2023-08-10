@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { toggleBlock, toggleMark, isMarkActive, addMarkData, isBlockActive,activeMark} from '../../../utils/SlateUtilityFunctions'
 import defaultToolbarGroups from './ToolbarGroups'
 import 'bootstrap/dist/css/bootstrap.css';
+import * as Icon from "react-bootstrap-icons"
 
 
 import { Editor, Element } from 'slate'
@@ -99,7 +100,7 @@ export default function Toolbar() {
                                         case 'block' :
                                             return <BlockButton key={element.id} {...element}/>
                                         case 'mark':
-                                            return <MarkButton key={element.id} {...element}/>
+                                            return <MarkButton key={element.id} {...element}/>  //currently only Markbutton is in use 
                                         case 'dropdown':
                                             return <Dropdown key={element.id} {...element} />
                     
