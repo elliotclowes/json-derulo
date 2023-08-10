@@ -8,7 +8,9 @@ const pathModule = require('path');
 
 const API_TOKEN = process.env.AAI_KEY;
 
-const DOCUMENT_ID = 'HZpgoFnM6Ht4M16YuTWk';
+const DOCUMENT_ID = 'f8sMKtRZk37XjQ3R5Geq';
+
+// OLD: HZpgoFnM6Ht4M16YuTWk
 
 async function processAudio(path) {
   console.log("🚀 ~ file: audioProcessing.js:12 ~ processAudio ~ path:", path)

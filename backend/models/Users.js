@@ -5,6 +5,7 @@ require("dotenv").config();
 class User {
   constructor({
     user_id,
+    token,
     first_name,
     last_name,
     email,
@@ -13,6 +14,7 @@ class User {
     is_verified,
   }) {
     this.id = user_id;
+    this.token = token;
     this.firstName = first_name;
     this.lastName = last_name;
     this.email = email;
