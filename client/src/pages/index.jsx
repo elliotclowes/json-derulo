@@ -7,3 +7,5 @@ export { default as Recorder } from "./Recorder";
 export { default as UserPage} from "./UserPage"
 export { default as Notes} from "./NotesPage"
 export { default as Summary } from "./Summary";
+export { default as CreateSummary } from "./CreateSummary";
+
