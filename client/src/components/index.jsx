@@ -9,3 +9,5 @@ export { default as BlockInput} from './BlockInput';
 export { default as AudioRecorder} from './AudioRecorder';
 export { default as BlocksDisplay} from './BlocksDisplay';
 export { default as TitleInput} from './TitleInput';
+export { default as YoutubeUpload} from './YoutubeUpload';
+export { default as CombinedSummaryNotes} from './CombinedSummaryNotes';

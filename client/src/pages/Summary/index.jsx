@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { SummaryInput, BlockInput, BlocksDisplay } from "../../components";
+import { SummaryInput, BlockInput, BlocksDisplay, CombinedSummaryNotes } from "../../components";
 
 function Summary() {
   const { documentId } = useParams();
@@ -7,11 +7,12 @@ function Summary() {
   return (
     <div>
       <div id="content"></div>
-      <SummaryInput documentId={documentId} />
+      {/* <SummaryInput documentId={documentId} />
       <hr />
       <BlockInput documentId={documentId} />
       <hr />
-      <BlocksDisplay documentId={documentId} />
+      <BlocksDisplay documentId={documentId} /> */}
+      <CombinedSummaryNotes documentId={documentId} /> 
     </div>
   );
 }
