@@ -44,16 +44,13 @@ function CombinedSummaryNotes() {
 
   return (
     <div>
-      <div id="blocks-display">
-        {blocks.map((blockText, index) => (
-          <div key={index}>
-            {/* Pass the block text as a document to TextEditor */}
-            <TextEditor 
-              document={[{ type: "p", children: [{ text: blockText }] }]} 
-              onChange={(newText) => updateSummaryBlock(`block${index + 1}`, newText)} />
-          </div>
-        ))}
-      </div>
+     <div id="blocks-display">
+  {blocks.map((blockText, index) => (
+    <div key={index}>
+      <TextEditor document={blockText} onChange={(newText) => updateSummaryBlock(`block${index + 1}`, newText)} />
+    </div>
+  ))}
+</div>
     </div>
   );
 }
