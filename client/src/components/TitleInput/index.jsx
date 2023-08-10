@@ -30,8 +30,26 @@ const TitleInput = () => {
     }
   };
 
+  const getUserID = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) return null;
+  
+    const response = await fetch(`http://localhost:3000/token/get/${token}`);
+    const data = await response.json();
+  
+    return data.user_id.toString();
+  };
+  
+
   const handleSubmit = async (event) => {
     event.preventDefault();
+  
+    const userID = await getUserID();
+    console.log("🚀 ~ file: index.jsx:48 ~ handleSubmit ~ userID:", userID)
+    if (userID === null) {
+      console.error('User not logged in');
+      return;
+    }
   
     const data = {
       blockOrder: ["block1"],
@@ -46,8 +64,10 @@ const TitleInput = () => {
           audioURL: "",
           comments: [{}]
         }
+      },
+      userID: userID
       }
-    };
+    console.log("🚀 ~ file: index.jsx:69 ~ handleSubmit ~ data:", data)
   
     try {
       const docRef = await addDoc(collection(db, 'summaries'), data); 
