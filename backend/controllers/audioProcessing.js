@@ -29,27 +29,32 @@ async function processAudio(path) {
 
     summarizeTranscript(text).then(async (summary) => {
       console.log('Audio processing complete:', summary);
-
+    
       // Get the document reference
       const docRef = db.collection('summaries').doc(DOCUMENT_ID);
-
+    
       // Get the current data
       const doc = await docRef.get();
       const data = doc.data();
-
+    
       // Generate new block ID
       const newBlockId = `block${data.blockOrder.length + 1}`;
-
+    
       // Add the new block ID to the block order
       data.blockOrder.push(newBlockId);
-
+    
       // Add the new block with the summary text
       data.blocks[newBlockId] = {
-        text: summary,
+        text: [
+          {
+            type: "p",
+            children: [{ text: summary }]
+          }
+        ],
         audioURL: publicUrl,
         comments: [] // Initialize with empty comments 
       };
-
+    
       // Update the document with the new data
       await docRef.set(data);
 
