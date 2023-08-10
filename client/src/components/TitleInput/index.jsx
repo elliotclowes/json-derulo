@@ -34,13 +34,23 @@ const TitleInput = () => {
     event.preventDefault();
   
     const data = {
-      title: title,
-      visibility: visibility,
-      tags: selectedTags,
+      blockOrder: ["block1"],
+      blocks: {
+        block1: {
+          text: [
+            {
+              type: "p",
+              children: [{ text: title }]
+            }
+          ],
+          audioURL: "",
+          comments: [{}]
+        }
+      }
     };
   
     try {
-      const docRef = await addDoc(collection(db, 'Sand-box'), data); 
+      const docRef = await addDoc(collection(db, 'summaries'), data); 
       console.log('Document written with ID:', docRef.id);
       
       navigate(`/summary/${docRef.id}`); 
