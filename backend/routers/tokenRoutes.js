@@ -1,8 +1,9 @@
 const express = require("express");
 const TokenController = require("../controllers/token");
-const authenticator = require("../middleware/authenticator");
 const router = express.Router();
 
-router.post("/", authenticator, TokenController.getOneByToken);
+router.get("/", TokenController.getAllToken);
+router.get("/:id", TokenController.getTokenById);
+router.get("/get/:token", TokenController.getOneByToken);
 
 module.exports = router;
