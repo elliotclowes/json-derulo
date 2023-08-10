@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { SummaryInput, BlockInput, BlocksDisplay, CombinedSummaryNotes } from "../../components";
+import { AudioRecorder, CombinedSummaryNotes } from "../../components";
 
 function Summary() {
   const { documentId } = useParams();
@@ -7,6 +7,7 @@ function Summary() {
   return (
     <div>
       <div id="content"></div>
+      <AudioRecorder />
       <CombinedSummaryNotes documentId={documentId} /> 
     </div>
   );
