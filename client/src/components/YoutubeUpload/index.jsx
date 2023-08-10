@@ -35,7 +35,7 @@ function App() {
       <button onClick={handleProcessVideo}>Process Video</button>
 
       {/* Display subtitles below the button */}
-      {subtitles && <div>{subtitles}</div>}
+      {subtitles && <div>{subtitles.summary}</div>}
     </div>
   );
 }
