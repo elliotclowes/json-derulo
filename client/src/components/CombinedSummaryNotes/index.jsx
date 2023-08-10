@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getFirestore, collection, doc, onSnapshot } from 'firebase/firestore';
+import { getFirestore, collection, doc, updateDoc, onSnapshot } from 'firebase/firestore';
 import { app } from '/firebase-config.js';
 import TextEditor from '../../components/TextEditor';
 import ExampleDocument from "../../utils/ExampleDocument";
@@ -10,17 +10,21 @@ function CombinedSummaryNotes() {
   const [blocks, setBlocks] = useState([]);
   const db = getFirestore(app);
 
-  const updateSummaryBlock = (blockId, newText) => {
+  const updateSummaryBlock = async (blockId, newText) => {
     // Get the Firestore reference to the specific document
-    const summariesRef = db.collection('summaries').doc(documentId);
+    const summariesCollection = collection(db, 'summaries');
+    const summariesRef = doc(summariesCollection, documentId);
   
     // Create a path to the specific block you want to update
     const blockPath = `blocks.${blockId}.text`;
   
-    // Update the text of the specific block
-    summariesRef.update({
+    // Create an object representing the update
+    const updateObject = {
       [blockPath]: newText,
-    }).catch(error => {
+    };
+  
+    // Update the text of the specific block
+    await updateDoc(summariesRef, updateObject).catch(error => {
       console.error('Error updating block:', error);
     });
   };
@@ -42,14 +46,23 @@ function CombinedSummaryNotes() {
     return () => unsubscribe();
   }, [documentId, db]);
 
+  const handleBlockSubmit = (blockId, newText) => {
+    updateSummaryBlock(`block${blockId + 1}`, newText);
+  };
+
   return (
     <div>
      <div id="blocks-display">
-  {blocks.map((blockText, index) => (
-    <div key={index}>
-      <TextEditor document={blockText} onChange={(newText) => updateSummaryBlock(`block${index + 1}`, newText)} />
-    </div>
-  ))}
+{blocks.map((blockText, index) => (
+  <div key={index}>
+    <TextEditor 
+      document={blockText} 
+      onChange={(newText) => updateSummaryBlock(`block${index + 1}`, newText)} 
+      onSubmit={(newText) => handleBlockSubmit(index, newText)} 
+    />
+  </div>
+))}
+
 </div>
     </div>
   );

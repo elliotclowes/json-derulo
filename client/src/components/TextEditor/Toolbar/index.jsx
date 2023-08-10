@@ -1,118 +1,103 @@
-import { useSlate } from "slate-react"
-import Button  from "../Button/index"
-import React, { useEffect, useState } from 'react';
-import { toggleBlock, toggleMark, isMarkActive, addMarkData, isBlockActive,activeMark} from '../../../utils/SlateUtilityFunctions'
-import defaultToolbarGroups from './ToolbarGroups'
-import 'bootstrap/dist/css/bootstrap.css';
+import React, { useMemo, useRef, useEffect } from 'react';
+import { Slate, Editable, withReact, useSlate, useFocused } from 'slate-react';
+import {
+  Editor,
+  Transforms,
+  Text,
+  createEditor,
+  Range,
+} from 'slate';
+import { css } from '@emotion/css';
 
+import { Button, Icon, Menu, Portal } from '../Button';
 
-import { Editor, Element } from 'slate'
-
-
-const useTable = (editor)=>{
-    const [isTable,setIsTable] = useState(false);
-    useEffect(()=>{
-        if(editor.selection){
-            const [tableNode] = Editor.nodes(editor,{
-                match:n => !Editor.isEditor(n) && Element.isElement(n) && n.type === 'table'
-            })
-            
-            setIsTable(!!tableNode);
-        }
-         // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[editor.selection])
-
-    return isTable;
-}
-
-export default function Toolbar() {
-    
+export default function HoveringToolbar () {
+    const ref = useRef(null); // Fixed parentheses
     const editor = useSlate();
-    const isTable = useTable(editor);
-    const [toolbarGroups,setToolbarGroups] = useState(defaultToolbarGroups);
-    useEffect(()=>{
-        let filteredGroups = [...defaultToolbarGroups]
-        if(isTable){
-            filteredGroups = toolbarGroups.map(grp =>(
-                grp.filter(element => (
-                    !['table'].includes(element.type)
-                ))
-            ))
-            filteredGroups = filteredGroups.filter(elem => elem.length)
-        }
-        setToolbarGroups(filteredGroups);
-         // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[isTable])
-    const BlockButton = ({format}) =>{
-        return (
-            <Button active={isBlockActive(editor,format)} format={format} onMouseDown={
-                e=>{
-                    e.preventDefault();
-                    toggleBlock(editor,format)
-                }
-            }>
-                <h4>{format}</h4>
-            </Button>
-        )
+    const inFocus = useFocused();
+  
+    useEffect(() => {
+      const el = ref.current;
+      const { selection } = editor;
+  
+      if (!el) {
+        return;
+      }
+  
+      if (
+        !selection ||
+        !inFocus ||
+        Range.isCollapsed(selection) ||
+        Editor.string(editor, selection) === ''
+      ) {
+        el.removeAttribute('style');
+        return;
+      }
+  
+      const domSelection = window.getSelection();
+      const domRange = domSelection.getRangeAt(0);
+      const rect = domRange.getBoundingClientRect();
+      el.style.opacity = '1';
+      el.style.top = `${rect.top + window.pageYOffset - el.offsetHeight}px`;
+      el.style.left = `${rect.left +
+        window.pageXOffset -
+        el.offsetWidth / 2 +
+        rect.width / 2}px`;
+    });
+  
+    return (
+      <Portal>
+        <Menu
+          ref={ref}
+          className={css`
+            padding: 8px 7px 6px;
+            position: absolute;
+            z-index: 1;
+            top: -10000px;
+            left: -10000px;
+            margin-top: -6px;
+            opacity: 0;
+            background-color: #d3d3d3;
+            border-radius: 4px;
+            transition: opacity 0.75s;
+          `}
+          onMouseDown={e => {
+            // prevent toolbar from taking focus away from editor
+            e.preventDefault();
+          }}
+        >
+          <FormatButton format="bold" icon="format_bold" />
+          <FormatButton format="italic" icon="format_italic" />
+          <FormatButton format="underlined" icon="format_underlined" />
+        </Menu>
+      </Portal>
+    );
+  };
+  
+  const FormatButton = ({ format, icon }) => {
+    const editor = useSlate();
+    return (
+      <Button
+        
+        active={isMarkActive(editor, format)}
+        onClick={() => toggleMark(editor, format)}
+      >
+        <Icon active={isMarkActive(editor, format)}>{icon}</Icon>
+      </Button>
+    );
+  };
+
+  const toggleMark = (editor, format) => {
+    const isActive = isMarkActive(editor, format);
+  
+    if (isActive) {
+      Editor.removeMark(editor, format);
+    } else {
+      Editor.addMark(editor, format, true);
     }
-    const MarkButton = ({format, letter})=>{
-        return(
-
-            <Button active={isMarkActive(editor,format)} format={format} onMouseDown={
-                e=>{
-                    e.preventDefault();
-                    toggleMark(editor,format)
-                }
-            }>
-                {letter}
-            </Button>
-        )
-    }
-    const Dropdown = ({format,options}) => {
-        return (
-            <select value={activeMark(editor,format)} onChange = {e => changeMarkData(e,format)}>
-                {
-                    options.map((item,index) => 
-                        <option key={index} value={item.value}>{item.text}</option>
-                    )
-                }
-            </select>
-        )
-    }
-    const changeMarkData = (event,format)=>{
-        event.preventDefault();
-        const value =event.target.value
-        addMarkData(editor,{format,value})
-    }
-
-
-
-    return(
-        <div className='toolbar d-flex justify-content-center' >
-            {
-                toolbarGroups.map((group,index) => 
-                    <span key={index} className='toolbar-grp'>
-                        {
-                            group.map((element) => 
-                                {
-                                    switch (element.type) {
-                                        case 'block' :
-                                            return <BlockButton key={element.id} {...element}/>
-                                        case 'mark':
-                                            return <MarkButton key={element.id} {...element}/>
-                                        case 'dropdown':
-                                            return <Dropdown key={element.id} {...element} />
-                    
-                                        default:
-                                            return <button>Invalid Button</button>
-                                    }
-                                }
-                            )
-                        }
-                    </span>    
-                )
-            }
-        </div>
-    )
-
-}
+  };
+  
+  const isMarkActive = (editor, format) => {
+    const marks = Editor.marks(editor);
+    return marks ? marks[format] === true : false;
+  };
