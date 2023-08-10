@@ -35,6 +35,7 @@ class Token {
             throw new Error("Unable to locate token.");
         } else {
             const { token_id, user_id } = response.rows[0];
+            console.log("Token value:", token)
             return new Token({ token_id, user_id, token });
         }
     }
