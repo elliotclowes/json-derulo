@@ -39,7 +39,7 @@ const TitleInput = () => {
         block1: {
           text: [
             {
-              type: "p",
+              type: "h2",
               children: [{ text: title }]
             }
           ],

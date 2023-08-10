@@ -7,11 +7,6 @@ function Summary() {
   return (
     <div>
       <div id="content"></div>
-      {/* <SummaryInput documentId={documentId} />
-      <hr />
-      <BlockInput documentId={documentId} />
-      <hr />
-      <BlocksDisplay documentId={documentId} /> */}
       <CombinedSummaryNotes documentId={documentId} /> 
     </div>
   );
