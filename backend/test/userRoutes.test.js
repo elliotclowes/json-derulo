@@ -14,13 +14,6 @@ test('GET /user should return all users', async () => {
     expect(res.body).toHaveProperty('length');
 });
 
-    // Test getting all users
-    test('GET /user should return all users', async () => {
-        const res = await request(app).get('/user');
-        expect(res.statusCode).toEqual(200);
-        expect(res.body).toHaveProperty('length');
-    });
-
 // Test getting a user by ID
 test('GET /user/:id should return a single user', async () => {
     const res = await request(app).get('/user/1');
@@ -45,10 +38,6 @@ test('PUT /user/:id should update a user', async () => {
     const res = await request(app).put('/user/1').send({
         firstName: 'Updated',
         lastName: 'Name',
-    });
-    expect(res.statusCode).toEqual(202);
-    expect(res.body).toHaveProperty('firstName', 'Updated');
-});
     });
     expect(res.statusCode).toEqual(202);
     expect(res.body).toHaveProperty('firstName', 'Updated');
@@ -88,11 +77,6 @@ test('DELETE /user/:id should delete a user', async () => {
     const res = await request(app).delete('/user/3');
     expect(res.statusCode).toEqual(204);
 });
-// Test deleting a user
-test('DELETE /user/:id should delete a user', async () => {
-    const res = await request(app).delete('/user/3');
-    expect(res.statusCode).toEqual(204);
-});
 
 // Test error handling for deleting a user
 
@@ -107,11 +91,6 @@ test('DELETE /user/:id should handle user not found', async () => {
 });
 
 
-// Test email
-test('GET /email', async () => {
-    const res = await request(app).get('/user/checkEmailToken/?token=d5e7d720-e5be-464b-9254-f6f94099ab6b');
-    expect(res.statusCode).toEqual(302);
-});
 // Test email
 test('GET /email', async () => {
     const res = await request(app).get('/user/checkEmailToken/?token=d5e7d720-e5be-464b-9254-f6f94099ab6b');
