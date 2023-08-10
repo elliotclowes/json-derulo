@@ -2,23 +2,24 @@ import React, { useState } from 'react';
 
 function App() {
   const [youtubeUrl, setYoutubeUrl] = useState('');
-  const [subtitles, setSubtitles] = useState(''); // State to hold subtitles
+  const [subtitles, setSubtitles] = useState('');
 
   const handleProcessVideo = async () => {
     try {
       const response = await fetch('http://localhost:3000/video/fetch_subtitles', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json' // Specify the content type
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ url: youtubeUrl }) // Use "url" property
+        body: JSON.stringify({ url: youtubeUrl })
       });
 
       const data = await response.json();
       console.log(data);
 
       // Update subtitles state with the fetched data
-      setSubtitles(data.subtitles);
+      setSubtitles(data.summary); // Assuming data.summary is the correct property
+
     } catch (error) {
       console.error('Error processing video:', error);
     }
@@ -35,7 +36,7 @@ function App() {
       <button onClick={handleProcessVideo}>Process Video</button>
 
       {/* Display subtitles below the button */}
-      {subtitles && <div>{subtitles.summary}</div>}
+      {subtitles && <div>{subtitles}</div>}
     </div>
   );
 }
