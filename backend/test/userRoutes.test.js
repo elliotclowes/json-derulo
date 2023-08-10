@@ -7,12 +7,14 @@ const User = require("../models/Users")
 const Token = require("../models/Token")
 
 
-// Test getting all users
-test('GET /user should return all users', async () => {
-    const res = await request(app).get('/user');
-    expect(res.statusCode).toEqual(200);
-    expect(res.body).toHaveProperty('length');
-});
+describe("User routes", () => {
+
+    // Test getting all users
+    test('GET /user should return all users', async () => {
+        const res = await request(app).get('/user');
+        expect(res.statusCode).toEqual(200);
+        expect(res.body).toHaveProperty('length');
+    });
 
 // Test getting a user by ID
 test('GET /user/:id should return a single user', async () => {
@@ -308,6 +310,9 @@ test('GET /user/checkEmailToken should redirect to signup page on error', async 
 });
 
 
-afterAll(async () => {
-    await setupTestDb();
-});
+    afterAll(async () => {
+        await setupTestDb();
+    });
+
+
+})
