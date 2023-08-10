@@ -5,6 +5,7 @@ const logger = require("morgan")
 const userRoutes = require("./routers/userRoutes");
 const tokenRoutes = require("./routers/tokenRoutes");
 const audioRoutes = require("./routers/audioRoutes");
+const videoRoutes = require("./routers/videoRoutes");
 
 
 const api = express();
@@ -16,6 +17,7 @@ api.use(logger('dev'))
 api.use("/user", userRoutes);
 api.use("/token", tokenRoutes);
 api.use("/audio", audioRoutes)
+api.use("/video", videoRoutes)
 
 api.get("/", (req, res) => {
   res.json({ message: "API is running" });

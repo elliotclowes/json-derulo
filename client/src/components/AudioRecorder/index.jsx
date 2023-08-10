@@ -42,11 +42,12 @@ const AudioRecorder = () => {
                         uploadAudio(blob); // Upload the audio blob to the server
                       };
 
-                  var timeInterval = document.querySelector('#time-interval').value;
-    if (timeInterval) timeInterval = parseInt(timeInterval);
-    else timeInterval = 5 * 1000;
-
+    var timeInterval = document.querySelector('#time-interval').value;
+    if (timeInterval) timeInterval = parseInt(timeInterval) * 1000; // Convert seconds to milliseconds
+    else timeInterval = 5 * 1000; // Default value if not provided
+    
     newMediaRecorder.start(timeInterval);
+                      
 
     setMediaRecorder(newMediaRecorder);
     setIsRecording(true);
