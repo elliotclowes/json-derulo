@@ -17,7 +17,7 @@ export default function SignupForm() {
   }
   async function handleSubmit(e) {
     e.preventDefault();
-    const res = await fetch("http://localhost:3000/user/register", {
+    const res = await fetch("https://learnt-me.onrender.com/user/register", {
       method: "POST",
       headers: {
         "content-type": "application/json",

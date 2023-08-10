@@ -17,7 +17,7 @@ export default function LoginForm() {
       headers: { "content-type": "application/json" },
       body: JSON.stringify(form),
     };
-    const res = await fetch("http://localhost:3000/user/login", options);
+    const res = await fetch("https://learnt-me.onrender.com/user/login", options);
     if (res.ok) {
       const data = await res.json();
       if (!data.user.isVerified) {
