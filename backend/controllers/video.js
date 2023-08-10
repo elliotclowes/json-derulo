@@ -11,14 +11,14 @@ async function fetchSubtitles(req, res) {
     const response = await axios.post(apiUrl, { url: youtubeUrl });
     const transcriptData = response.data; // Assuming this is the data received from the API
 
-    // Convert transcriptData to a string using JSON.stringify
+   
     const transcript = JSON.stringify(transcriptData);
     
     console.log(transcript, 'fish');
 
-    // Assuming the summarizeTranscript function is defined in './chatGPT'
-    const summary = await summarizeTranscript(transcript); // Summarize the extracted subtitles
-    const summaryRef = db.collection('summaries').doc();
+    
+    const summary = await summarizeTranscript(transcript); 
+    const summaryRef = db.collection('summaries.originalSubtitles').doc();
     await summaryRef.set({ summary: summary }); 
     console.log(summary, 'banana');
     res.status(200).json({ summary });
