@@ -17,7 +17,7 @@ async function processAudio(path, documentId) {
   try {
     const uploadUrl = await uploadFile(path);
     const transcript = await transcribeAudio(API_TOKEN, uploadUrl);
-    const text = 'I want you to create a summary of the contents of the following transcript' + transcript.text;
+    const text = 'I want you to create a summary of the contents of the following transcript:' + transcript.text;
 
     const filename = pathModule.basename(path);
     const destination = `audio/${filename}`; // Set the destination path in the bucket
