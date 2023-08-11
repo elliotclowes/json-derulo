@@ -2,7 +2,7 @@ import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import { Login, ProtectedRoute, Signup, Homepage, Dash, Summary, Recorder, Notes, CreateSummary, YoutubeUpload, TeacherSummary, FinalSummary } from "./pages";
 import { AuthProvider } from "./contexts";
-import { Navigation } from './components';
+import { Navigation, Footer } from './components';
 
 
 function App() {
@@ -32,6 +32,7 @@ function App() {
             }
           />
         </Routes>
+        <Footer />
       </AuthProvider>
     </>
   );
