@@ -10,7 +10,7 @@ function App() {
     try {
       setIsLoading(true); // Set loading to true when starting to fetch subtitles
 
-      const response = await fetch('https://learnt-me.onrender.com/video/fetch_subtitles', {
+      const response = await fetch('http://localhost:3000/video/fetch_subtitles', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

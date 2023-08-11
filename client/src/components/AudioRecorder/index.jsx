@@ -112,7 +112,7 @@ const AudioRecorder = ({ documentId }) => {
     formData.append('audio', blob, `part${indexRef.current}-` + randomFileName);
     formData.append('documentId', documentId); // Append the documentId to the request
 
-    fetch('https://learnt-me.onrender.com/audio/save', {
+    fetch('http://localhost:3000/audio/save', {
       method: 'POST',
       body: formData
     })
