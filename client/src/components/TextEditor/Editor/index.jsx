@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useEffect, useCallback } from 'react';
+import React, { useMemo, useRef, useEffect, useCallback, ReactNode } from 'react';
 import { Slate, Editable, withReact, useSlate, useFocused } from 'slate-react';
 import {
   Editor,
@@ -10,6 +10,8 @@ import {
 
 import { withHistory } from 'slate-history';
 import HoveringToolbar from '../Toolbar'
+import { getCommentThreadsOnTextNode, CommentedText } from '../Commenting';
+import { useRecoilSnapshot, useRecoilValue } from 'recoil';
 
 
 const HoveringMenuEditor = ({document, onChange}) => {
@@ -47,11 +49,26 @@ const HoveringMenuEditor = ({document, onChange}) => {
     if (leaf.underlined) {
       children = <u>{children}</u>;
     }
+
+    const commentThreads = getCommentThreadsOnTextNode(leaf);
+
+    if (commentThreads.size > 0) {
+        return (
+          <CommentedText
+          {...attributes}
+          commentThreads={commentThreads}
+          textNode={leaf}
+          >
+            {children}
+          </CommentedText>
+        );
+      }
   
     return <span {...attributes}>{children}</span>;
   };
 
   return (
+    <>
     <Slate editor={editor} initialValue={document} onChange={onChange}>
       <HoveringToolbar />
       <Editable
@@ -75,6 +92,8 @@ const HoveringMenuEditor = ({document, onChange}) => {
         }}
       />
     </Slate>
+    <DebugObserver/>
+    </>
   );
 };
 
@@ -95,7 +114,17 @@ const isMarkActive = (editor, format) => {
 
 
 
-
-
+function DebugObserver() {
+    const snapshot = useRecoilSnapshot();
+    useEffect(() => {
+      console.debug('The following atoms were modified:');
+      for (const node of snapshot.getNodes_UNSTABLE({ isModified: true })) {
+        console.debug(node.key, snapshot.getLoadable(node));
+      }
+    }, [snapshot]);
+  
+    return null;
+  }
+  
 
 export default HoveringMenuEditor;
