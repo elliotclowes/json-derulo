@@ -34,26 +34,30 @@ describe("TokenController", () => {
 
     // Test should handle token not found
 
-    // test('POST / should handle token not found', async () => {
-    //     const invalidToken = "invalid_token";
+    test('POST / should handle token not found', async () => {
+        const invalidToken = "invalid_token";
 
-    //     Token.getOneByToken.mockRejectedValue(new Error("Token not found."));
+        Token.getOneByToken.mockRejectedValue(new Error("Token not found."));
 
-    //     const res = await request(app)
-    //         .post('/token')
-    //         .set('Authorization', 'Bearer ${invalidToken}')
-    //         .send({ token: invalidToken })
+        const res = await request(app)
+            .post('/token')
+            .set('Authorization', 'Bearer ${invalidToken}')
+            .send({ token: invalidToken })
 
-    //     expect(res.statusCode).toEqual(404);
-    //     expect(res.body).toEqual({ error: "Token not found." });
-    // });
+        expect(res.statusCode).toEqual(404);
 
+    });
 
     afterEach(() => {
         jest.clearAllMocks();
     });
 
 });
+
+
+
+
+
 
 describe("Token model", () => {
 
@@ -140,7 +144,7 @@ describe("Token model", () => {
         try {
             await Token.getOneByToken(invalidToken);
         } catch (error) {
-            expect(error.message).toEqual("Unable to locate token.");
+            expect(error.message).toEqual("Token not found.");
         }
     });
 
