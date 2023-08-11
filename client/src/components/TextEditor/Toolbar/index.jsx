@@ -80,7 +80,7 @@ export default function HoveringToolbar () {
           <FormatButton format="bold" icon="format_bold" />
           <FormatButton format="italic" icon="format_italic" />
           <FormatButton format="underlined" icon="format_underlined" />
-          <FormatButton format="comment" icon="add_comment" onInsertComment={onInsertComment}/>
+          <FormatButton format="comment" icon="format_paint" onInsertComment={onInsertComment}/>
         </Menu>
       </Portal>
     );
