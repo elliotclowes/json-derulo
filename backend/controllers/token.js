@@ -1,5 +1,6 @@
 const Token = require("../models/Token");
 const User = require("../models/Users");
+
 class TokenController {
   static async getAllToken(req, res) {
     try {

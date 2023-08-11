@@ -24,7 +24,7 @@ const trimToTokenLimit = (text, limit) => {
 
   return text;
 };
-
+ 
 
 const summarizeTranscript = async (transcript) => {
   try {
