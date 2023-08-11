@@ -10,10 +10,17 @@ export default function SignupForm() {
     lastName: "",
     email: "",
     username: "",
+    teacher:false,
     password: "",
   });
+  const [isTeacher, setIsTeacher] = useState(false);
+
   function handleChange(e) {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    
+    const { name, value, type, checked } = e.target;
+    const newValue = type === 'checkbox' ? checked : value;
+    setForm({ ...form, [name]: newValue });
+    setIsTeacher(!isTeacher);
   }
   async function handleSubmit(e) {
     e.preventDefault();
@@ -23,7 +30,7 @@ export default function SignupForm() {
         "content-type": "application/json",
       },
       body: JSON.stringify(form),
-    });
+    }); 
     if (res.ok) {
       const user = await res.json();
       console.log(user);
@@ -32,7 +39,7 @@ export default function SignupForm() {
       );
     } else {
       alert("Something went wrong.");
-    }
+    } 
   }
   return (
     <>
@@ -91,6 +98,16 @@ export default function SignupForm() {
             onChange={(e) => handleChange(e)}
           />
         </FloatingLabel>
+        <br />
+        <label>
+          
+          <input
+            type="checkbox"
+            checked={form.teacher}
+            onChange={handleChange}
+            name="teacher"
+          /> Are you a teacher?
+        </label>
         <div className="input-field">
           <input type="submit" className="submit" value="Register" />
         </div>
