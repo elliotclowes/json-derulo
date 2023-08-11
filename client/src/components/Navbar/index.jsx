@@ -113,6 +113,7 @@ function NavBar() {
       </div>
     </header>
     </div>
+    
   );
 }
 
