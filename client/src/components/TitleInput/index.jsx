@@ -66,7 +66,8 @@ const TitleInput = () => {
         }
       },
       type: "user",
-      userID: userID
+      userID: userID,
+      visibility: visibility
       }
     console.log("🚀 ~ file: index.jsx:69 ~ handleSubmit ~ data:", data)
   
