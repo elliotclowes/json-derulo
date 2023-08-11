@@ -16,6 +16,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/summary" element={<CreateSummary />}/>
+          {/* <Route path="/teacher" element={<TeacherSummary />}/>
+          <Route path="/teacher:id" element={< Summary />}/> */}
           <Route path="/summary/:documentId" element={<Summary />} />
           <Route path="/recorder" element={<Recorder />} />
           <Route path="/video" element={<YoutubeUpload />} />
