@@ -30,49 +30,17 @@ const TitleInput = () => {
     }
   };
 
-  const getUserID = async () => {
-    const token = localStorage.getItem('token');
-    if (!token) return null;
-  
-    const response = await fetch(`http://localhost:3000/token/get/${token}`);
-    const data = await response.json();
-  
-    return data.user_id.toString();
-  };
-  
-
   const handleSubmit = async (event) => {
     event.preventDefault();
   
-    const userID = await getUserID();
-    console.log("🚀 ~ file: index.jsx:48 ~ handleSubmit ~ userID:", userID)
-    if (userID === null) {
-      console.error('User not logged in');
-      return;
-    }
-  
     const data = {
-      blockOrder: ["block1"],
-      blocks: {
-        block1: {
-          text: [
-            {
-              type: "h2",
-              children: [{ text: title }]
-            }
-          ],
-          audioURL: "",
-          comments: [{}]
-        }
-      },
-      type: "user",
-      userID: userID,
-      visibility: visibility
-      }
-    console.log("🚀 ~ file: index.jsx:69 ~ handleSubmit ~ data:", data)
+      title: title,
+      visibility: visibility,
+      tags: selectedTags,
+    };
   
     try {
-      const docRef = await addDoc(collection(db, 'summaries'), data); 
+      const docRef = await addDoc(collection(db, 'Sand-box'), data); 
       console.log('Document written with ID:', docRef.id);
       
       navigate(`/summary/${docRef.id}`); 

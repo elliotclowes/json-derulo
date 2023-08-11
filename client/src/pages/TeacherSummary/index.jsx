@@ -1,13 +1,13 @@
-// import React from 'react';
-// import  from '../../components/TitleInput';
+import React from 'react';
+import TeacherInput from '../../components/TeacherInput';
 
-// const TeacherSummary = () => {
-//   return (
-//     <div>
-//     <h1>Title Input Form</h1>
-//     <TeacherI />
-//   </div>
-// );
-// };
+const TeacherSummary = () => {
+  return (
+    <div>
+    <h1>Teacher Input Form</h1>
+    <TeacherInput />
+  </div>
+);
+};
 
-// export default TeacherSummary;
+export default TeacherSummary;

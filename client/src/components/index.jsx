@@ -11,3 +11,5 @@ export { default as BlocksDisplay} from './BlocksDisplay';
 export { default as TitleInput} from './TitleInput';
 export { default as YoutubeUpload} from './YoutubeUpload';
 export { default as CombinedSummaryNotes} from './CombinedSummaryNotes';
+export { default as TeacherInput} from './TeacherInput';
+export { default as TeacherComponents} from './TeacherComponents';
