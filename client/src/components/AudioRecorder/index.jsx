@@ -148,7 +148,7 @@ const AudioRecorder = ({ documentId }) => {
   };
 
   return (
-    <div>
+    <div className="container mx-auto px-4">
       <Controls handlers={handlers} isRecording={isRecording} isPaused={isPaused} />
       <AudioContainer />
     </div>

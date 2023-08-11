@@ -5,7 +5,7 @@ function Summary() {
   const { documentId } = useParams();
 
   return (
-    <div>
+    <div className="container mx-auto px-4">
       <div id="content"></div>
       <AudioRecorder documentId={documentId} />
       <CombinedSummaryNotes documentId={documentId} /> 
