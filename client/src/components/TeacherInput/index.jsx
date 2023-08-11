@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import './TeacherInput.css';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
 import { app } from '../../../firebase-config';
 import { useNavigate } from 'react-router-dom';

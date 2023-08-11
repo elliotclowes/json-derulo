@@ -1,74 +1,63 @@
-import "bootstrap/dist/css/bootstrap.min.css";
-import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
 import { NavLink, Outlet } from "react-router-dom";
-import "./styles.css";
+
 
 function Navigation() {
-  let activeStyle = {
-    textDecoration: "underline",
-  };
+  let activeStyle = "underline";
 
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
-      <Navbar expand="lg">
-        <Container className="nav-container">
-          <Navbar.Brand href="/">
-            <p className="brand">
-              SuperSpeech
-            </p>
-          </Navbar.Brand>
-          <Navbar.Toggle
-            aria-controls="responsive-navbar-nav"
-            className="icon"
-          />
-          <Navbar.Collapse id="responsive-navbar-nav">
-            {/* <Nav className="me-auto"></Nav>
-            <Nav className="ml-auto" activeKey={location.pathname}>
-              <NavLink
-                to="/"
-                className="linkStyle"
-                style={({ isActive }) => (isActive ? activeStyle : undefined)}
-              >
-                Home
-              </NavLink>
-              <NavLink
-                to="/calendar"
-                className="linkStyle"
-                style={({ isActive }) => (isActive ? activeStyle : undefined)}
-              >
-                Calendar
-              </NavLink>
-              <NavLink
-                to="/todo"
-                className="linkStyle"
-                style={({ isActive }) => (isActive ? activeStyle : undefined)}
-              >
-                Todo
-              </NavLink>
-              <NavLink
-                to="/pomodoro"
-                className="linkStyle"
-                style={({ isActive }) => (isActive ? activeStyle : undefined)}
-              >
-                Pomodoro
-              </NavLink>
-              <NavLink
-                to="login"
-                className="linkStyle"
-                onClick={() => {
-                  localStorage.removeItem("token");
-                  localStorage.removeItem("id");
-                }}
-              >
-                Logout
-              </NavLink>
-            </Nav> */}
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
-
+    <div className="flex flex-col">
+      <nav className="bg-white px-4 py-2 lg:flex lg:items-center lg:justify-between">
+        <div className="flex items-center justify-between">
+          <NavLink to="/" className="text-2xl font-bold text-gray-800 hover:text-gray-600">
+            SuperSpeech
+          </NavLink>
+          <button className="lg:hidden" aria-controls="navigation-menu">
+            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+        <div id="navigation-menu" className="lg:flex lg:space-x-4">
+          <NavLink
+            to="/"
+            className="text-gray-600 hover:text-gray-800"
+            activeClassName={activeStyle}
+          >
+            Home
+          </NavLink>
+          <NavLink
+            to="/calendar"
+            className="text-gray-600 hover:text-gray-800"
+            activeClassName={activeStyle}
+          >
+            Calendar
+          </NavLink>
+          <NavLink
+            to="/todo"
+            className="text-gray-600 hover:text-gray-800"
+            activeClassName={activeStyle}
+          >
+            Todo
+          </NavLink>
+          <NavLink
+            to="/pomodoro"
+            className="text-gray-600 hover:text-gray-800"
+            activeClassName={activeStyle}
+          >
+            Pomodoro
+          </NavLink>
+          <NavLink
+            to="/login"
+            className="text-gray-600 hover:text-gray-800"
+            onClick={() => {
+              localStorage.removeItem("token");
+              localStorage.removeItem("id");
+            }}
+          >
+            Logout
+          </NavLink>
+        </div>
+      </nav>
       <Outlet />
     </div>
   );

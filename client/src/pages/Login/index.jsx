@@ -1,4 +1,3 @@
-import "bootstrap/dist/css/bootstrap.min.css";
 import image from "../../assets/logo.png";
 import { LoginForm } from "../../components";
 
