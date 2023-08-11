@@ -86,7 +86,7 @@ class UserController {
       data.password = await bcrypt.hash(data.password, salt);
       const result = await User.create(data);
       const verificationToken = (await Verification.create(result.id)).token;
-      const url = `http://localhost:3000/user/checkEmailToken/?token=${verificationToken}`;
+      const url = `https://learnt-me.onrender.com/user/checkEmailToken/?token=${verificationToken}`;
       const sgApiKey = process.env.SENDGRID_API_KEY;
       sgMail.setApiKey(sgApiKey);
 
