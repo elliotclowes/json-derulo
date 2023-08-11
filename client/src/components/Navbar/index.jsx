@@ -5,6 +5,7 @@ function Navigation() {
   let activeStyle = "underline";
 
   return (
+    <div className="max-w-1200 mx-auto">
     <div className="flex flex-col">
       <nav className="bg-white px-4 py-2 lg:flex lg:items-center lg:justify-between">
         <div className="flex items-center justify-between">
@@ -59,6 +60,7 @@ function Navigation() {
         </div>
       </nav>
       <Outlet />
+    </div>
     </div>
   );
 }

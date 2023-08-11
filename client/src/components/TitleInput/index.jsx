@@ -32,24 +32,24 @@ const TitleInput = () => {
   const getUserID = async () => {
     const token = localStorage.getItem('token');
     if (!token) return null;
-  
+
     const response = await fetch(`http://localhost:3000/token/get/${token}`);
     const data = await response.json();
-  
+
     return data.user_id.toString();
   };
-  
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
+
     const userID = await getUserID();
     console.log("🚀 ~ file: index.jsx:48 ~ handleSubmit ~ userID:", userID)
     if (userID === null) {
       console.error('User not logged in');
       return;
     }
-  
+
     const data = {
       blockOrder: ["block1"],
       blocks: {
@@ -67,60 +67,65 @@ const TitleInput = () => {
       type: "user",
       userID: userID,
       visibility: visibility
-      }
+    }
     console.log("🚀 ~ file: index.jsx:69 ~ handleSubmit ~ data:", data)
-  
+
     try {
-      const docRef = await addDoc(collection(db, 'summaries'), data); 
+      const docRef = await addDoc(collection(db, 'summaries'), data);
       console.log('Document written with ID:', docRef.id);
-      
-      navigate(`/summary/${docRef.id}`); 
+
+      navigate(`/summary/${docRef.id}`);
     } catch (error) {
       console.error('Error adding document:', error);
     }
   };
 
   return (
-    <div>
-      <form className="title-form" onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="title">Title:</label>
+      <div className="max-w-500 mx-auto">
+        <form className="title-form p-4 rounded-lg shadow-md bg-white" onSubmit={handleSubmit}>
+        <div className="mb-4">
+          <label htmlFor="title" className="block text-sm font-medium text-gray-700">Title:</label>
           <input
             type="text"
             id="title"
             value={title}
             onChange={handleTitleChange}
+            className="mt-1 p-2 block w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300"
             placeholder="Enter title"
           />
         </div>
-        <div>
-          <label>Visibility:</label>
-          <label>
-            <input
-              type="radio"
-              value="public"
-              checked={visibility === 'public'}
-              onChange={handleVisibilityChange}
-            />
-            Public
-          </label>
-          <label>
-            <input
-              type="radio"
-              value="private"
-              checked={visibility === 'private'}
-              onChange={handleVisibilityChange}
-            />
-            Private
-          </label>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">Visibility:</label>
+          <div className="flex gap-2">
+            <label className="inline-flex items-center">
+              <input
+                type="radio"
+                value="public"
+                checked={visibility === 'public'}
+                onChange={handleVisibilityChange}
+                className="form-radio h-4 w-4 text-blue-600"
+              />
+              <span className="ml-2 text-sm text-gray-700">Public</span>
+            </label>
+            <label className="inline-flex items-center">
+              <input
+                type="radio"
+                value="private"
+                checked={visibility === 'private'}
+                onChange={handleVisibilityChange}
+                className="form-radio h-4 w-4 text-blue-600"
+              />
+              <span className="ml-2 text-sm text-gray-700">Private</span>
+            </label>
+          </div>
         </div>
-        <div className="tag-container">
-          <label>Select Tags:</label>
-          <div className="tag-list">
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">Select Tags:</label>
+          <div className="flex gap-2">
             {predefinedTags.map((tag) => (
               <span
                 key={tag}
-                className={`tag ${selectedTags.includes(tag) ? 'selected' : ''}`}
+                className={`px-3 py-1 text-sm rounded-lg cursor-pointer ${selectedTags.includes(tag) ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}
                 onClick={() => handleTagClick(tag)}
               >
                 {tag}
@@ -128,7 +133,12 @@ const TitleInput = () => {
             ))}
           </div>
         </div>
-        <button type="submit">Create Summary</button>
+        <button
+          type="submit"
+          className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus-visible:ring focus-visible:ring-blue-200 focus-visible:ring-opacity-50 transition-colors"
+        >
+          Create Summary
+        </button>
       </form>
     </div>
   );

@@ -2,11 +2,17 @@ import React from 'react';
 
 const TestPage = () => (
   <>
-  
+  <div className="max-w-1200 mx-auto">
+  <div className="flex flex-col w-full lg:flex-row">
+  <div className="grid flex-grow h-32 card bg-base-300 rounded-box place-items-center">content</div> 
+  <div className="divider lg:divider-horizontal">OR</div> 
+  <div className="grid flex-grow h-32 card bg-base-300 rounded-box place-items-center">content</div>
+</div>
   <button className="btn">
   <span className="loading loading-spinner"></span>
   loading
 </button>
+
   <div className="avatar-group -space-x-6">
   <div className="avatar">
     <div className="w-12">
@@ -83,7 +89,7 @@ const TestPage = () => (
       <div className="bg-gray-400 p-4 rounded">Column 3</div>
     </div>
   </div>
-
+  </div>
   </>
 );
 
