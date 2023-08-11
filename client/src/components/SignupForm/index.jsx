@@ -10,6 +10,7 @@ export default function SignupForm() {
     lastName: "",
     email: "",
     username: "",
+    teacher:"",
     password: "",
   });
   function handleChange(e) {
@@ -91,6 +92,13 @@ export default function SignupForm() {
             onChange={(e) => handleChange(e)}
           />
         </FloatingLabel>
+        <br />
+        <input
+         type="checkbox"
+         name="teacher"
+         onChange={(e) => handleChange(e)}
+        />
+        <label>Are you a teacher?</label>
         <div className="input-field">
           <input type="submit" className="submit" value="Register" />
         </div>

@@ -31,9 +31,7 @@ class TokenController {
       }
     }
   
-  // Create token route is called via the login route in User contolller
-  // Delete token route is called via the logout route in User contolller
-  // Update token route is not required
+
 }
 
 module.exports = TokenController;
