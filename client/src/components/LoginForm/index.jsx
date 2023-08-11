@@ -1,5 +1,3 @@
-
-
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "../../contexts";
@@ -41,35 +39,40 @@ export default function LoginForm() {
   }
 
   return (
-    <>
-      <form onSubmit={handleSubmit}>
-        <FloatingLabel
-          controlId="floatingInput"
-          label="Username"
-          className="mb-3"
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="form-floating">
+        <input
+          onChange={(e) => setForm({ ...form, username: e.target.value })}
+          type="text"
+          className="form-control"
+          placeholder="Username"
+          required
+        />
+        <label>Username</label>
+      </div>
+      <div className="form-floating">
+        <input
+          onChange={(e) => setForm({ ...form, password: e.target.value })}
+          type="password"
+          className="form-control"
+          placeholder="Password"
+          required
+        />
+        <label>Password</label>
+      </div>
+      <div>
+        <button
+          type="submit"
+          className="btn btn-primary w-full"
         >
-          <Form.Control
-            onChange={(e) => setForm({ ...form, username: e.target.value })}
-            type="text"
-            placeholder="username"
-          />
-        </FloatingLabel>
-        <FloatingLabel controlId="floatingPassword" label="Password">
-          <Form.Control
-            onChange={(e) => setForm({ ...form, password: e.target.value })}
-            type="password"
-            placeholder="Password"
-          />
-        </FloatingLabel>
-        <div className="input-field">
-          <input type="submit" className="submit" value="Login" />
-        </div>
-        <div className="signup">
-          <span>
-            Don't have an account? <Link to="/signup">Register here</Link>
-          </span>
-        </div>
-      </form>
-    </>
+          Login
+        </button>
+      </div>
+      <div className="text-center">
+        <span>
+          Don't have an account? <Link to="/signup" className="text-blue-500">Register here</Link>
+        </span>
+      </div>
+    </form>
   );
 }
