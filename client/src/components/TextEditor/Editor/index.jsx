@@ -1,11 +1,19 @@
-import { Editable, Slate, withReact } from "slate-react";
-import Toolbar from "../Toolbar";
-import { createEditor } from "slate";
-import { useMemo, useState, useCallback } from "react";
-import {withHistory} from "slate-history"
+import React, { useMemo, useRef, useEffect, useCallback } from 'react';
+import { Slate, Editable, withReact, useSlate, useFocused } from 'slate-react';
+import {
+  Editor,
+  Transforms,
+  Text,
+  createEditor,
+  Range,
+} from 'slate';
 
-export default function Editor({ document, onChange }) {
-  const [editor] = useState(() => withReact(withHistory(createEditor()), []));
+import { withHistory } from 'slate-history';
+import HoveringToolbar from '../Toolbar'
+
+
+const HoveringMenuEditor = ({document, onChange}) => {
+  const editor = useMemo(() => withHistory(withReact(createEditor())), []);
 
 
   const renderElement = useCallback(props => {
@@ -23,60 +31,71 @@ export default function Editor({ document, onChange }) {
       return <h4 {...attributes}>{children}</h4>;
     default:
       // For the default case, we delegate to Slate's default rendering. 
-      return <DefaultElement {...props} />;
+      return <p {...props.attributes}>{props.children}</p>;
     }
   }, [])
 
-  function renderLeaf({ attributes, children, leaf }) {
-    let el = <>{children}</>;
-  
+  const Leaf = ({ attributes, children, leaf }) => {
     if (leaf.bold) {
-      el = <strong>{el}</strong>;
-    }
-  
-    if (leaf.code) {
-      el = <code>{el}</code>;
+      children = <strong>{children}</strong>;
     }
   
     if (leaf.italic) {
-      el = <em>{el}</em>;
+      children = <em>{children}</em>;
     }
   
-    if (leaf.underline) {
-      el = <u>{el}</u>;
+    if (leaf.underlined) {
+      children = <u>{children}</u>;
     }
   
-    return <span {...attributes}>{el}</span>;
-  }
+    return <span {...attributes}>{children}</span>;
+  };
 
   return (
-    <Slate editor={editor} initialValue={document} onChange={onChange} >
-        <Toolbar/>
-        <Editable 
+    <Slate editor={editor} initialValue={document} onChange={onChange}>
+      <HoveringToolbar />
+      <Editable
         renderElement={renderElement}
-        renderLeaf={renderLeaf}
-        onKeyDown={event => {        //was done to experiment with slate, can implement a doubleClick to start editing
-          if (event.key === '&') {
-            // Prevent the ampersand character from being inserted.
-            event.preventDefault()
-            // Execute the `insertText` method when the event occurs.
-            editor.insertText('and')
+        renderLeaf={props => <Leaf {...props} />}
+        placeholder="Enter some text..."
+        onDOMBeforeInput={(event) => {
+          switch (event.inputType) {
+            case 'formatBold':
+              event.preventDefault();
+              return toggleMark(editor, 'bold');
+            case 'formatItalic':
+              event.preventDefault();
+              return toggleMark(editor, 'italic');
+            case 'formatUnderline':
+              event.preventDefault();
+              return toggleMark(editor, 'underlined');
+            default:
+              return;
           }
         }}
-        />
-        
+      />
     </Slate>
   );
-}
+};
 
-const CodeElement = props => {
-    return (
-      <pre {...props.attributes}>
-        <code>{props.children}</code>
-      </pre>
-    )
+const toggleMark = (editor, format) => {
+  const isActive = isMarkActive(editor, format);
+
+  if (isActive) {
+    Editor.removeMark(editor, format);
+  } else {
+    Editor.addMark(editor, format, true);
   }
-  
-  const DefaultElement = props => {
-    return <p {...props.attributes}>{props.children}</p>
-  }
+};
+
+const isMarkActive = (editor, format) => {
+  const marks = Editor.marks(editor);
+  return marks ? marks[format] === true : false;
+};
+
+
+
+
+
+
+export default HoveringMenuEditor;
