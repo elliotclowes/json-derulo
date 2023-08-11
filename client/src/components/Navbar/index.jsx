@@ -1,8 +1,24 @@
-import React, { useState } from 'react';
-
+import React, { useState, useEffect, useRef } from 'react';
 
 function NavBar() {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null); // Reference to the dropdown menu and avatar
+
+  const handleOutsideClick = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setDropdownOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    // Add the event listener when the component mounts
+    document.addEventListener('mousedown', handleOutsideClick);
+
+    // Remove the event listener when the component unmounts
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+    };
+  }, []);
 
   return (
     <div className="min-h-full">
@@ -34,7 +50,7 @@ function NavBar() {
                 </svg>
               </button>
               {/* Profile dropdown */}
-              <div className="relative ml-3">
+              <div className="relative ml-3" ref={dropdownRef}>
                 <div>
                   <button type="button" onClick={() => setDropdownOpen(!isDropdownOpen)} className="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                     <span className="absolute -inset-1.5"></span>
