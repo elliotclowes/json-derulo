@@ -1,9 +1,22 @@
 const request = require('supertest');
 const { summarizeTranscript } = require('../controllers/chatGPT')
 const app = require("../api")
+require("dotenv").config()
+const { Configuration, OpenAIApi } = require("openai");
+const encoder = require('gpt-3-encoder');
 
 
 describe("ChatGPT Functions", () => {
+
+    jest.mock('openai', () => {
+        return {
+            Configuration: jest.fn(),
+            OpenAIApi: jest.fn(() => ({
+                createChatCompletion: jest.fn()
+            }))
+        };
+    });
+    const openai = new OpenAIApi();
 
     // Test that summarizeTranscript returns text
     test('summarizeTranscript should return summary', async () => {
@@ -13,10 +26,12 @@ describe("ChatGPT Functions", () => {
     })
 
     // Make sure long transcripts are shortened before being sent to ChatGPT
-    test('make sure long transcripts are shortened before being sent to ChatGPTy', async () => {
+    test('make sure long transcripts are shortened before being sent to ChatGPT', async () => {
         const transcript = "A".repeat(15000)
         const summaryResponse = await summarizeTranscript(transcript)
         expect(summaryResponse).toBeTruthy()
     })
 
-})
+
+
+});

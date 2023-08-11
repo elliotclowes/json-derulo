@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Controls from '../Controls';
 import AudioContainer from '../AudioContainer';
 
-const AudioRecorder = () => {
+const AudioRecorder = ({ documentId }) => {
   const [mediaRecorder, setMediaRecorder] = useState(null);
 
   const [audiosContainer, setAudiosContainer] = useState(null);
@@ -15,44 +15,69 @@ const AudioRecorder = () => {
 
   const indexRef = useRef(1); // Use a ref to store the index
 
-  const onMediaSuccess = (stream) => {
-                    var audio = document.createElement('audio');
-                    audio.controls = true;
-                    audio.muted = true;
-                    audio.srcObject = stream;
-                    audio.play();
+  // OLD VERSION WHICH SHOWS PLAYER AND FILES
+  // const onMediaSuccess = (stream) => {
+  //                   var audio = document.createElement('audio');
+  //                   audio.controls = true;
+  //                   audio.muted = true;
+  //                   audio.srcObject = stream;
+  //                   audio.play();
 
-                    audiosContainer.appendChild(audio);
-                    audiosContainer.appendChild(document.createElement('hr'));
+  //                   audiosContainer.appendChild(audio);
+  //                   audiosContainer.appendChild(document.createElement('hr'));
 
-                    const newMediaRecorder = new MediaStreamRecorder(stream);
-                    newMediaRecorder.stream = stream;
-                    newMediaRecorder.recorderType = MediaRecorderWrapper;
-                    newMediaRecorder.audioChannels = !!document.getElementById('left-channel').checked ? 1 : 2;
+  //                   const newMediaRecorder = new MediaStreamRecorder(stream);
+  //                   newMediaRecorder.stream = stream;
+  //                   newMediaRecorder.recorderType = MediaRecorderWrapper;
+  //                   newMediaRecorder.audioChannels = !!document.getElementById('left-channel').checked ? 1 : 2;
 
-                    newMediaRecorder.ondataavailable = function (blob) {
-                        var a = document.createElement('a');
-                        a.target = '_blank';
-                        a.innerHTML = 'Audio file ' + indexRef.current + ' (Size: ' + bytesToSize(blob.size) + ')';
-                        a.href = URL.createObjectURL(blob);
-                        audiosContainer.appendChild(a);
-                        audiosContainer.appendChild(document.createElement('hr'));
-                        indexRef.current += 1; // Increment the index using the ref
+  //                   newMediaRecorder.ondataavailable = function (blob) {
+  //                       var a = document.createElement('a');
+  //                       a.target = '_blank';
+  //                       a.innerHTML = 'Audio file ' + indexRef.current + ' (Size: ' + bytesToSize(blob.size) + ')';
+  //                       a.href = URL.createObjectURL(blob);
+  //                       audiosContainer.appendChild(a);
+  //                       audiosContainer.appendChild(document.createElement('hr'));
+  //                       indexRef.current += 1; // Increment the index using the ref
                       
-                        uploadAudio(blob); // Upload the audio blob to the server
-                      };
+  //                       uploadAudio(blob); // Upload the audio blob to the server
+  //                     };
 
+  //   var timeInterval = document.querySelector('#time-interval').value;
+  //   if (timeInterval) timeInterval = parseInt(timeInterval) * 1000; // Convert seconds to milliseconds
+  //   else timeInterval = 5 * 1000; // Default value if not provided
+    
+  //   newMediaRecorder.start(timeInterval);
+                      
+
+  //   setMediaRecorder(newMediaRecorder);
+  //   setIsRecording(true);
+  //   setIsPaused(false);
+  // };
+
+
+  const onMediaSuccess = (stream) => {
+    const newMediaRecorder = new MediaStreamRecorder(stream);
+    newMediaRecorder.stream = stream;
+    newMediaRecorder.recorderType = MediaRecorderWrapper;
+    newMediaRecorder.audioChannels = !!document.getElementById('left-channel').checked ? 1 : 2;
+  
+    newMediaRecorder.ondataavailable = function (blob) {
+      indexRef.current += 1; // Increment the index using the ref
+      uploadAudio(blob); // Upload the audio blob to the server
+    };
+  
     var timeInterval = document.querySelector('#time-interval').value;
     if (timeInterval) timeInterval = parseInt(timeInterval) * 1000; // Convert seconds to milliseconds
     else timeInterval = 5 * 1000; // Default value if not provided
-    
+  
     newMediaRecorder.start(timeInterval);
-                      
-
+  
     setMediaRecorder(newMediaRecorder);
     setIsRecording(true);
     setIsPaused(false);
   };
+  
 
   const onMediaError = (e) => {
     console.error('media error', e);
@@ -84,8 +109,9 @@ const AudioRecorder = () => {
   const uploadAudio = (blob) => {
     const randomFileName = generateRandomString(20) + '.wav';
     const formData = new FormData();
-    formData.append('audio', blob, `part${indexRef.current}-` + randomFileName); // Appending the blob with a random filename
-  
+    formData.append('audio', blob, `part${indexRef.current}-` + randomFileName);
+    formData.append('documentId', documentId); // Append the documentId to the request
+
     fetch('http://localhost:3000/audio/save', {
       method: 'POST',
       body: formData

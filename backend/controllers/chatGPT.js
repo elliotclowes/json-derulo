@@ -24,7 +24,7 @@ const trimToTokenLimit = (text, limit) => {
 
   return text;
 };
-
+ 
 
 const summarizeTranscript = async (transcript) => {
   try {
@@ -33,7 +33,7 @@ const summarizeTranscript = async (transcript) => {
     // Trim the transcript to the token limit
     transcript = trimToTokenLimit(transcript, TOKEN_LIMIT);
 
-    const prompt = `I want you to create a summary of the contents of the following transcript. If any formatting is need make sure you use HTML. Don't make any mention of the transcript. Just give your summary. Include a title for the summary. Seperate the text in paragrpahs if necessary. This is the transcript: ${transcript}`;
+    const prompt = `I want you to create a summary of the contents of the following transcript. Don't make any mention of the transcript. Just give your summary. This is the transcript: ${transcript}`;
     
     const chatCompletion = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
