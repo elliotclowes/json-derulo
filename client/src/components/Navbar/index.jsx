@@ -29,7 +29,7 @@ function NavBar() {
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <a href="/"><img className="h-8 w-8" src="https://raw.githubusercontent.com/elliotclowes/json-derulo/c7ceb468851addc4b2628f7d52107b62b85924f3/client/src/assets/logo.svg" alt="Audify.me" /></a>
+              <a href="/"><img className="h-8 w-8" src="https://firebasestorage.googleapis.com/v0/b/learnt-me-test.appspot.com/o/manual%2Flogo.svg?alt=media&token=1b976e10-5cf3-42e0-827a-136ced55ba58" alt="Audify.me" /></a>
             </div>
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-4">
