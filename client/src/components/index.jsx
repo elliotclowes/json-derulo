@@ -18,4 +18,4 @@ export { default as Footer} from './Footer';
 export { default as UserSummariesList} from './UserSummariesList';
 export { default as DeleteSummaryConfirmationDialog} from './DeleteSummaryConfirmationDialog';
 export { default as UserSummariesTagList} from './UserSummariesTagList';
-
+export { default as SearchResultList} from './SearchResultList';

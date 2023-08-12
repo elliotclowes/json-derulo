@@ -1,6 +1,6 @@
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
-import { Login, ProtectedRoute, Signup, Homepage, Dash, Summary, Recorder, Notes, CreateSummary, YoutubeUpload, TeacherSummary, FinalSummary, UserSummaries, UserTagSummaries } from "./pages";
+import { Login, ProtectedRoute, Signup, Homepage, Dash, Summary, Recorder, Notes, CreateSummary, YoutubeUpload, TeacherSummary, FinalSummary, UserSummaries, UserTagSummaries, SearchResults } from "./pages";
 import { AuthProvider } from "./contexts";
 import { Navigation, Footer } from './components';
 
@@ -24,6 +24,7 @@ function App() {
           <Route path="/recorder" element={<Recorder />} />
           <Route path="/video" element={<YoutubeUpload />} />
           <Route path="/notes" element={<Notes/>} />
+          <Route path="/search/:searchText" element={<SearchResults />} />
           {/* Use ProtectedRoute for /dash and its nested routes */}
           <Route
             path="/dash"
