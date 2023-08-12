@@ -19,9 +19,12 @@ export default function UserSummariesList() {
   const [summaries, setSummaries] = useState([]);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [deleteSummaryId, setDeleteSummaryId] = useState(null); // To hold the ID of the summary being deleted
+  const [deleteSummaryTitle, setDeleteSummaryTitle] = useState(null); // To hold the title of the summary being deleted
 
-  const handleShowDeleteDialog = (summaryId) => {
+
+  const handleShowDeleteDialog = (summaryId, summaryTitle) => {
     setDeleteSummaryId(summaryId);
+    setDeleteSummaryTitle(summaryTitle); // pass title as a prop to the dialog
     setShowDeleteDialog(true);
   };
 
@@ -96,6 +99,7 @@ export default function UserSummariesList() {
         open={showDeleteDialog}
         onClose={() => setShowDeleteDialog(false)}
         onDelete={handleDeleteSummary}
+        summaryTitle={deleteSummaryTitle}
       />
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
@@ -146,9 +150,9 @@ export default function UserSummariesList() {
                         </a>
                       </td>
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                        <a href="#" onClick={(e) => { e.preventDefault(); handleShowDeleteDialog(summary.id); }} className="text-red-600 hover:text-red-900">
-                          Delete<span className="sr-only">, {summary.title}</span>
-                        </a>
+                      <a href="#" onClick={(e) => { e.preventDefault(); handleShowDeleteDialog(summary.id, summary.title); }} className="text-red-600 hover:text-red-900">
+                      Delete<span className="sr-only">, {summary.title}</span>
+                    </a>
                       </td>
                     </tr>
                   ))}
