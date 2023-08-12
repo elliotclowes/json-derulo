@@ -1,19 +1,50 @@
 import { useNavigate } from 'react-router-dom';
+import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+import { app } from '../../../firebase-config';
+import { useState, useEffect } from 'react';
 
-const people = [
-  { title: 'Summary', created: '2023-08-12', tags: ['Tag1', 'Tag2'], visibility: 'Private' },
- 
-];
+const getUserID = async () => {
+  const token = localStorage.getItem('token');
+  if (!token) return null;
+
+  const response = await fetch(`http://localhost:3000/token/get/${token}`);
+  const data = await response.json();
+
+  return data.user_id.toString();
+};
 
 export default function UserSummariesList() {
   const navigate = useNavigate();
+  const [summaries, setSummaries] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const userID = await getUserID();
+      console.log("🚀 ~ file: index.jsx:48 ~ handleSubmit ~ userID:", userID);
+      if (userID === null) {
+        console.error('User not logged in');
+        return;
+      }
+    
+      const db = getFirestore(app);
+      const summariesCollection = collection(db, 'summaries');
+      const q = query(summariesCollection, where('userID', '==', userID));
+      const querySnapshot = await getDocs(q);
+    
+      const summariesArray = [];
+      querySnapshot.forEach((doc) => {
+        summariesArray.push({ id: doc.id, ...doc.data() }); // This line replaces your existing code
+      });
+      setSummaries(summariesArray);
+      console.log("🚀 ~ file: index.jsx:39 ~ fetchData ~ summariesArray:", summariesArray)
+    };
+
+    fetchData();
+  }, []);
 
   const handleCreateNewSummary = () => {
     navigate('/summary');
   };
-
-
-
 
   return (
     <div className="px-4 sm:px-6 lg:px-8">
@@ -59,23 +90,23 @@ export default function UserSummariesList() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
-                  {people.map((person) => (
-                    <tr key={person.title}>
+                      {summaries.map((summary) => (
+                      <tr key={summary.id}>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                        {person.title}
+                        {summary.title}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {person.tags.map((tag, index) => (
+                          {summary.tags && summary.tags.map((tag, index) => (
                           <span key={index} className="inline-block px-2 py-1 text-xs font-semibold bg-gray-200 text-gray-800 rounded-full mr-1">
                             {tag}
                           </span>
                         ))}
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{person.visibility}</td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{person.created}</td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{summary.visibility}</td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{new Date(summary.created).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</td>
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                         <a href="#" className="text-indigo-600 hover:text-indigo-900">
-                          Edit<span className="sr-only">, {person.title}</span>
+                          Edit<span className="sr-only">, {summary.title}</span>
                         </a>
                       </td>
                     </tr>

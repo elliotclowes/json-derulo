@@ -40,11 +40,15 @@ const TitleInput = () => {
   };
 
 
+  // Get the current date and time
+  const currentDate = new Date();
+  const formattedDate = currentDate.toISOString();
+
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     const userID = await getUserID();
-    console.log("🚀 ~ file: index.jsx:48 ~ handleSubmit ~ userID:", userID)
     if (userID === null) {
       console.error('User not logged in');
       return;
@@ -64,11 +68,13 @@ const TitleInput = () => {
           comments: [{}]
         }
       },
+      created: formattedDate,
+      tags: selectedTags,
+      title: title,
       type: "user",
       userID: userID,
-      visibility: visibility
-    }
-    console.log("🚀 ~ file: index.jsx:69 ~ handleSubmit ~ data:", data)
+      visibility: visibility,
+    };
 
     try {
       const docRef = await addDoc(collection(db, 'summaries'), data);
