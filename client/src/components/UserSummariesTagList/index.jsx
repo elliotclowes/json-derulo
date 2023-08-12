@@ -137,13 +137,13 @@ export default function UserSummariesTagList() {
                         {summary.title}
                       </Link>
                         </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                           {summary.tags && summary.tags.map((tag, index) => (
-                          <span key={index} className="inline-block px-2 py-1 text-xs font-semibold bg-gray-200 text-gray-800 rounded-full mr-1">
-                            {tag}
-                          </span>
-                        ))}
-                      </td>
+                            <Link key={index} to={`/summaries/tag/${tag}`} className="inline-block px-2 py-1 text-xs font-semibold bg-gray-200 text-gray-800 rounded-full mr-1">
+                              {tag}
+                            </Link>
+                          ))}
+                        </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{summary.visibility}</td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{new Date(summary.created).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</td>
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
