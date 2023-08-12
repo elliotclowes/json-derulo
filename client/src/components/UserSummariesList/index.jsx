@@ -33,10 +33,11 @@ export default function UserSummariesList() {
     
       const summariesArray = [];
       querySnapshot.forEach((doc) => {
-        summariesArray.push({ id: doc.id, ...doc.data() }); // This line replaces your existing code
+        summariesArray.push({ id: doc.id, ...doc.data() });
       });
+      // Sort summaries by 'created' date in descending order (newest first)
+      summariesArray.sort((a, b) => new Date(b.created) - new Date(a.created));
       setSummaries(summariesArray);
-      console.log("🚀 ~ file: index.jsx:39 ~ fetchData ~ summariesArray:", summariesArray)
     };
 
     fetchData();
