@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
 import { app } from '../../../firebase-config';
 import { useState, useEffect } from 'react';
@@ -93,8 +93,10 @@ export default function UserSummariesList() {
                       {summaries.map((summary) => (
                       <tr key={summary.id}>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                      <Link to={`/summary/${summary.id}`} className="text-indigo-600 hover:text-indigo-900">
                         {summary.title}
-                      </td>
+                      </Link>
+                        </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                           {summary.tags && summary.tags.map((tag, index) => (
                           <span key={index} className="inline-block px-2 py-1 text-xs font-semibold bg-gray-200 text-gray-800 rounded-full mr-1">
