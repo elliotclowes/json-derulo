@@ -17,5 +17,5 @@ export { default as BigButton} from './BigButton';
 export { default as Footer} from './Footer';
 export { default as UserSummariesList} from './UserSummariesList';
 export { default as DeleteSummaryConfirmationDialog} from './DeleteSummaryConfirmationDialog';
-
+export { default as UserSummariesTagList} from './UserSummariesTagList';
 
