@@ -1,7 +1,8 @@
 import { useNavigate, Link } from 'react-router-dom';
-import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+import { getFirestore, collection, query, where, getDocs, doc, deleteDoc } from 'firebase/firestore';
 import { app } from '../../../firebase-config';
 import { useState, useEffect } from 'react';
+import DeleteSummaryConfirmationDialog from '../../components/DeleteSummaryConfirmationDialog';
 
 const getUserID = async () => {
   const token = localStorage.getItem('token');
@@ -16,6 +17,30 @@ const getUserID = async () => {
 export default function UserSummariesList() {
   const navigate = useNavigate();
   const [summaries, setSummaries] = useState([]);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [deleteSummaryId, setDeleteSummaryId] = useState(null); // To hold the ID of the summary being deleted
+
+  const handleShowDeleteDialog = (summaryId) => {
+    setDeleteSummaryId(summaryId);
+    setShowDeleteDialog(true);
+  };
+
+  // Function to handle the deletion
+  const handleDeleteSummary = async () => {
+    try {
+      const db = getFirestore(app);
+      const summaryRef = doc(db, 'summaries', deleteSummaryId);
+  
+      await deleteDoc(summaryRef);
+  
+      setSummaries(summaries.filter((summary) => summary.id !== deleteSummaryId));
+    } catch (error) {
+      console.error('Failed to delete summary:', error);
+      // TODO: show message to user if deletion fails
+    } finally {
+      setShowDeleteDialog(false);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,6 +92,11 @@ export default function UserSummariesList() {
         </div>
       </div>
       <div className="mt-8 flow-root">
+      <DeleteSummaryConfirmationDialog
+        open={showDeleteDialog}
+        onClose={() => setShowDeleteDialog(false)}
+        onDelete={handleDeleteSummary}
+      />
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
             <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
@@ -88,6 +118,9 @@ export default function UserSummariesList() {
                     <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
                       <span className="sr-only">Edit</span>
                     </th>
+                    <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                    <span className="sr-only">Delete</span>
+                  </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
@@ -110,6 +143,11 @@ export default function UserSummariesList() {
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                         <a href="#" className="text-indigo-600 hover:text-indigo-900">
                           Edit<span className="sr-only">, {summary.title}</span>
+                        </a>
+                      </td>
+                      <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                        <a href="#" onClick={(e) => { e.preventDefault(); handleShowDeleteDialog(summary.id); }} className="text-red-600 hover:text-red-900">
+                          Delete<span className="sr-only">, {summary.title}</span>
                         </a>
                       </td>
                     </tr>
