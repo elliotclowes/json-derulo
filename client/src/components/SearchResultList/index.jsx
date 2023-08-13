@@ -3,6 +3,7 @@ import { getFirestore, collection, query, where, getDocs, doc, deleteDoc } from 
 import { app } from '../../../firebase-config';
 import { useEffect, useState } from 'react';
 import DeleteSummaryConfirmationDialog from '../../components/DeleteSummaryConfirmationDialog';
+import { XCircleIcon } from '@heroicons/react/20/solid'
 
 export default function SearchResults() {
   const { searchText } = useParams(); // Get search text from the URL
@@ -80,13 +81,14 @@ export default function SearchResults() {
         </div>
       </div>
       <div className="mt-8 flow-root">
-      <DeleteSummaryConfirmationDialog
-        open={showDeleteDialog}
-        onClose={() => setShowDeleteDialog(false)}
-        onDelete={handleDeleteSummary}
-        summaryTitle={deleteSummaryTitle}
-      />
-        <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <DeleteSummaryConfirmationDialog
+          open={showDeleteDialog}
+          onClose={() => setShowDeleteDialog(false)}
+          onDelete={handleDeleteSummary}
+          summaryTitle={deleteSummaryTitle}
+        />
+        {summaries.length > 0 ? (
+          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
             <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
               <table className="min-w-full divide-y divide-gray-300">
@@ -145,7 +147,19 @@ export default function SearchResults() {
               </table>
             </div>
           </div>
-        </div>
+          </div>
+        ) : (
+            <div className="rounded-md bg-red-50 p-4">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <XCircleIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
+              </div>
+              <div className="ml-3">
+                <h3 className="text-sm font-medium text-red-800">No search results found</h3>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
