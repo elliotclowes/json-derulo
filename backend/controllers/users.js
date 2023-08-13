@@ -142,7 +142,7 @@ class UserController {
       const verifiedToken = await Verification.getOneByToken(token);
       await Verification.deleteByToken(verifiedToken.token_id);
       await User.verifyUser(verifiedToken.user_id);
-      
+
       // Redirecting to a frontend success page
       res.redirect(frontEndUrl + 'login');
     } catch (error) {
