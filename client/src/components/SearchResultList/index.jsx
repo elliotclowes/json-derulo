@@ -6,7 +6,8 @@ import DeleteSummaryConfirmationDialog from '../../components/DeleteSummaryConfi
 
 export default function SearchResults() {
   const { searchText } = useParams(); // Get search text from the URL
-  const lowerSearchText = searchText.toLowerCase(); // Convert to lowercase
+  const decodedSearchText = decodeURIComponent(searchText); // Decode URL
+  const lowercaseSearchText = decodedSearchText.toLowerCase(); // Convert to lowercase
   const [summaries, setSummaries] = useState([]);
   const navigate = useNavigate();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -41,8 +42,7 @@ export default function SearchResults() {
       const db = getFirestore(app);
       const summariesCollection = collection(db, 'summaries');
 
-      // Modify the query to search for the desired field, such as title, tags, etc.
-      const q = query(summariesCollection, where('title', '==', searchText)); // Change this to match your search criteria
+      const q = query(summariesCollection, where('titleLower', '==', lowercaseSearchText));
       const querySnapshot = await getDocs(q);
 
       const summariesArray = [];
