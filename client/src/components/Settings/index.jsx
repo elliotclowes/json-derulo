@@ -15,6 +15,7 @@ function Settings() {
     });
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [emailError, setEmailError] = useState("");
 
     const getUserID = async () => {
         const token = localStorage.getItem('token');
@@ -29,12 +30,9 @@ function Settings() {
     const { user: authUser } = useAuth();
 
     useEffect(() => {
-        console.log("Inside useEffect!");
-
         const loadUserData = async () => {
             try {
                 if (authUser) {
-                    console.log("User:", authUser);
                     setUser(authUser);
                     setEditedUser({
                         firstName: authUser.firstName,
@@ -48,8 +46,6 @@ function Settings() {
                     const response = await fetch(`http://localhost:3000/user/${userId}`);
                     const userData = await response.json();
 
-                    console.log("Fetched User Data:", userData);
-
                     setUser(userData);
                     setEditedUser({
                         firstName: userData.firstName,
@@ -57,7 +53,6 @@ function Settings() {
                         email: userData.email,
                         username: userData.username,
                     });
-                    console.log("Do we reach here?");
                     setLoading(false);
                 }
             } catch (error) {
@@ -69,9 +64,19 @@ function Settings() {
         loadUserData();
     }, [authUser]);
 
+    const validateEmail = (email) => {
+        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+        return emailRegex.test(email);
+    };
+
     const handleEditChange = (e) => {
         const { name, value } = e.target;
         setEditedUser((prevUser) => ({ ...prevUser, [name]: value }));
+        if (name === "email" && !validateEmail(value)) {
+            setEmailError("Please enter a valid email address.");
+        } else {
+            setEmailError("");
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -143,6 +148,7 @@ function Settings() {
                             value={editedUser.email}
                             onChange={handleEditChange}
                         />
+                        {emailError && <p className="error-message">{emailError}</p>}
                     </div>
                     <div>
                         <label>Username:</label>
