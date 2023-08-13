@@ -1,14 +1,13 @@
-import React, { useState } from 'react';
-import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import React, { useState, useEffect } from 'react';
+import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
 import { app } from '../../../firebase-config';
 import { useNavigate } from 'react-router-dom';
-
-const predefinedTags = ['Step by step Guide', 'Tutorial', 'Coding', 'Video', 'Food'];
 
 const TitleInput = () => {
   const [title, setTitle] = useState('');
   const [visibility, setVisibility] = useState('private');
   const [selectedTags, setSelectedTags] = useState([]);
+  const [userTags, setUserTags] = useState([]);
 
   const db = getFirestore(app);
   const navigate = useNavigate();
@@ -43,6 +42,33 @@ const TitleInput = () => {
   // Get the current date and time
   const currentDate = new Date();
   const formattedDate = currentDate.toISOString();
+
+  useEffect(() => {
+    const fetchUserTags = async () => {
+      const userID = await getUserID();
+      if (userID === null) {
+        console.error('User not logged in');
+        return;
+      }
+
+      const summariesRef = collection(db, 'summaries');
+      const q = query(summariesRef, where('userID', '==', userID));
+      const querySnapshot = await getDocs(q);
+
+      const tagCounts = {};
+      querySnapshot.forEach((doc) => {
+        const tags = doc.data().tags;
+        tags.forEach((tag) => {
+          tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+        });
+      });
+
+      const sortedTags = Object.keys(tagCounts).sort((a, b) => tagCounts[b] - tagCounts[a]);
+      setUserTags(sortedTags);
+    };
+
+    fetchUserTags();
+  }, []);
 
 
   const handleSubmit = async (event) => {
@@ -126,10 +152,10 @@ const TitleInput = () => {
             </label>
           </div>
         </div>
-        <div className="mb-4">
+          <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">Select Tags:</label>
           <div className="flex gap-2">
-            {predefinedTags.map((tag) => (
+            {userTags.map((tag) => (
               <span
                 key={tag}
                 className={`px-3 py-1 text-sm rounded-lg cursor-pointer ${selectedTags.includes(tag) ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}
