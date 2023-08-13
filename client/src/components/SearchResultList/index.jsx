@@ -6,6 +6,7 @@ import DeleteSummaryConfirmationDialog from '../../components/DeleteSummaryConfi
 
 export default function SearchResults() {
   const { searchText } = useParams(); // Get search text from the URL
+  const lowerSearchText = searchText.toLowerCase(); // Convert to lowercase
   const [summaries, setSummaries] = useState([]);
   const navigate = useNavigate();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);

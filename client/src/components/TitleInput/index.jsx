@@ -71,6 +71,7 @@ const TitleInput = () => {
       created: formattedDate,
       tags: selectedTags,
       title: title,
+      titleLower: title.toLowerCase(), // Lowercase version of the title
       type: "user",
       userID: userID,
       visibility: visibility,
