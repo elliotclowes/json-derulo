@@ -28,6 +28,16 @@ export default function UserSummariesTagList() {
     setShowDeleteDialog(true);
   };
 
+  const getUserID = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) return null;
+
+    const response = await fetch(`http://localhost:3000/token/get/${token}`);
+    const data = await response.json();
+
+    return data.user_id.toString();
+  };
+
   // Function to handle the deletion
   const handleDeleteSummary = async () => {
     try {
@@ -58,8 +68,8 @@ export default function UserSummariesTagList() {
     
       const db = getFirestore(app);
       const summariesCollection = collection(db, 'summaries');
-      // Query summaries that have the specific tag
-      const q = query(summariesCollection, where('tags', 'array-contains', tagName));
+      // Query summaries that have the specific tag and match the logged-in user's ID
+      const q = query(summariesCollection, where('tags', 'array-contains', tagName), where('userID', '==', userID));
       const querySnapshot = await getDocs(q);
     
       const summariesArray = [];
