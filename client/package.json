@@ -15,6 +15,8 @@
     "@emotion/css": "^11.11.2",
     "@zach.codes/react-calendar": "^0.3.2",
     "axios": "^1.4.0",
+    "bcrypt": "^5.1.0",
+    "bcryptjs": "^2.4.3",
     "bootstrap": "^5.3.1",
     "bootstrap-icons": "^1.10.5",
     "date-fns": "^2.30.0",

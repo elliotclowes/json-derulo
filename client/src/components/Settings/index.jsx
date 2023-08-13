@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
+import bcrypt from "bcryptjs";
 import { useAuth } from "../../contexts";
+
 import "./styles.css";
 
 function Settings() {
@@ -9,8 +11,10 @@ function Settings() {
         firstName: "",
         lastName: "",
         email: "",
-        username: "",
+        username: ""
     });
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
 
     const getUserID = async () => {
         const token = localStorage.getItem('token');
@@ -73,14 +77,24 @@ function Settings() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        if (newPassword !== confirmPassword) {
+            alert('Passwords do not match. Please try again.');
+            return;
+        }
+
         try {
             const userId = await getUserID();
+            const updateUserPayload = {
+                ...editedUser,
+                ...(newPassword && { password: await bcrypt.hash(newPassword, 10) }),
+            };
+
             const response = await fetch(`http://localhost:3000/user/${userId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(editedUser),
+                body: JSON.stringify(updateUserPayload),
             });
 
             if (response.ok) {
@@ -97,7 +111,8 @@ function Settings() {
 
     return (
         <div className="settings-container">
-            <h2>Profile Settings</h2>
+            <h1>Account Settings</h1>
+            <h2>Welcome, {String(editedUser.firstName.charAt(0).toUpperCase()) + String(editedUser.firstName.slice(1))}!</h2>
             {loading ? (
                 <p>Loading user data...</p>
             ) : user ? (
@@ -136,6 +151,24 @@ function Settings() {
                             name="username"
                             value={editedUser.username}
                             onChange={handleEditChange}
+                        />
+                    </div>
+                    <div>
+                        <label>New Password:</label>
+                        <input
+                            type="password"
+                            name="newPassword"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <label>Confirm Password:</label>
+                        <input
+                            type="password"
+                            name="confirmPassword"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
                         />
                     </div>
                     <button type="submit">Save Changes</button>
