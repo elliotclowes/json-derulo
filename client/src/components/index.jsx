@@ -19,3 +19,5 @@ export { default as UserSummariesList} from './UserSummariesList';
 export { default as DeleteSummaryConfirmationDialog} from './DeleteSummaryConfirmationDialog';
 export { default as UserSummariesTagList} from './UserSummariesTagList';
 export { default as SearchResultList} from './SearchResultList';
+export { default as NavigationAndContent} from './NavigationAndContent';
+export { default as Layout} from './Layout';

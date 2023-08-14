@@ -36,7 +36,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Example() {
+export default function Layout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
@@ -309,7 +309,8 @@ export default function Example() {
           
           <main className="py-10">
             <div className="px-4 sm:px-6 lg:px-8">
-              {/* CONTENT HERE */}
+              {/* Content from each page/component */}
+                {children}
             </div>
           </main>
 

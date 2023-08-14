@@ -9,7 +9,7 @@ function App() {
   return (
     <>
       <AuthProvider>
-      <Navigation />
+      {/* <Navigation /> */}
         <Routes>
           <Route path="/" element={<Navigation />} />
           <Route index element={<Homepage />} />
@@ -35,7 +35,7 @@ function App() {
             }
           />
         </Routes>
-        <Footer />
+        {/* <Footer /> */}
       </AuthProvider>
     </>
   );

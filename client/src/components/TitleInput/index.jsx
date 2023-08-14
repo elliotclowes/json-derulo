@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
 import { app } from '../../../firebase-config';
 import { useNavigate } from 'react-router-dom';
+import { RadioGroup } from '@headlessui/react'
 
 const TitleInput = () => {
   const [title, setTitle] = useState('');
@@ -16,8 +17,20 @@ const TitleInput = () => {
     setTitle(event.target.value);
   };
 
-  const handleVisibilityChange = (event) => {
-    setVisibility(event.target.value);
+  function classNames(...classes) {
+    return classes.filter(Boolean).join(' ')
+  }
+
+  const visibilitySettings = [
+    { name: 'Public', description: 'This summary would be available to anyone who has the link', value: 'public' },
+    { name: 'Private', description: 'You are the only one able to access this summary', value: 'private' },
+  ];
+
+  const [selectedVisibility, setSelectedVisibility] = useState(visibilitySettings[1]);
+
+  const handleVisibilityChange = (option) => {
+    setSelectedVisibility(option);
+    setVisibility(option.value);
   };
 
   const handleTagClick = (tag) => {
@@ -114,8 +127,9 @@ const TitleInput = () => {
   };
 
   return (
-      <div className="max-w-500 mx-auto">
-        <form className="title-form p-4 rounded-lg shadow-md bg-white" onSubmit={handleSubmit}>
+    <>
+
+      <form className="title-form p-4 rounded-lg shadow-md bg-white" onSubmit={handleSubmit}>
         <div className="mb-4">
           <label htmlFor="title" className="block text-sm font-medium text-gray-700">Title:</label>
           <input
@@ -128,31 +142,6 @@ const TitleInput = () => {
           />
         </div>
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Visibility:</label>
-          <div className="flex gap-2">
-            <label className="inline-flex items-center">
-              <input
-                type="radio"
-                value="public"
-                checked={visibility === 'public'}
-                onChange={handleVisibilityChange}
-                className="form-radio h-4 w-4 text-blue-600"
-              />
-              <span className="ml-2 text-sm text-gray-700">Public</span>
-            </label>
-            <label className="inline-flex items-center">
-              <input
-                type="radio"
-                value="private"
-                checked={visibility === 'private'}
-                onChange={handleVisibilityChange}
-                className="form-radio h-4 w-4 text-blue-600"
-              />
-              <span className="ml-2 text-sm text-gray-700">Private</span>
-            </label>
-          </div>
-        </div>
-          <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">Select Tags:</label>
           <div className="flex gap-2">
             {userTags.map((tag) => (
@@ -166,6 +155,56 @@ const TitleInput = () => {
             ))}
           </div>
         </div>
+        <div className="mb-4">
+          <RadioGroup value={selectedVisibility} onChange={handleVisibilityChange}>
+            <RadioGroup.Label className="block text-sm font-medium text-gray-700">Visibility:</RadioGroup.Label>
+            <div className="-space-y-px rounded-md bg-white">
+              {visibilitySettings.map((setting, settingIdx) => (
+                <RadioGroup.Option
+                  key={setting.name}
+                  value={setting}
+                  className={({ checked }) =>
+                    classNames(
+                      settingIdx === 0 ? 'rounded-tl-md rounded-tr-md' : '',
+                      settingIdx === visibilitySettings.length - 1 ? 'rounded-bl-md rounded-br-md' : '',
+                      checked ? 'z-10 border-indigo-200 bg-indigo-50' : 'border-gray-200',
+                      'relative flex cursor-pointer border p-4 focus:outline-none'
+                    )
+                  }
+                >
+                  {({ active, checked }) => (
+                    <>
+                      <span
+                        className={classNames(
+                          checked ? 'bg-indigo-600 border-transparent' : 'bg-white border-gray-300',
+                          active ? 'ring-2 ring-offset-2 ring-indigo-600' : '',
+                          'mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded-full border flex items-center justify-center'
+                        )}
+                        aria-hidden="true"
+                      >
+                        <span className="rounded-full bg-white w-1.5 h-1.5" />
+                      </span>
+                      <span className="ml-3 flex flex-col">
+                        <RadioGroup.Label
+                          as="span"
+                          className={classNames(checked ? 'text-indigo-900' : 'text-gray-900', 'block text-sm font-medium')}
+                        >
+                          {setting.name}
+                        </RadioGroup.Label>
+                        <RadioGroup.Description
+                          as="span"
+                          className={classNames(checked ? 'text-indigo-700' : 'text-gray-500', 'block text-sm')}
+                        >
+                          {setting.description}
+                        </RadioGroup.Description>
+                      </span>
+                    </>
+                  )}
+                </RadioGroup.Option>
+              ))}
+            </div>
+          </RadioGroup>
+        </div>
         <button
           type="submit"
           className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus-visible:ring focus-visible:ring-blue-200 focus-visible:ring-opacity-50 transition-colors"
@@ -173,8 +212,8 @@ const TitleInput = () => {
           Create Summary
         </button>
       </form>
-    </div>
+    </>
   );
-}
+};
 
 export default TitleInput;

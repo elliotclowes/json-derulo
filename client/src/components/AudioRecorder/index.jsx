@@ -105,6 +105,7 @@ const AudioRecorder = ({ documentId }) => {
     }
     return randomString;
   };
+
   
   const uploadAudio = (blob) => {
     const randomFileName = generateRandomString(20) + '.wav';
