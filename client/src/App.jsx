@@ -1,9 +1,9 @@
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
-import { Login, ProtectedRoute, Signup, Homepage, Dash, Summary, Recorder, Notes, YoutubeUpload } from "./pages";
+import { Login, ProtectedRoute, Signup, Homepage, Dash, Summary, Recorder, Notes, YoutubeUpload, UserSettings } from "./pages";
 import { AuthProvider } from "./contexts";
 import { Navigation } from './components';
-import UserSettings from "./pages/UserSettings";
+
 
 
 function App() {
