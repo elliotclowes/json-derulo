@@ -10,7 +10,7 @@ function App() {
       <AuthProvider>
       {/* <Navigation /> */}
         <Routes>
-          <Route path="/" element={<Navigation />} />
+          {/* <Route path="/" element={<Navigation />} /> */}
           <Route index element={<Homepage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
@@ -35,7 +35,6 @@ function App() {
             }
           />
         </Routes>
-        {/* <Footer /> */}
       </AuthProvider>
     </>
   );

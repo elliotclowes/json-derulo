@@ -1,7 +1,10 @@
-import { LoginForm } from "../../components";
+import { LoginForm, Layout, Footer } from "../../components";
 
 export default function Login() {
   return (
-          <LoginForm />
+    <Layout>
+      <LoginForm />
+      <Footer />
+    </Layout>
   );
-}
+};

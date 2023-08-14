@@ -1,11 +1,10 @@
-import React from 'react';
-import { YoutubeUpload } from "../../components";
+import { Layout, Footer, YoutubeUpload } from "../../components";
 
-
-const Youtube = () => (
-      <article>
-        <YoutubeUpload />
-      </article>
-);
-
-export default Youtube;
+export default function Youtube() {
+  return (
+    <Layout>
+      <YoutubeUpload />
+      <Footer />
+    </Layout>
+  );
+};

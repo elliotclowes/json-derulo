@@ -1,9 +1,10 @@
-import { UserSummariesTagList } from "../../components";
+import { Layout, Footer, UserSummariesTagList } from "../../components";
 
 export default function UserSummaries() {
   return (
-    <div className="max-w-1200 mx-auto">
-          <UserSummariesTagList />
-       </div>
+    <Layout>
+      <UserSummariesTagList />
+      <Footer />
+    </Layout>
   );
-}
+};
