@@ -11,10 +11,13 @@ export default function SignupForm() {
     password: "",
   });
   function handleChange(e) {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+    setForm({ ...form, [e.target.name]: value });
   }
+  
   async function handleSubmit(e) {
     e.preventDefault();
+    console.log(JSON.stringify(form))
     const res = await fetch("http://localhost:3000/user/register", {
       method: "POST",
       headers: {
