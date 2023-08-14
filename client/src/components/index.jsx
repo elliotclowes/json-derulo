@@ -1,6 +1,5 @@
 export { default as LoginForm } from './LoginForm';
 export { default as SignupForm} from './SignupForm';
-export { default as Navigation} from './Navbar';
 export { default as TextEditor} from './TextEditor'
 export { default as Controls} from './Controls';
 export { default as AudioContainer} from './AudioContainer';
@@ -21,3 +20,4 @@ export { default as UserSummariesTagList} from './UserSummariesTagList';
 export { default as SearchResultList} from './SearchResultList';
 export { default as NavigationAndContent} from './NavigationAndContent';
 export { default as Layout} from './Layout';
+export { default as Settings } from './Settings';
