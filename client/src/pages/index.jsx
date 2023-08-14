@@ -11,3 +11,7 @@ export { default as CreateSummary } from "./CreateSummary";
 export {default as YoutubeUpload} from "./YoutubeUpload";
 export {default as TeacherSummary} from "./TeacherSummary";
 export {default as FinalSummary} from "./FinalSummary";
+export {default as UserSummaries} from "./UserSummaries";
+export {default as UserTagSummaries} from "./UserTagSummaries";
+export {default as SearchResults} from "./SearchResults";
+export { default as UserSettings } from "./UserSettings"

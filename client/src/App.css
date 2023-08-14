@@ -1,4 +1,8 @@
-header, span {
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* header, span {
     color: black !important;
 }
 .comment {
@@ -6,4 +10,4 @@ header, span {
   }
 .is-active{
     background-color: #f0bc2d
-}
+} */

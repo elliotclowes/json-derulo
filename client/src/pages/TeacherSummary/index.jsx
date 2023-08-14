@@ -1,13 +1,11 @@
-import React from 'react';
-import TeacherInput from '../../components/TeacherInput';
 
-const TeacherSummary = () => {
+import { Layout, Footer, TeacherInput } from "../../components";
+
+export default function TeacherSummary() {
   return (
-    <div>
-    <h1>Teacher Input Form</h1>
-    <TeacherInput />
-  </div>
-);
+    <Layout>
+      <TeacherInput />
+      <Footer />
+    </Layout>
+  );
 };
-
-export default TeacherSummary;

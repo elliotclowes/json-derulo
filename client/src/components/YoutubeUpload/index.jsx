@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
 
-import './index.css';
-
-
 function App() {
   const [youtubeUrl, setYoutubeUrl] = useState('');
   const [subtitles, setSubtitles] = useState('');
