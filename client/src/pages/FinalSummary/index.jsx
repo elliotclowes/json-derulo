@@ -1,13 +1,14 @@
 import React from 'react';
-import { AudioRecorder, TeacherComponents } from '../../components';
+import { AudioRecorder, TeacherComponents, Layout, Footer } from '../../components';
 
 const FinalSummary = () => {
   return (
-    <div>
-    <AudioRecorder />
-    <TeacherComponents/>
-  </div>
-);
+    <Layout>
+      <AudioRecorder />
+      <TeacherComponents />
+      <Footer />
+    </Layout>
+  );
 };
 
 export default FinalSummary;
