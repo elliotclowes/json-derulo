@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import bcrypt from "bcryptjs";
 import { useAuth } from "../../contexts";
+import { useNavigate } from "react-router-dom";
 
 import "./styles.css";
 
+
 function Settings() {
+    const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [editedUser, setEditedUser] = useState({
@@ -106,6 +109,8 @@ function Settings() {
                 const updatedUser = await response.json();
                 console.log("User updated:", updatedUser);
                 setUser(updatedUser);
+                alert('Changes saved successfully!');
+
             } else {
                 console.error('Error updating user data:', response.statusText);
             }
@@ -113,6 +118,30 @@ function Settings() {
             console.error('Error updating user data:', error);
         }
     };
+
+    const handleDeleteAccount = async () => {
+        if (window.confirm("Are you sure you want to delete your account? This action is irreversible.")) {
+            try {
+                const userId = await getUserID();
+                const response = await fetch(`http://localhost:3000/user/${userId}`, {
+                    method: 'DELETE',
+                });
+
+                if (response.ok) {
+                    alert('You successfully deleted your account!');
+                    localStorage.clear();
+                    navigate("/signup");
+
+                } else {
+                    console.error('Error deleting user:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error deleting user:', error);
+            }
+        }
+    };
+
+
 
     return (
         <div className="settings-container">
@@ -178,6 +207,9 @@ function Settings() {
                         />
                     </div>
                     <button type="submit">Save Changes</button>
+                    <button type="button" onClick={handleDeleteAccount} className="delete-button">
+                        Delete Account
+                    </button>
                 </form>
             ) : (
                 <p>User data not available.</p>
