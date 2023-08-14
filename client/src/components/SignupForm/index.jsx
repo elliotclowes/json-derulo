@@ -1,3 +1,5 @@
+import Form from "react-bootstrap/Form";
+import FloatingLabel from "react-bootstrap/FloatingLabel";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
@@ -7,10 +9,17 @@ export default function SignupForm() {
     lastName: "",
     email: "",
     username: "",
+    teacher:false,
     password: "",
   });
+  const [isTeacher, setIsTeacher] = useState(false);
+
   function handleChange(e) {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    
+    const { name, value, type, checked } = e.target;
+    const newValue = type === 'checkbox' ? checked : value;
+    setForm({ ...form, [name]: newValue });
+    setIsTeacher(!isTeacher);
   }
   async function handleSubmit(e) {
     e.preventDefault();
@@ -20,7 +29,7 @@ export default function SignupForm() {
         "content-type": "application/json",
       },
       body: JSON.stringify(form),
-    });
+    }); 
     if (res.ok) {
       const user = await res.json();
       console.log(user);
@@ -29,73 +38,81 @@ export default function SignupForm() {
       );
     } else {
       alert("Something went wrong.");
-    }
+    } 
   }
   return (
     <>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="flex space-x-4">
-          <div className="w-1/2">
-            <label className="block text-sm font-medium">First name</label>
-            <input
+      <form onSubmit={handleSubmit}>
+        <div className="name">
+          <FloatingLabel
+            controlId="floatingInput"
+            label="First name"
+            className="mb-3"
+          >
+            <Form.Control
               type="text"
               placeholder="firstname"
               name="firstName"
-              onChange={handleChange}
-              className="input input-bordered w-full"
+              onChange={(e) => handleChange(e)}
             />
-          </div>
-          <div className="w-1/2">
-            <label className="block text-sm font-medium">Last name</label>
-            <input
+          </FloatingLabel>
+          <FloatingLabel
+            controlId="floatingInput"
+            label="Last name"
+            className="mb-3"
+          >
+            <Form.Control
               type="text"
               placeholder="lastName"
               name="lastName"
-              onChange={handleChange}
-              className="input input-bordered w-full"
+              onChange={(e) => handleChange(e)}
             />
-          </div>
+          </FloatingLabel>
         </div>
-        <div>
-          <label className="block text-sm font-medium">Email</label>
-          <input
+        <FloatingLabel controlId="floatingInput" label="Email" className="mb-3">
+          <Form.Control
             type="email"
             placeholder="email@email.com"
             name="email"
-            onChange={handleChange}
-            className="input input-bordered w-full"
+            onChange={(e) => handleChange(e)}
           />
-        </div>
-        <div>
-          <label className="block text-sm font-medium">Username</label>
-          <input
+        </FloatingLabel>
+        <FloatingLabel
+          controlId="floatingInput"
+          label="Username"
+          className="mb-3"
+        >
+          <Form.Control
             type="text"
             placeholder="username"
             name="username"
-            onChange={handleChange}
-            className="input input-bordered w-full"
+            onChange={(e) => handleChange(e)}
           />
-        </div>
-        <div>
-          <label className="block text-sm font-medium">Password</label>
-          <input
+        </FloatingLabel>
+        <FloatingLabel controlId="floatingPassword" label="Password">
+          <Form.Control
             type="password"
             placeholder="Password"
             name="password"
-            onChange={handleChange}
-            className="input input-bordered w-full"
+            onChange={(e) => handleChange(e)}
           />
-        </div>
-        <div className="input-field">
+        </FloatingLabel>
+        <br />
+        <label>
+          
           <input
-            type="submit"
-            className="btn"
-            value="Register"
-          />
+            type="checkbox"
+            checked={form.teacher}
+            onChange={handleChange}
+            name="teacher"
+          /> Are you a teacher?
+        </label>
+        <div className="input-field">
+          <input type="submit" className="submit" value="Register" />
         </div>
-        <div className="signup text-center">
+        <div className="signup">
           <span>
-            Already have an account? <Link to="/login" className="text-blue-500">Login here</Link>
+            Already have an account? <Link to="/login">Login here</Link>
           </span>
         </div>
       </form>

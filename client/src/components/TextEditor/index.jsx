@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Editor from "./Editor";
+import { RecoilRoot } from "recoil";
 
 export default function TextEditor({ document: initialDocument, onChange }) {
   const [document, updateDocument] = useState(initialDocument);
@@ -16,12 +17,14 @@ export default function TextEditor({ document: initialDocument, onChange }) {
 
   return (
     <div className="App">
+        <RecoilRoot>
       <Editor
         document={document}
         onChange={(newDocument) => {
           updateDocument(newDocument);
         }}
       />
+      </RecoilRoot>
     </div>
   );
 }

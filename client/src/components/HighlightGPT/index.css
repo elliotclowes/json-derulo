@@ -1,0 +1,4 @@
+.follow-button {
+    position: absolute;
+    transform: translate(5px, -50%);
+  }
