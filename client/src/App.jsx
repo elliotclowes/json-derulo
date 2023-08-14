@@ -1,6 +1,6 @@
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
-import { Login, ProtectedRoute, Signup, Homepage, Dash, Summary, Recorder, Notes, CreateSummary, YoutubeUpload, TeacherSummary, FinalSummary } from "./pages";
+import { Login, ProtectedRoute, Signup, Homepage, Dash, Summary, Recorder, Notes, CreateSummary, YoutubeUpload, TeacherSummary, FinalSummary, AllSummary } from "./pages";
 import { AuthProvider } from "./contexts";
 import { Navigation } from './components';
 
@@ -17,6 +17,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/summary" element={<CreateSummary />}/>
           <Route path="/teacher" element={<TeacherSummary />}/>
+          <Route path="/summary/:userId" element={<AllSummary />}/>
           <Route path="/teacher/:documentId" element={< FinalSummary />}/>
           <Route path="/summary/:documentId" element={<Summary />} />
           <Route path="/recorder" element={<Recorder />} />

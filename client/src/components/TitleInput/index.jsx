@@ -14,6 +14,8 @@ const TitleInput = () => {
   const db = getFirestore(app);
   const navigate = useNavigate();
 
+  
+
   const handleTitleChange = (event) => {
     setTitle(event.target.value);
   };
@@ -40,7 +42,7 @@ const TitleInput = () => {
     };
   
     try {
-      const docRef = await addDoc(collection(db, 'Sand-box'), data); 
+      const docRef = await addDoc(collection(db, 'Test-1'), data); 
       console.log('Document written with ID:', docRef.id);
       
       navigate(`/summary/${docRef.id}`); 
