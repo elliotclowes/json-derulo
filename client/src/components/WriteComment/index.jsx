@@ -13,7 +13,7 @@ import { Listbox, Transition } from '@headlessui/react'
 
 const activity = [
   {
-    id: 1,
+    userID: 1,
     type: 'commented',
     person: {
       name: 'Chelsea Hagon',
@@ -25,7 +25,7 @@ const activity = [
     dateTime: '2023-01-23T15:56',
   },
   {
-    id: 2,
+    userID: 2,
     type: 'commented',
     person: {
       name: 'Chelsea Hagon',
@@ -37,21 +37,13 @@ const activity = [
     dateTime: '2023-01-23T15:56',
   },
 ]
-const moods = [
-  { name: 'Excited', value: 'excited', icon: FireIcon, iconColor: 'text-white', bgColor: 'bg-red-500' },
-  { name: 'Loved', value: 'loved', icon: HeartIcon, iconColor: 'text-white', bgColor: 'bg-pink-400' },
-  { name: 'Happy', value: 'happy', icon: FaceSmileIcon, iconColor: 'text-white', bgColor: 'bg-green-400' },
-  { name: 'Sad', value: 'sad', icon: FaceFrownIcon, iconColor: 'text-white', bgColor: 'bg-yellow-400' },
-  { name: 'Thumbsy', value: 'thumbsy', icon: HandThumbUpIcon, iconColor: 'text-white', bgColor: 'bg-blue-500' },
-  { name: 'I feel nothing', value: null, icon: XMarkIcon, iconColor: 'text-gray-400', bgColor: 'bg-transparent' },
-]
 
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function WriteComment() {
+export default function WriteComment({ comments }) {
   const [commentBoxVisible, setCommentBoxVisible] = useState(false);
   // Function to toggle the visibility of the comment box
   const toggleCommentBox = () => {
@@ -63,7 +55,7 @@ export default function WriteComment() {
     <>
       <ul role="list" className="space-y-6">
         {activity.map((activityItem, activityItemIdx) => (
-          <li key={activityItem.id} className="relative flex gap-x-4">
+          <li key={activityItem.userID} className="relative flex gap-x-4">
             <div
               className={classNames(
                 activityItemIdx === activity.length - 1 ? 'h-6' : '-bottom-6',
@@ -162,3 +154,4 @@ export default function WriteComment() {
     </>
   )
 }
+

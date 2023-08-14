@@ -4,12 +4,10 @@ import { getFirestore, collection, doc, updateDoc, onSnapshot } from 'firebase/f
 import { app } from '/firebase-config.js';
 import { Footer, AudioRecorder, TextEditor, WriteComment, InfoBox } from "../../components";
 import { BellIcon } from '@heroicons/react/24/outline'
-
 function CombinedSummaryNotes() {
   const { documentId } = useParams();
   const [blocks, setBlocks] = useState([]);
   const db = getFirestore(app);
-
   const updateSummaryBlock = async (blockId, newText) => {
     // Get the Firestore reference to the specific document
     const summariesCollection = collection(db, 'summaries');
@@ -28,11 +26,9 @@ function CombinedSummaryNotes() {
       console.error('Error updating block:', error);
     });
   };
-
   useEffect(() => {
     const summariesCollection = collection(db, 'summaries');
     const docRef = doc(summariesCollection, documentId);
-
     const unsubscribe = onSnapshot(docRef, (docSnapshot) => {
       if (docSnapshot.exists()) {
         const data = docSnapshot.data();
@@ -42,17 +38,13 @@ function CombinedSummaryNotes() {
         console.log("No such document!");
       }
     });
-
     return () => unsubscribe();
   }, [documentId, db]);
-
   const handleBlockSubmit = (blockId, newText) => {
     updateSummaryBlock(`block${blockId + 1}`, newText);
   };
-
   return (
     <>
-
 <div className="flex min-h-full flex-col">
         <header className="shrink-0 bg-gray-900">
           <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -77,9 +69,6 @@ function CombinedSummaryNotes() {
             </div>
           </div>
         </header>
-
-
-
 {/* Wrapper */}
 <div className="mx-auto w-full max-w-7xl grow xl:px-2">
       {blocks.map((blockText, index) => (
@@ -88,7 +77,6 @@ function CombinedSummaryNotes() {
           <div className="border-b border-gray-200 px-4 py-6 sm:px-6 lg:pl-8 xl:w-64 xl:shrink-0 xl:border-b-0 xl:border-r xl:pl-6">
           <p>Left</p>
           </div>
-
           {/* Main content */}
           <div className="px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-6">
             <TextEditor 
@@ -97,7 +85,6 @@ function CombinedSummaryNotes() {
               onSubmit={(newText) => handleBlockSubmit(index, newText)} 
             />
           </div>
-
           {/* Right sidebar */}
           <div className="shrink-0 border-t border-gray-200 px-4 py-6 sm:px-6 lg:w-96 lg:border-l lg:border-t-0 lg:pr-8 xl:pr-6">
           <WriteComment />
@@ -113,7 +100,3 @@ function CombinedSummaryNotes() {
   );
 }
 export default CombinedSummaryNotes;
-
-
-
-
