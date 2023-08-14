@@ -5,6 +5,8 @@ const db = admin.firestore();
 
 async function fetchSubtitles(req, res) {
   const youtubeUrl = req.body.url;
+  const user_id = req.body.user_id; // Extract user_id from the request body
+  const timestamp = req.body.timestamp; 
   const apiUrl = "http://178.128.39.115:8000/download_subtitles";
   
   try {
@@ -18,8 +20,12 @@ async function fetchSubtitles(req, res) {
 
     
     const summary = await summarizeTranscript(transcript); 
-    const summaryRef = db.collection('summaries.originalSubtitles').doc();
-    await summaryRef.set({ summary: summary }); 
+    const summaryRef = db.collection('summaries.fish').doc();
+    await summaryRef.set({ 
+      summary: summary,
+      user_id: user_id,
+      timestamp: timestamp
+    });
     console.log(summary, 'banana');
     res.status(200).json({ summary });
   } catch (error) {

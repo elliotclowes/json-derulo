@@ -4,18 +4,26 @@ import './index.css';
 function App() {
   const [youtubeUrl, setYoutubeUrl] = useState('');
   const [subtitles, setSubtitles] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);  
+  const [timestamp, setTimestamp] = useState('');
 
   const handleProcessVideo = async () => {
     try {
       setIsLoading(true); // Set loading to true when starting to fetch subtitles
-
+      const getuserID = async () => {
+        const token =localStorage.getItem('token');
+        if(!token) return null;
+        const response = await fetch (`http://localhost:3000/token/get${token}`);
+        const data = await response.json();
+        return data.user_id.toString();
+      };
       const response = await fetch('http://localhost:3000/video/fetch_subtitles', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ url: youtubeUrl })
+        body: JSON.stringify({ url: youtubeUrl,
+        user_Id: getuserID })
       });
 
       const data = await response.json();
