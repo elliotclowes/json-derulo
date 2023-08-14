@@ -17,7 +17,8 @@ async function processAudio(path, documentId) {
   try {
     const uploadUrl = await uploadFile(path);
     const transcript = await transcribeAudio(API_TOKEN, uploadUrl);
-    const text = 'I want you to create a summary of the contents of the following transcript:' + transcript.text;
+    const prompt = 'I want you to create a summary of the contents of the following transcript:'
+    const content = transcript.text;
 
     const filename = pathModule.basename(path);
     const destination = `audio/${filename}`; // Set the destination path in the bucket
@@ -29,7 +30,7 @@ async function processAudio(path, documentId) {
     // Get the public URL of the file
     const publicUrl = `https://storage.googleapis.com/${bucket.name}/${file.name}`; // Construct the public URL
 
-    summarizeTranscript(text).then(async (summary) => {
+    summarizeTranscript(prompt, content).then(async (summary) => {
       console.log('Audio processing complete:', summary);
     
       // Get the document reference
