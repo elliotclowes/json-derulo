@@ -8,14 +8,16 @@ const pathModule = require('path');
 
 const API_TOKEN = process.env.AAI_KEY;
 
-const DOCUMENT_ID = 'HZpgoFnM6Ht4M16YuTWk';
 
-async function processAudio(path) {
+
+// OLD: HZpgoFnM6Ht4M16YuTWk
+
+async function processAudio(path, documentId) {
   console.log("🚀 ~ file: audioProcessing.js:12 ~ processAudio ~ path:", path)
   try {
     const uploadUrl = await uploadFile(path);
     const transcript = await transcribeAudio(API_TOKEN, uploadUrl);
-    const text = 'I want you to create a summary of the contents of the following transcript' + transcript.text;
+    const text = 'I want you to create a summary of the contents of the following transcript:' + transcript.text;
 
     const filename = pathModule.basename(path);
     const destination = `audio/${filename}`; // Set the destination path in the bucket
@@ -31,8 +33,8 @@ async function processAudio(path) {
       console.log('Audio processing complete:', summary);
 
       // Get the document reference
-      const docRef = db.collection('summaries').doc(DOCUMENT_ID);
-
+      const docRef = db.collection('summaries').doc(documentId);
+    
       // Get the current data
       const doc = await docRef.get();
       const data = doc.data();

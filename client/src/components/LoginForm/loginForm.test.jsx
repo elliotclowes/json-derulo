@@ -96,4 +96,8 @@ describe('LoginForm', () => {
     });
 
 
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> 8d50ee8ed9d86104de03849ffe2ea6f4ea37c02c

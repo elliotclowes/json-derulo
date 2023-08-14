@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import { useAuth } from "../../contexts";
 import { useNavigate } from "react-router-dom";
 
-import "./styles.css";
+// import "./styles.css";
 
 
 function Settings() {
