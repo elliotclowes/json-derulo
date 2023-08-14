@@ -7,6 +7,7 @@ export default function SignupForm() {
     lastName: "",
     email: "",
     username: "",
+    teacher:false,
     password: "",
   });
   function handleChange(e) {
@@ -93,11 +94,18 @@ export default function SignupForm() {
             value="Register"
           />
         </div>
+        <br />
+        <input
+         type="checkbox"
+         name="teacher"
+         onChange={(e) => handleChange(e)}
+        />
+        <label>Are you a teacher?</label>
         <div className="signup text-center">
           <span>
             Already have an account? <Link to="/login" className="text-blue-500">Login here</Link>
           </span>
-        </div>
+        </div>  
       </form>
     </>
   );
