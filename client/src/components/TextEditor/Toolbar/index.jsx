@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useEffect } from 'react';
+import React, { useMemo, useRef, useEffect, useCallback } from 'react';
 import { Slate, Editable, withReact, useSlate, useFocused } from 'slate-react';
 import {
   Editor,
@@ -11,10 +11,21 @@ import { css } from '@emotion/css';
 
 import { Button, Icon, Menu, Portal } from '../Button';
 
+import { insertCommentThread, shouldAllowNewCommentThreadAtSelection } from '../Commenting';
+
+import useAddCommentThreadToState from '../hooks/useAddCommentThreadToState';
+
+
 export default function HoveringToolbar () {
     const ref = useRef(null); // Fixed parentheses
     const editor = useSlate();
     const inFocus = useFocused();
+
+    const addCommentThread = useAddCommentThreadToState()
+
+    const onInsertComment = useCallback(()=>{
+      const newCommentThreadID = insertCommentThread(editor, addCommentThread)
+    }, [editor, addCommentThread])
   
     useEffect(() => {
       const el = ref.current;
@@ -69,22 +80,41 @@ export default function HoveringToolbar () {
           <FormatButton format="bold" icon="format_bold" />
           <FormatButton format="italic" icon="format_italic" />
           <FormatButton format="underlined" icon="format_underlined" />
+          <FormatButton format="comment" icon="format_paint" onInsertComment={onInsertComment}/>
         </Menu>
       </Portal>
     );
   };
   
-  const FormatButton = ({ format, icon }) => {
+  const FormatButton = ({ format, icon , onInsertComment = null}) => {
     const editor = useSlate();
+    const { selection } = editor
+    if (!onInsertComment) {
     return (
+      
       <Button
         
         active={isMarkActive(editor, format)}
-        onClick={() => toggleMark(editor, format)}
+        disabled={!shouldAllowNewCommentThreadAtSelection(
+          editor,
+          selection
+        )}
+        onMouseDown={() => toggleMark(editor, format)}
       >
         <Icon active={isMarkActive(editor, format)}>{icon}</Icon>
       </Button>
-    );
+    );}
+    else{
+      return (
+      
+        <Button  
+          active={isMarkActive(editor, format)}
+          onMouseDown = {onInsertComment}
+          >
+            <Icon active={isMarkActive(editor, format)}>{icon}</Icon>
+          </Button>
+      )
+    }
   };
 
   const toggleMark = (editor, format) => {
