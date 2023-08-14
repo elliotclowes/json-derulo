@@ -20,3 +20,4 @@ export { default as UserSummariesTagList} from './UserSummariesTagList';
 export { default as SearchResultList} from './SearchResultList';
 export { default as Layout} from './Layout';
 export { default as Settings } from './Settings';
+export { default as AudioUpload } from './AudioUpload';
