@@ -1,17 +1,25 @@
-const Controls = ({ handlers, isRecording /* , isPaused Remove this part */ }) => (
+const Controls = ({ handlers, isRecording }) => (
   <section className="experiment py-5">
-    <label htmlFor="time-interval">Time Interval (seconds):</label>
-    <input type="text" id="time-interval" defaultValue="60" className="border p-2 my-2 rounded" />
+    <label htmlFor="time-interval" style={{ display: 'none' }} >Time Interval (seconds):</label>
+    <input type="text" id="time-interval" defaultValue="120" className="border p-2 my-2 rounded" style={{ display: 'none' }}  />
 
-    <br />
-
-    <input id="left-channel" type="checkbox" defaultChecked style={{ width: 'auto' }} />
-
-    <br />
-    <br />
-
-    <button id="start-recording" onClick={handlers.startRecording} disabled={isRecording} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50">Start</button>
-    <button id="stop-recording" onClick={handlers.stopRecording} disabled={!isRecording} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50">Stop</button>
+    <input id="left-channel" type="checkbox" defaultChecked style={{ display: 'none' }} />
+    <button
+        type="button"
+        onClick={handlers.startRecording}
+        disabled={isRecording}
+        className={`rounded-full px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 mr-2 ${isRecording ? 'bg-green-300' : 'bg-green-600'}`}
+      >
+        {isRecording ? 'Recording...' : 'Start'}
+      </button>
+    <button
+        type="button"
+        onClick={handlers.stopRecording}
+        disabled={!isRecording}
+        className={`rounded-full px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600 ${isRecording ? 'bg-red-600' : 'bg-gray-300'}`}
+      >
+        Stop
+      </button>
   </section>
 );
 
