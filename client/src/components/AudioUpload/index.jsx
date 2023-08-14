@@ -8,41 +8,43 @@ function AudioUpload() {
     setSelectedFile(event.target.files[0]);
   };
 
-  const handleUpload = () => {
+  const handleUpload = async () => {
     if (!selectedFile) {
-        console.log('Please select a file.');
+      console.log('Please select a file.');
       return;
     }
-
-    const formData = new FormData();
-    formData.append('audio', selectedFile);
-
-    fetch('http://localhost:3000/audio/save', {
-      method: 'POST',
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          console.log('File uploaded successfully.');
-        } else {
-            console.log('File upload failed.');
-        }
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-        console.log('An error occurred during upload.');
+  
+    try {
+      const formData = new FormData();
+      formData.append('audio', selectedFile);
+  
+      const response = await fetch('http://localhost:3000/audio/audioup', {
+        method: 'POST',
+        body: formData
       });
+  
+      if (response.ok) {
+        const data = await response.text(); 
+        console.log(data,'yoyo'); 
+        const resultElement = document.getElementById('result');
+        resultElement.textContent = data;
+      } else {
+        console.error('Error uploading file.');
+      }
+    } catch (error) {
+      console.error('Error uploading file:', error);
+    }
   };
+  
 
   return (
     <div>
       <h2>Upload an Audio File</h2>
       <input type="file" accept="audio/*" onChange={handleFileChange} />
       <button onClick={handleUpload}>Upload</button>
-      <div>{message}</div>
+      <div id="result">{message}</div> {/* Display the response here */}
     </div>
   );
-}
+  }
 
-export default AudioUpload;
+export default AudioUpload
