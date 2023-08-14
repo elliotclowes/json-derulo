@@ -2,7 +2,6 @@ import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import { Login, ProtectedRoute, Signup, Homepage, Dash, Summary, Recorder, Notes, CreateSummary, YoutubeUpload, TeacherSummary, FinalSummary, UserSummaries, UserTagSummaries, SearchResults } from "./pages";
 import { AuthProvider } from "./contexts";
-import { Navigation, Footer } from './components';
 
 
 function App() {
@@ -11,7 +10,7 @@ function App() {
       <AuthProvider>
       {/* <Navigation /> */}
         <Routes>
-          <Route path="/" element={<Navigation />} />
+          {/* <Route path="/" element={<Navigation />} /> */}
           <Route index element={<Homepage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
@@ -35,7 +34,6 @@ function App() {
             }
           />
         </Routes>
-        {/* <Footer /> */}
       </AuthProvider>
     </>
   );

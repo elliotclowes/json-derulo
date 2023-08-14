@@ -1,16 +1,15 @@
 import { useParams } from 'react-router-dom';
-import { AudioRecorder, CombinedSummaryNotes } from "../../components";
+import { Layout, Footer, AudioRecorder, CombinedSummaryNotes } from "../../components";
 
-function Summary() {
+export default function Summary() {
   const { documentId } = useParams();
 
   return (
-    <div className="container mx-auto px-4">
-      <div id="content"></div>
+    <Layout>
       <AudioRecorder documentId={documentId} />
       <CombinedSummaryNotes documentId={documentId} /> 
-    </div>
+      <Footer />
+    </Layout>
   );
-}
+};
 
-export default Summary;

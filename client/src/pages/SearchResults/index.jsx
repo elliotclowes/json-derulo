@@ -1,9 +1,10 @@
-import { SearchResultList } from "../../components";
+import { Layout, Footer, SearchResultList } from "../../components";
 
-export default function SearchResults() {
+export default function UserSummaries() {
   return (
-    <div className="max-w-1200 mx-auto">
-          <SearchResultList />
-       </div>
+    <Layout>
+      <SearchResultList />
+      <Footer />
+    </Layout>
   );
-}
+};

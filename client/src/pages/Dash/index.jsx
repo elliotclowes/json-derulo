@@ -1,10 +1,13 @@
+import React from 'react';
+import Layout from '../../components/Layout';
+import Footer from '../../components/Footer';
 
-
-export default function Dash() {
+const CreateSummary = () => {
   return (
-    <>
-        <h1>Dash</h1>
-        
-    </>
+    <Layout>
+      <Footer />
+    </Layout>
   );
-}
+};
+
+export default CreateSummary;
