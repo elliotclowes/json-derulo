@@ -21,9 +21,10 @@ async function processAudioUpload(audioBuffer, documentId, res) {
       if (res) {
         res.status(200).json({ transcriptInfo, summary });
       }
-  
+      
       console.log('Summary:', summary);
       return summary; 
+      
     } catch (error) {
       console.error('Error processing audio:', error);
   
@@ -32,5 +33,6 @@ async function processAudioUpload(audioBuffer, documentId, res) {
       }
     }
   }
+  
   
   module.exports = { processAudioUpload };

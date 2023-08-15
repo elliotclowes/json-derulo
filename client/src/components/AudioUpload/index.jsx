@@ -39,7 +39,7 @@ function AudioUpload() {
   
   return (
     <div>
-      <h2>Upload an Audio File</h2>
+      <strong><h2>Upload an Audio File</h2></strong>
       <input type="file" accept="audio/*" onChange={handleFileChange} />
       <button onClick={handleUpload}>Upload</button>
       <div id="result">{summary}</div> {/* Display the summary here */}

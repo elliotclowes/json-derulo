@@ -60,6 +60,20 @@ class User {
     return new User(response.rows[0]);
   }
 
+  static async getOneByToken(token) {
+    // const query = "SELECT * FROM tokens AS t JOIN users as u ON t.user_id = u.user_id WHERE token = $1";
+    const query = "SELECT U.first_name, U.last_name, U.email, U.username, U.teacher, T.token, T.user_id  FROM users AS u LEFT JOIN tokens as T ON T.user_id = U.user_id WHERE token = $1";
+    // const query = "SELECT user_id FROM tokens WHERE token = $1"
+    const response = await db.query(query, [token]);
+    console.log(response,'fishy')
+    if (response.rows.length !== 1) {
+        throw new Error("Unable to locate token."); 
+    } else {
+       return new User(response.rows[0]);
+    }
+}
+
+
   static async create(data) {
     const {
       firstName: first_name,
