@@ -55,8 +55,8 @@ export default function SignupForm() {
       }
     }
   }
-
-  return (
+  
+    return (
     <div className="flex min-h-full flex-1">
             <div className="relative hidden w-0 flex-1 lg:block">
           <img

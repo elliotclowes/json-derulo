@@ -142,6 +142,28 @@ const TitleInput = () => {
           />
         </div>
         <div className="mb-4">
+  <label htmlFor="newTag" className="block text-sm font-medium text-gray-700">Add Tags:</label>
+  <div className="mt-2 relative rounded-md shadow-sm">
+    <input
+      type="text"
+      name="newTag"
+      id="newTag"
+      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+      placeholder="Enter new tag"
+      onKeyPress={(event) => {
+        if (event.key === 'Enter') {
+          event.preventDefault(); // To prevent form submission on Enter
+          const newTag = event.target.value;
+          if (newTag.trim() !== "") {
+            setUserTags([newTag, ...userTags]);
+            event.target.value = "";
+          }
+        }
+      }}
+    />
+  </div>
+</div>
+        <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">Select Tags:</label>
           <div className="flex gap-2">
             {userTags.map((tag) => (
@@ -217,3 +239,5 @@ const TitleInput = () => {
 };
 
 export default TitleInput;
+
+  
