@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 import { Dialog, Menu, Transition } from '@headlessui/react'
 import {
   Bars3Icon,
@@ -34,6 +34,19 @@ function classNames(...classes) {
 export default function Layout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("");
+
+  const [username, setUsername] = useState(""); // For the user's name
+  const [userImage, setUserImage] = useState(""); // For the user's image URL
+
+  useEffect(() => {
+    const firstname = localStorage.getItem('firstname');
+    const capitalizedFirstName = firstname.charAt(0).toUpperCase() + firstname.slice(1);
+    const imageUrl = localStorage.getItem('imageUrl');
+
+    if (capitalizedFirstName) setUsername(capitalizedFirstName);
+    if (imageUrl) setUserImage(imageUrl);
+
+  }, []);
 
   // Function to handle the input change
   const handleSearchChange = (e) => {
@@ -270,14 +283,14 @@ export default function Layout({ children }) {
                 <Menu as="div" className="relative">
                   <Menu.Button className="-m-1.5 flex items-center p-1.5">
                     <span className="sr-only">Open user menu</span>
-                    <img
+                                <img
                       className="h-8 w-8 rounded-full bg-gray-50"
-                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                      src={userImage || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"}
                       alt=""
                     />
                     <span className="hidden lg:flex lg:items-center">
                       <span className="ml-4 text-sm font-semibold leading-6 text-gray-900" aria-hidden="true">
-                        Test user
+                        {username || "No user logged in!"}
                       </span>
                       <ChevronDownIcon className="ml-2 h-5 w-5 text-gray-400" aria-hidden="true" />
                     </span>
