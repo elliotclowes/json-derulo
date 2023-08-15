@@ -21,6 +21,17 @@ export default function SearchResults() {
     setShowDeleteDialog(true);
   };
 
+
+  const getUserID = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) return null;
+  
+    const response = await fetch(`http://localhost:3000/token/get/${token}`);
+    const data = await response.json();
+  
+    return data.user_id
+    };
+
   // Function to handle the deletion
   const handleDeleteSummary = async () => {
     try {
@@ -42,8 +53,13 @@ export default function SearchResults() {
     const fetchData = async () => {
       const db = getFirestore(app);
       const summariesCollection = collection(db, 'summaries');
+      const currentUserId = await getUserID();
 
-      const q = query(summariesCollection, where('titleLower', '==', lowercaseSearchText));
+      const q = query(
+        summariesCollection, 
+        where('titleLower', '==', lowercaseSearchText),
+        where('userID', '==', currentUserId)
+      );
       const querySnapshot = await getDocs(q);
 
       const summariesArray = [];

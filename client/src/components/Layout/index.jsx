@@ -23,7 +23,7 @@ const teams = [
   { id: 2, name: 'Geography', href: '#', initial: 'G', current: false },
 ]
 const userNavigation = [
-  { name: 'Your profile', href: '/settings' },
+  { name: 'Settings', href: '/settings' },
   { name: 'Sign out', href: '/signout' },
 ]
 

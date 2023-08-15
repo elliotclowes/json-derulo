@@ -48,7 +48,7 @@ const TitleInput = () => {
 	const response = await fetch(`http://localhost:3000/token/get/${token}`);
 	const data = await response.json();
 
-	return data.user_id.toString();
+	return data.user_id
   };
 
 
