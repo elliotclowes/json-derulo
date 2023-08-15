@@ -45,6 +45,13 @@ export default function LoginForm() {
 		if (userDocSnapshot.exists() && !userDocSnapshot.data().imageUrl) {
 			data.user.imageUrl = 'https://firebasestorage.googleapis.com/v0/b/learnt-me-test.appspot.com/o/manual%2Fblankavatar-small-min.jpg?alt=media&token=8c28cd62-1b1b-48fc-98f9-cfa0fc077022';
 		}
+
+		// If the user exists and doesn't have an imageUrl, then set it
+		if (userDocSnapshot.exists() && !userDocSnapshot.data().imageUrl) {
+			data.user.imageUrl = 'https://firebasestorage.googleapis.com/v0/b/learnt-me-test.appspot.com/o/manual%2Fblankavatar-small-min.jpg?alt=media&token=8c28cd62-1b1b-48fc-98f9-cfa0fc077022';
+		} else if (userDocSnapshot.exists() && userDocSnapshot.data().imageUrl) {
+			localStorage.setItem("imageUrl", userDocSnapshot.data().imageUrl);
+		}
 	
 		try {
 			await setDoc(userDocRef, data.user, { merge: true });
