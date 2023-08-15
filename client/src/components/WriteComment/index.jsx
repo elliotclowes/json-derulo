@@ -27,6 +27,8 @@ export default function WriteComment({ documentId, blockId }) {
   const [commentBoxVisible, setCommentBoxVisible] = useState(false);
   const [activity, setActivity] = useState([]);
   const [commentText, setCommentText] = useState('');
+  const [imageUrl, setImageUrl] = useState("");
+
 
 
   const getUserID = async () => {
@@ -60,13 +62,28 @@ export default function WriteComment({ documentId, blockId }) {
         return `${daysPast}d ago`;
       }
     }
+
+    useEffect(() => {
+      async function prefetchUserData() {
+          const userID = await getUserID();
+          const userData = await getUserData(userID);
+          if (userData && userData.imageUrl) {
+              setImageUrl(userData.imageUrl);
+          }
+      }
+  
+      prefetchUserData();
+  }, []);
     
 
 
   // Function to toggle the visibility of the comment box
-  const toggleCommentBox = () => {
-    setCommentBoxVisible(!commentBoxVisible);
-  };
+// Function to toggle the visibility of the comment box
+const toggleCommentBox = () => {
+  setCommentBoxVisible(!commentBoxVisible);
+};
+
+
 
   const db = getFirestore(app);
 
@@ -225,7 +242,7 @@ const handleCommentSubmit = async (e) => {
       {commentBoxVisible && (
         <div className="mt-6 flex gap-x-3">
         <img
-          src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+          src={imageUrl}
           alt=""
           className="h-8 w-8 flex-none rounded-full bg-gray-50"
         />
