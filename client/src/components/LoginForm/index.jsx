@@ -1,11 +1,19 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../../contexts";
 
 export default function LoginForm() {
   const [form, setForm] = useState({ username: "", password: "" });
   const { setUser } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedId = localStorage.getItem('id');
+    if (storedId) {
+      navigate('/dash');
+    }
+  }, [navigate]);
+
 
   async function handleSubmit(e) {
     e.preventDefault();

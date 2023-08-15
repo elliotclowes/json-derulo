@@ -1,6 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 export default function SignupForm() {
   const [form, setForm] = useState({
@@ -11,6 +11,15 @@ export default function SignupForm() {
     teacher: false,
     password: '',
   });
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedId = localStorage.getItem('id');
+    if (storedId) {
+      navigate('/dash');
+    }
+  }, [navigate]);
 
   const [emailError, setEmailError] = useState('');
 
@@ -49,6 +58,7 @@ export default function SignupForm() {
       alert(
         'Register Successfully! Verification Email has been sent to your email. Please verify your account before enjoying our app.'
       );
+      navigate('/login');
     } else {
       const errorResponse = await res.json();
       if (errorResponse.error === 'Username already registered.') {

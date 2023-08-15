@@ -12,7 +12,6 @@ export { default as YoutubeUpload } from './YoutubeUpload';
 export { default as CombinedSummaryNotes } from './CombinedSummaryNotes';
 export { default as TeacherInput } from './TeacherInput';
 export { default as TeacherComponents } from './TeacherComponents';
-export { default as BigButton } from './BigButton';
 export { default as Footer } from './Footer';
 export { default as UserSummariesList } from './UserSummariesList';
 export { default as DeleteSummaryConfirmationDialog } from './DeleteSummaryConfirmationDialog';
