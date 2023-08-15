@@ -53,6 +53,7 @@ class UserController {
   static async updateUser(req, res) {
     const { id } = req.params;
     const { firstName, lastName, email, username, password } = req.body;
+    console.log(req.body)
 
     try {
       const user = await User.getById(id);
@@ -61,6 +62,9 @@ class UserController {
       user.email = email || user.email;
       user.username = username || user.username;
       user.password = password || user.password;
+
+      await user.update();
+
       res.status(202).json(user);
     } catch (error) {
       res.status(404).json({ error: "User not found." });
@@ -142,7 +146,7 @@ class UserController {
       const verifiedToken = await Verification.getOneByToken(token);
       await Verification.deleteByToken(verifiedToken.token_id);
       await User.verifyUser(verifiedToken.user_id);
-      
+
       // Redirecting to a frontend success page
       res.redirect(frontEndUrl + 'login');
     } catch (error) {

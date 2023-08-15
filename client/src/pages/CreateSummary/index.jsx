@@ -1,13 +1,15 @@
 import React from 'react';
+import Layout from '../../components/Layout';
 import TitleInput from '../../components/TitleInput';
+import Footer from '../../components/Footer';
 
 const CreateSummary = () => {
   return (
-    <div>
-    <h1>Title Input Form</h1>
-    <TitleInput />
-  </div>
-);
+    <Layout>
+      <TitleInput />
+      <Footer />
+    </Layout>
+  );
 };
 
 export default CreateSummary;
