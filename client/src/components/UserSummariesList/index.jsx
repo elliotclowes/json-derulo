@@ -4,7 +4,7 @@ import { app } from '../../../firebase-config';
 import { useState, useEffect } from 'react';
 import DeleteSummaryConfirmationDialog from '../../components/DeleteSummaryConfirmationDialog';
 
-export async function getUserID() {
+export const getUserID = async function() {
   const token = localStorage.getItem('token');
   if (!token) return null;
 
