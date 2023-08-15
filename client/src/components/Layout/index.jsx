@@ -36,7 +36,7 @@ export default function Layout({ children }) {
 
   return (
     <>
-      <div>
+      <div data-testid="layout-component">
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog as="div" className="relative z-50 lg:hidden" onClose={setSidebarOpen}>
             <Transition.Child
@@ -112,7 +112,7 @@ export default function Layout({ children }) {
                           <ul role="list" className="-mx-2 mt-2 space-y-1">
                             {teams.map((team) => (
                               <li key={team.name}>
-                                <a
+                                <a data-testid="link-component"
                                   href={team.href}
                                   className={classNames(
                                     team.current
@@ -245,7 +245,7 @@ export default function Layout({ children }) {
               </form>
               <div className="flex items-center gap-x-4 lg:gap-x-6">
 
-  
+
 
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative">
@@ -294,11 +294,11 @@ export default function Layout({ children }) {
               </div>
             </div>
           </div>
-          
+
           <main className="py-10">
             <div className="px-4 sm:px-6 lg:px-8">
               {/* Content from each page/component */}
-                {children}
+              {children}
             </div>
           </main>
 
