@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import { useAuth } from "../../contexts";
 import { useNavigate } from "react-router-dom";
 
-// import "./styles.css";
+import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
 
 
 function Settings() {
