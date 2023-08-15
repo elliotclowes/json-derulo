@@ -94,20 +94,47 @@ export default function WriteComment({ documentId, blockId }) {
 
 
 
+
+const getUserData = async (userID) => {
+  try {
+      const userIdString = userID.toString();
+      const userDocRef = doc(collection(db, 'users'), userIdString);
+      const userDocSnapshot = await getDoc(userDocRef);
+      if (userDocSnapshot.exists()) {
+          const userData = userDocSnapshot.data();
+          return {
+              name: `${userData.firstName} ${userData.lastName}`,
+              imageUrl: userData.imageUrl
+          };
+      }
+  } catch (error) {
+      console.error("Error fetching user data: ", error);
+  }
+  return null;  // return null if there's an error or if the document doesn't exist
+};
+
+
+
 const handleCommentSubmit = async (e) => {
   e.preventDefault();
 
   const userID = await getUserID();
+  const userData = await getUserData(userID);
+
+  if (!userData) {
+      console.error("Unable to fetch user data.");
+      return;  // exit the function if no user data is found
+  }
 
   const newComment = {
       userID: userID,
       type: 'commented',
       person: {
-          name: 'Elliot Clowes', // This should ideally come from the user's profile, for now, I'm hardcoding
-          imageUrl: 'https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',  // This too
+          name: userData.name,
+          imageUrl: userData.imageUrl
       },
       comment: commentText,
-      dateTime: new Date().toISOString(),  // Setting it to the current time
+      dateTime: new Date().toISOString()
   };
 
   try {
