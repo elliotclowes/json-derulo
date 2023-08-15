@@ -7,13 +7,17 @@ export default function SignupForm() {
     lastName: "",
     email: "",
     username: "",
+    teacher:false,
     password: "",
   });
   function handleChange(e) {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+    setForm({ ...form, [e.target.name]: value });
   }
+  
   async function handleSubmit(e) {
     e.preventDefault();
+    console.log(JSON.stringify(form))
     const res = await fetch("http://localhost:3000/user/register", {
       method: "POST",
       headers: {
@@ -93,11 +97,18 @@ export default function SignupForm() {
             value="Register"
           />
         </div>
+        <br />
+        <input
+         type="checkbox"
+         name="teacher"
+         onChange={(e) => handleChange(e)}
+        />
+        <label>Are you a teacher?</label>
         <div className="signup text-center">
           <span>
             Already have an account? <Link to="/login" className="text-blue-500">Login here</Link>
           </span>
-        </div>
+        </div>  
       </form>
     </>
   );

@@ -47,6 +47,7 @@ export default function Layout({ children }) {
     window.location.href = `/search/${searchQuery}`;
   };
 
+  // test
   return (
     <>
       <div>
