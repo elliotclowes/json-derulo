@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { getFirestore, collection, doc, updateDoc, onSnapshot } from 'firebase/firestore';
 import { app } from '/firebase-config.js';
 import TextEditor from '../../components/TextEditor';
+import ExampleDocument from "../../utils/ExampleDocument";
 
 function CombinedSummaryNotes() {
   const { documentId } = useParams();
@@ -50,18 +51,19 @@ function CombinedSummaryNotes() {
   };
 
   return (
-    <div className="container mx-auto px-4">
-      <div id="blocks-display" className="space-y-4">
-        {blocks.map((blockText, index) => (
-          <div key={index} className="border p-4 rounded">
-            <TextEditor 
-              document={blockText} 
-              onChange={(newText) => updateSummaryBlock(`block${index + 1}`, newText)} 
-              onSubmit={(newText) => handleBlockSubmit(index, newText)} 
-            />
-          </div>
-        ))}
-      </div>
+    <div>
+     <div id="blocks-display">
+{blocks.map((blockText, index) => (
+  <div key={index}>
+    <TextEditor 
+      document={blockText} 
+      onChange={(newText) => updateSummaryBlock(`block${index + 1}`, newText)} 
+      onSubmit={(newText) => handleBlockSubmit(index, newText)} 
+    />
+  </div>
+))}
+
+</div>
     </div>
   );
 }

@@ -20,17 +20,17 @@ class TokenController {
       res.status(404).json({ error: "Token not found." });
     }
   }
-
-  static async getOneByToken(req, res) {
-    try {
-      const token = req.params.token; // Access the token from the URL parameter
-      const tokenObj = await Token.getOneByToken(token);
-      res.status(200).json(tokenObj);
-    } catch (error) {
-      res.status(404).json({ error: "Get by token not found." });
+ 
+    static async getOneByToken(req, res) {
+      try {
+        const token = req.params.token; // Access the token from the URL parameter
+        const tokenObj = await Token.getOneByToken(token);
+        res.status(200).json(tokenObj);
+      } catch (error) {
+        res.status(404).json({ error: "Get by token not found." });
+      }
     }
-  }
-
+  
   // Create token route is called via the login route in User contolller
   // Delete token route is called via the logout route in User contolller
   // Update token route is not required

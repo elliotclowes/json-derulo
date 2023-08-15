@@ -105,7 +105,6 @@ const AudioRecorder = ({ documentId }) => {
     }
     return randomString;
   };
-
   
   const uploadAudio = (blob) => {
     const randomFileName = generateRandomString(20) + '.wav';
@@ -149,7 +148,7 @@ const AudioRecorder = ({ documentId }) => {
   };
 
   return (
-    <div className="container mx-auto px-4">
+    <div>
       <Controls handlers={handlers} isRecording={isRecording} isPaused={isPaused} />
       <AudioContainer />
     </div>

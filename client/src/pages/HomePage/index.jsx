@@ -1,13 +1,10 @@
-import React from 'react';
-import Layout from '../../components/Layout';
-import Footer from '../../components/Footer';
-
-const CreateSummary = () => {
-  return (
-    <Layout>
-      <Footer />
-    </Layout>
-  );
-};
-
-export default CreateSummary;
+export default function Homepage() {
+    return (
+        <main>
+        <div>
+            <h1>Homepage</h1>
+            <p>I am a homepage!</p>
+        </div>
+        </main>
+    )
+}
