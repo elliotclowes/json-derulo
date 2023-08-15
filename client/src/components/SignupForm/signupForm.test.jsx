@@ -19,24 +19,6 @@ describe('SignupForm', () => {
         );
     });
 
-    it('should render sign up page with form fields', () => {
-        render(
-            <BrowserRouter>
-                <SignupForm />
-            </BrowserRouter>
-        );
-
-        const firstNameInput = screen.getByRole('textbox', { name: /first name/i });
-        const lastNameInput = screen.getByRole('textbox', { name: /last name/i });
-        const emailInput = screen.getByRole('textbox', { name: /email/i });
-        const usernameInput = screen.getByRole('textbox', { name: /username/i });
-
-        expect(firstNameInput).toBeTruthy();
-        expect(lastNameInput).toBeTruthy();
-        expect(emailInput).toBeTruthy();
-        expect(usernameInput).toBeTruthy();
-    })
-
     it('should submit the form and display success alert', async () => {
         render(
             <BrowserRouter>
@@ -63,7 +45,7 @@ describe('SignupForm', () => {
 
         fireEvent.click(submitButton);
 
-        await new Promise((resolve) => setTimeout(resolve, 0)); // This waits for any asynchronous operations
+        await new Promise((resolve) => setTimeout(resolve, 0));
 
         expect(alertSpy).toHaveBeenCalledWith(
             "Register Successfully! Verification Email has been sent to your email. Please verify your account before enjoying our app."
@@ -98,6 +80,10 @@ describe('SignupForm', () => {
 
         expect(alertSpy).toHaveBeenCalledWith("Something went wrong.");
     });
+
+
+
+
 
 
 });

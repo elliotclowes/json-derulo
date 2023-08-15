@@ -1,6 +1,5 @@
 const { v4: uuidv4 } = require("uuid");
 const db = require("../database/db");
-require("dotenv").config(); 
 
 class Token {
     constructor({ token_id, user_id, token }) {
@@ -8,10 +7,7 @@ class Token {
         this.user_id = user_id;
         this.token = token;
     }
-    static async getAll() {
-        const response = await db.query("SELECT * FROM tokens");
-        return response.rows.map((row) => new Token(row));
-      }
+
     static async create(user_id) {
         const token = uuidv4();
         const query =
@@ -22,9 +18,9 @@ class Token {
         return new Token({ token_id, user_id: createdUserId, token });
     }
 
-    static async getOneById(token_id) {
+    static async getOneById(id) {
         const query = "SELECT * FROM tokens WHERE token_id = $1";
-        const response = await db.query(query, [token_id]);
+        const response = await db.query(query, [id]);
         if (response.rows.length !== 1) {
             throw new Error("Unable to locate token.");
         } else {
@@ -38,7 +34,7 @@ class Token {
         if (response.rows.length !== 1) {
             throw new Error("Unable to locate token.");
         } else {
-           return new Token(response.rows[0]);
+            return new Token(response.rows[0]);
         }
     }
 
