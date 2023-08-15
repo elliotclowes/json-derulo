@@ -50,6 +50,17 @@ class UserController {
     }
   }
 
+  static async getUserByToken(req, res) {
+    const { token } = req.body;
+
+    try {
+      const user = await User.getOneByToken(token);
+      res.status(200).json(user);
+    } catch (error) {
+      console.log(error);
+      res.status(404).json({ error: "Token not found." });
+    }
+  }
   static async updateUser(req, res) {
     const { id } = req.params;
     const { firstName, lastName, email, username, password } = req.body;
