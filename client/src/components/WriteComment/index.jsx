@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect } from 'react'
 import { CheckCircleIcon, PlusIcon } from '@heroicons/react/24/solid'
 import { Listbox, Transition } from '@headlessui/react'
 
-import { getFirestore, collection, doc, updateDoc, onSnapshot, getDoc } from 'firebase/firestore';
+import { getFirestore, collection, doc, updateDoc, onSnapshot, getDoc, arrayUnion } from 'firebase/firestore';
 import { app } from '/firebase-config.js';
 
 // const activity = [
@@ -15,23 +15,9 @@ import { app } from '/firebase-config.js';
 //         'https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
 //     },
 //     comment: 'Called client, they reassured me the invoice would be paid by the 25th.',
-//     date: '3d ago',
-//     dateTime: '2023-01-23T15:56',
-//   },
-//   {
-//     userID: 2,
-//     type: 'commented',
-//     person: {
-//       name: 'Chelsea Hagon',
-//       imageUrl:
-//         'https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-//     },
-//     comment: 'I think Winston Churchill is one of the greatest icons of the 21st century. And I would like to see more lessons on him..',
-//     date: '3d ago',
 //     dateTime: '2023-01-23T15:56',
 //   },
 // ]
-
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -40,37 +26,150 @@ function classNames(...classes) {
 export default function WriteComment({ documentId, blockId }) {
   const [commentBoxVisible, setCommentBoxVisible] = useState(false);
   const [activity, setActivity] = useState([]);
+  const [commentText, setCommentText] = useState('');
+  const [imageUrl, setImageUrl] = useState("");
+
+
+
+  const getUserID = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) return null;
+  
+    const response = await fetch(`http://localhost:3000/token/get/${token}`);
+    const data = await response.json();
+  
+    return data.user_id
+    };
+
+
+
+    function timeAgo(isoTime) {
+      const now = new Date();
+      const timestamp = new Date(isoTime);
+      const secondsPast = (now.getTime() - timestamp.getTime()) / 1000;
+    
+      if (secondsPast < 60) {
+        return `${Math.round(secondsPast)}s ago`;
+      }
+      if (secondsPast < 3600) {
+        return `${Math.round(secondsPast / 60)}m ago`;
+      }
+      if (secondsPast <= 86400) {
+        return `${Math.round(secondsPast / 3600)}h ago`;
+      }
+      if (secondsPast > 86400) {
+        const daysPast = Math.round(secondsPast / 86400);
+        return `${daysPast}d ago`;
+      }
+    }
+
+    useEffect(() => {
+      async function prefetchUserData() {
+          const userID = await getUserID();
+          const userData = await getUserData(userID);
+          if (userData && userData.imageUrl) {
+              setImageUrl(userData.imageUrl);
+          }
+      }
+  
+      prefetchUserData();
+  }, []);
+    
 
 
   // Function to toggle the visibility of the comment box
-  const toggleCommentBox = () => {
-    setCommentBoxVisible(!commentBoxVisible);
-  };
+// Function to toggle the visibility of the comment box
+const toggleCommentBox = () => {
+  setCommentBoxVisible(!commentBoxVisible);
+};
+
+
 
   const db = getFirestore(app);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-          const summariesCollection = collection(db, 'summaries');
-          const docRef = doc(summariesCollection, documentId);
-          const docSnapshot = await getDoc(docRef);  // Fetch the document
+    const summariesCollection = collection(db, 'summaries');
+    const docRef = doc(summariesCollection, documentId);
   
-          if (docSnapshot.exists) {  // Check if the document exists
-              const data = docSnapshot.data();
-              
-              // Access the block using the blockId as a key
-              const block = data.blocks[blockId];
-              if (block && block.comments) {
-                  setActivity(block.comments);
-              }
-          }
-      } catch (error) {
-          console.error("Error fetching data: ", error);
-      }
+    // Set up the real-time listener
+    const unsubscribe = onSnapshot(docRef, (docSnapshot) => {
+        if (docSnapshot.exists) {
+            const data = docSnapshot.data();
+            const block = data.blocks[blockId];
+            if (block && block.comments) {
+                setActivity(block.comments);
+            }
+        }
+    });
+
+    // Cleanup function
+    return () => {
+        unsubscribe();
     };
-    fetchData();
+
 }, [documentId, blockId]);
+
+
+
+
+const getUserData = async (userID) => {
+  try {
+      const userIdString = userID.toString();
+      const userDocRef = doc(collection(db, 'users'), userIdString);
+      const userDocSnapshot = await getDoc(userDocRef);
+      if (userDocSnapshot.exists()) {
+          const userData = userDocSnapshot.data();
+          return {
+              name: `${userData.firstName} ${userData.lastName}`,
+              imageUrl: userData.imageUrl
+          };
+      }
+  } catch (error) {
+      console.error("Error fetching user data: ", error);
+  }
+  return null;  // return null if there's an error or if the document doesn't exist
+};
+
+
+
+const handleCommentSubmit = async (e) => {
+  e.preventDefault();
+
+  const userID = await getUserID();
+  const userData = await getUserData(userID);
+
+  if (!userData) {
+      console.error("Unable to fetch user data.");
+      return;  // exit the function if no user data is found
+  }
+
+  const newComment = {
+      userID: userID,
+      type: 'commented',
+      person: {
+          name: userData.name,
+          imageUrl: userData.imageUrl
+      },
+      comment: commentText,
+      dateTime: new Date().toISOString()
+  };
+
+  try {
+      const summariesCollection = collection(db, 'summaries');
+      const docRef = doc(summariesCollection, documentId);
+      
+      await updateDoc(docRef, {
+          [`blocks.${blockId}.comments`]: arrayUnion(newComment)
+      });
+
+      // Reset the comment box
+      setCommentText('');
+      setCommentBoxVisible(false);
+
+  } catch (error) {
+      console.error("Error adding comment: ", error);
+  }
+}
 
 
 
@@ -100,8 +199,8 @@ export default function WriteComment({ documentId, blockId }) {
                     <div className="py-0.5 text-xs leading-5 text-gray-500">
                       <span className="font-medium text-gray-900">{activityItem.person.name}</span>
                     </div>
-                    <time dateTime={activityItem.dateTime} className="flex-none py-0.5 text-xs leading-5 text-gray-500">
-                      {activityItem.dateTime}
+                    <time dateTime={timeAgo(activityItem.dateTime)} className="flex-none py-0.5 text-xs leading-5 text-gray-500">
+                      {timeAgo(activityItem.dateTime)}
                     </time>
                   </div>
                   <p className="text-sm leading-5 text-gray-500">{activityItem.comment}</p>
@@ -120,8 +219,8 @@ export default function WriteComment({ documentId, blockId }) {
                   <span className="font-medium text-gray-900">{activityItem.person.name}</span> {activityItem.type} the
                   invoice.
                 </p>
-                <time dateTime={activityItem.dateTime} className="flex-none py-0.5 text-xs leading-5 text-gray-500">
-                {activityItem.dateTime}
+                <time dateTime={timeAgo(activityItem.dateTime)} className="flex-none py-0.5 text-xs leading-5 text-gray-500">
+                {timeAgo(activityItem.dateTime)}
                 </time>
               </>
             )}
@@ -143,11 +242,11 @@ export default function WriteComment({ documentId, blockId }) {
       {commentBoxVisible && (
         <div className="mt-6 flex gap-x-3">
         <img
-          src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+          src={imageUrl}
           alt=""
           className="h-8 w-8 flex-none rounded-full bg-gray-50"
         />
-        <form action="#" className="relative flex-auto">
+        <form action="#" className="relative flex-auto" onSubmit={handleCommentSubmit}>
           <div className="overflow-hidden rounded-lg pb-12 shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-indigo-600">
             <label htmlFor="comment" className="sr-only">
               Add your comment
@@ -158,7 +257,8 @@ export default function WriteComment({ documentId, blockId }) {
               id="comment"
               className="block w-full resize-none border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
               placeholder="Add your comment..."
-              defaultValue={''}
+              value={commentText}
+              onChange={e => setCommentText(e.target.value)}
             />
           </div>
           <div className="absolute inset-x-0 bottom-0 flex justify-between py-2 pl-3 pr-2">
