@@ -35,7 +35,14 @@ export default function SignupForm() {
         'Register Successfully! Verification Email has been sent to your email. Please verify your account before enjoying our app.'
       );
     } else {
-      alert('Something went wrong.');
+      const errorResponse = await res.json();
+      if (errorResponse.error === 'Username already registered.') {
+        alert('Username already exists. Please choose a different username.')
+      } else if (errorResponse.error === 'Email already registered.') {
+        alert('Email already registered. Please use a different email.')
+      } else {
+        alert('Something went wrong.')
+      }
     }
   }
 
