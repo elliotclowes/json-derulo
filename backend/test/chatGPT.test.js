@@ -12,16 +12,26 @@ describe("ChatGPT Functions", () => {
         return {
             Configuration: jest.fn(),
             OpenAIApi: jest.fn(() => ({
-                createChatCompletion: jest.fn()
+                createChatCompletion: jest.fn(() => ({
+                    data: {
+                        choices: [
+                            {
+                                message: {
+                                    content: 'Your summarized content here'
+                                }
+                            }
+                        ]
+                    }
+                }))
             }))
         };
     });
-    const openai = new OpenAIApi();
 
     // Test that summarizeTranscript returns text
     test('summarizeTranscript should return summary', async () => {
         const transcript = "This is a transcript test. What would normally go here is a transcript."
         const summaryResponse = await summarizeTranscript(transcript)
+
         expect(summaryResponse).toBeTruthy()
     })
 

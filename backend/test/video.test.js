@@ -1,7 +1,7 @@
 const request = require('supertest');
 const axios = require('axios');
 const admin = require('firebase-admin');
-const { summarizeTranscript } = require('../controllers/chatGPT');
+const { summarizeTranscript } = require('../controllers/chatGPT'); // Assuming this is the correct path
 const app = require('../api');
 const db = admin.firestore();
 
@@ -19,7 +19,7 @@ describe('Fetch Subtitles API', () => {
 
     // Mock summarizeTranscript function
     jest.mock('../controllers/chatGPT', () => ({
-        summarizeTranscript: jest.fn(() => 'Summary of transcript'),
+        summarizeTranscript: jest.fn((content) => `Summary of ${content}`),
     }));
 
     // Test successful fetch and summarization
@@ -27,6 +27,8 @@ describe('Fetch Subtitles API', () => {
         const mockRequest = {
             body: {
                 url: 'https://www.example.com/youtube-video-url',
+                user_id: 'user123', // Add a valid user ID
+                timestamp: '1234567890', // Add a valid timestamp
             },
         };
         const mockResponse = {
@@ -34,17 +36,23 @@ describe('Fetch Subtitles API', () => {
             json: jest.fn(),
         };
 
-        await request(app).post('/fetch-subtitles').send(mockRequest).expect(200);
+        await request(app).post('/video/fetch_subtitles').send(mockRequest).expect(200);
 
         expect(axios.post).toHaveBeenCalledWith('http://178.128.39.115:8000/download_subtitles', {
             url: 'https://www.example.com/youtube-video-url',
         });
 
-        expect(summarizeTranscript).toHaveBeenCalledWith(expect.any(String));
-        expect(db.collection().doc().set).toHaveBeenCalledWith({ summary: 'Summary of transcript' });
+        expect(summarizeTranscript).toHaveBeenCalledWith(expect.any(String), expect.any(String));
+        expect(db.collection().doc().set).toHaveBeenCalledWith({
+            summary: 'Summary of Subtitle 1Subtitle 2', // Check if the summary matches your expectation
+            user_id: 'user123',
+            timestamp: '1234567890',
+        });
 
         expect(mockResponse.status).toHaveBeenCalledWith(200);
-        expect(mockResponse.json).toHaveBeenCalledWith({ summary: 'Summary of transcript' });
+        expect(mockResponse.json).toHaveBeenCalledWith({
+            summary: 'Summary of Subtitle 1Subtitle 2', // Check if the summary matches your expectation
+        });
     });
 
     // Test error handling
@@ -61,7 +69,7 @@ describe('Fetch Subtitles API', () => {
         };
 
         await request(app)
-            .post('/fetch-subtitles')
+            .post('/video/fetch_subtitles')
             .send(mockRequest)
             .expect(500, { error: 'An error occurred while fetching and summarizing subtitles.' });
 

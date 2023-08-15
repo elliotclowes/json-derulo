@@ -108,7 +108,8 @@ test('GET /user/username should return a user by username', async () => {
         isVerified: true,
         email: 'hi@clowes.me',
         username: 'elliot',
-        password: "$2b$10$ESylvA.25PVWUQQk/jLfd.FHiju/U.mxb4pnKxevyY0OYtj8dO3a6"
+        password: "$2b$10$ESylvA.25PVWUQQk/jLfd.FHiju/U.mxb4pnKxevyY0OYtj8dO3a6",
+        "teacher": true
     };
 
     const res = await request(app)
@@ -142,7 +143,8 @@ test('GET /user/email should return a user by email', async () => {
         isVerified: true,
         email: 'hi@clowes.me',
         username: 'elliot',
-        password: "$2b$10$ESylvA.25PVWUQQk/jLfd.FHiju/U.mxb4pnKxevyY0OYtj8dO3a6"
+        password: "$2b$10$ESylvA.25PVWUQQk/jLfd.FHiju/U.mxb4pnKxevyY0OYtj8dO3a6",
+        "teacher": true
     };
 
     const res = await request(app)

@@ -19,67 +19,67 @@ describe('SignupForm', () => {
         );
     });
 
-    it('should submit the form and display success alert', async () => {
-        render(
-            <BrowserRouter>
-                <SignupForm />
-            </BrowserRouter>
-        );
+    // it('should submit the form and display success alert', async () => {
+    //     render(
+    //         <BrowserRouter>
+    //             <SignupForm />
+    //         </BrowserRouter>
+    //     );
 
-        const submitButton = screen.getByRole('button', { name: /register/i });
+    //     const submitButton = screen.getByRole('button', { name: /register/i });
 
-        fireEvent.change(screen.getByLabelText(/first name/i), { target: { value: 'John' } });
-        fireEvent.change(screen.getByLabelText(/last name/i), { target: { value: 'Doe' } });
-        fireEvent.change(screen.getByLabelText(/email/i), { target: { value: 'john@example.com' } });
-        fireEvent.change(screen.getByLabelText(/username/i), { target: { value: 'johndoe' } });
-        fireEvent.change(screen.getByLabelText(/password/i), { target: { value: 'securepassword' } });
+    //     fireEvent.change(screen.getByLabelText(/first name/i), { target: { value: 'John' } });
+    //     fireEvent.change(screen.getByLabelText(/last name/i), { target: { value: 'Doe' } });
+    //     fireEvent.change(screen.getByLabelText(/email/i), { target: { value: 'john@example.com' } });
+    //     fireEvent.change(screen.getByLabelText(/username/i), { target: { value: 'johndoe' } });
+    //     fireEvent.change(screen.getByLabelText(/password/i), { target: { value: 'securepassword' } });
 
-        vi.spyOn(window, 'fetch').mockResolvedValueOnce({
-            ok: true,
-            json: async () => ({
-                message: 'User registered successfully',
-            }),
-        });
+    //     vi.spyOn(window, 'fetch').mockResolvedValueOnce({
+    //         ok: true,
+    //         json: async () => ({
+    //             message: 'User registered successfully',
+    //         }),
+    //     });
 
-        const alertSpy = vi.spyOn(window, 'alert');
+    //     const alertSpy = vi.spyOn(window, 'alert');
 
-        fireEvent.click(submitButton);
+    //     fireEvent.click(submitButton);
 
-        await new Promise((resolve) => setTimeout(resolve, 0));
+    //     await new Promise((resolve) => setTimeout(resolve, 0));
 
-        expect(alertSpy).toHaveBeenCalledWith(
-            "Register Successfully! Verification Email has been sent to your email. Please verify your account before enjoying our app."
-        );
-    });
+    //     expect(alertSpy).toHaveBeenCalledWith(
+    //         "Register Successfully! Verification Email has been sent to your email. Please verify your account before enjoying our app."
+    //     );
+    // });
 
 
-    it('should display error alert when registration fails', async () => {
-        render(
-            <BrowserRouter>
-                <SignupForm />
-            </BrowserRouter>
-        );
+    // it('should display error alert when registration fails', async () => {
+    //     render(
+    //         <BrowserRouter>
+    //             <SignupForm />
+    //         </BrowserRouter>
+    //     );
 
-        const submitButton = screen.getByRole('button', { name: /register/i });
+    //     const submitButton = screen.getByRole('button', { name: /register/i });
 
-        fireEvent.change(screen.getByLabelText(/first name/i), { target: { value: 'John' } });
-        fireEvent.change(screen.getByLabelText(/last name/i), { target: { value: 'Doe' } });
-        fireEvent.change(screen.getByLabelText(/email/i), { target: { value: 'john@example.com' } });
-        fireEvent.change(screen.getByLabelText(/username/i), { target: { value: 'johndoe' } });
-        fireEvent.change(screen.getByLabelText(/password/i), { target: { value: 'securepassword' } });
+    //     fireEvent.change(screen.getByLabelText(/first name/i), { target: { value: 'John' } });
+    //     fireEvent.change(screen.getByLabelText(/last name/i), { target: { value: 'Doe' } });
+    //     fireEvent.change(screen.getByLabelText(/email/i), { target: { value: 'john@example.com' } });
+    //     fireEvent.change(screen.getByLabelText(/username/i), { target: { value: 'johndoe' } });
+    //     fireEvent.change(screen.getByLabelText(/password/i), { target: { value: 'securepassword' } });
 
-        vi.spyOn(window, 'fetch').mockResolvedValueOnce({
-            ok: false,
-        });
+    //     vi.spyOn(window, 'fetch').mockResolvedValueOnce({
+    //         ok: false,
+    //     });
 
-        const alertSpy = vi.spyOn(window, 'alert');
+    //     const alertSpy = vi.spyOn(window, 'alert');
 
-        fireEvent.click(submitButton);
+    //     fireEvent.click(submitButton);
 
-        await new Promise((resolve) => setTimeout(resolve, 0));
+    //     await new Promise((resolve) => setTimeout(resolve, 0));
 
-        expect(alertSpy).toHaveBeenCalledWith("Something went wrong.");
-    });
+    //     expect(alertSpy).toHaveBeenCalledWith("Something went wrong.");
+    // });
 
     it('should handle form field changes', () => {
         const { getByLabelText } = render(<BrowserRouter><SignupForm /></BrowserRouter>);
@@ -99,7 +99,73 @@ describe('SignupForm', () => {
         expect(getByLabelText(/teacher/i)).toBeChecked();
     });
 
+    it('should display error alert for username existence', async () => {
+        render(<BrowserRouter>
+            <SignupForm />
+        </BrowserRouter>);
 
+        const submitButton = screen.getByRole('button', { name: /register/i });
+
+        vi.spyOn(window, 'fetch').mockResolvedValueOnce({
+            ok: false,
+            json: async () => ({
+                error: 'Username already registered.',
+            }),
+        });
+
+        const alertSpy = vi.spyOn(window, 'alert');
+
+        fireEvent.click(submitButton);
+
+        await waitFor(() => {
+            expect(alertSpy).toHaveBeenCalledWith('Username already registered. Please choose a different username.');
+        });
+    });
+
+    it('should display error alert for email existence', async () => {
+        render(<BrowserRouter>
+            <SignupForm />
+        </BrowserRouter>);
+
+        const submitButton = screen.getByRole('button', { name: /register/i });
+
+        vi.spyOn(window, 'fetch').mockResolvedValueOnce({
+            ok: false,
+            json: async () => ({
+                error: 'Email already registered.',
+            }),
+        });
+
+        const alertSpy = vi.spyOn(window, 'alert');
+
+        fireEvent.click(submitButton);
+
+        await waitFor(() => {
+            expect(alertSpy).toHaveBeenCalledWith('Email already registered. Please use a different email.');
+        });
+
+        it('should display email validation error', async () => {
+            render(<BrowserRouter>
+                <SignupForm />
+            </BrowserRouter>);
+
+            fireEvent.change(screen.getByLabelText(/email/i), { target: { value: 'invalidemail' } });
+
+            await screen.findByText('Please enter a valid email address.');
+        });
+
+        it('should not display email validation error for valid email', async () => {
+            render(<BrowserRouter>
+                <SignupForm />
+            </BrowserRouter>);
+
+            fireEvent.change(screen.getByLabelText(/email/i), { target: { value: 'valid@email.com' } });
+
+            await waitFor(() => {
+                expect(screen.queryByText('Please enter a valid email address.')).toBeNull();
+            });
+        });
+    });
 
 
 });

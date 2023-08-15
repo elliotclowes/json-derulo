@@ -38,16 +38,16 @@ const AudioRecorder = ({ documentId }) => {
   //                       audiosContainer.appendChild(a);
   //                       audiosContainer.appendChild(document.createElement('hr'));
   //                       indexRef.current += 1; // Increment the index using the ref
-                      
+
   //                       uploadAudio(blob); // Upload the audio blob to the server
   //                     };
 
   //   var timeInterval = document.querySelector('#time-interval').value;
   //   if (timeInterval) timeInterval = parseInt(timeInterval) * 1000; // Convert seconds to milliseconds
   //   else timeInterval = 5 * 1000; // Default value if not provided
-    
+
   //   newMediaRecorder.start(timeInterval);
-                      
+
 
   //   setMediaRecorder(newMediaRecorder);
   //   setIsRecording(true);
@@ -60,23 +60,23 @@ const AudioRecorder = ({ documentId }) => {
     newMediaRecorder.stream = stream;
     newMediaRecorder.recorderType = MediaRecorderWrapper;
     newMediaRecorder.audioChannels = !!document.getElementById('left-channel').checked ? 1 : 2;
-  
+
     newMediaRecorder.ondataavailable = function (blob) {
       indexRef.current += 1; // Increment the index using the ref
       uploadAudio(blob); // Upload the audio blob to the server
     };
-  
+
     var timeInterval = document.querySelector('#time-interval').value;
     if (timeInterval) timeInterval = parseInt(timeInterval) * 1000; // Convert seconds to milliseconds
     else timeInterval = 5 * 1000; // Default value if not provided
-  
+
     newMediaRecorder.start(timeInterval);
-  
+
     setMediaRecorder(newMediaRecorder);
     setIsRecording(true);
     setIsPaused(false);
   };
-  
+
 
   const onMediaError = (e) => {
     console.error('media error', e);
@@ -105,7 +105,7 @@ const AudioRecorder = ({ documentId }) => {
     return randomString;
   };
 
-  
+
   const uploadAudio = (blob) => {
     const randomFileName = generateRandomString(20) + '.wav';
     const formData = new FormData();
@@ -116,12 +116,12 @@ const AudioRecorder = ({ documentId }) => {
       method: 'POST',
       body: formData
     })
-    .then(response => response.json())
-    .then(data => console.log('File uploaded successfully:', data))
-    .catch(error => console.error('Error uploading file:', error));
+      .then(response => response.json())
+      .then(data => console.log('File uploaded successfully:', data))
+      .catch(error => console.error('Error uploading file:', error));
   };
-  
-  
+
+
 
   const handlers = {
     startRecording: () => {
@@ -137,8 +137,8 @@ const AudioRecorder = ({ documentId }) => {
 
   return (
     <div className="container mx-auto px-4">
-      <Controls handlers={handlers} isRecording={isRecording} />
-      <AudioContainer />
+      <Controls handlers={handlers} isRecording={isRecording} data-testid="controls" />
+      <AudioContainer data-testid="audio-container" />
     </div>
   );
 };

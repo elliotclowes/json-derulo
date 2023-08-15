@@ -9,53 +9,53 @@ import { getFirestore, collection, query, where, getDocs } from 'firebase/firest
 
 
 vi.mock('./index', async () => {
-    const actual = await vi.importActual('./index');
-    return {
-      ...actual,
-      UserSummariesList: actual.default // Assuming UserSummariesList is the default export
-    };
-  });
-  
+  const actual = await vi.importActual('./index');
+  return {
+    ...actual,
+    UserSummariesList: actual.default // Assuming UserSummariesList is the default export
+  };
+});
 
-  import { UserSummariesList } from './index';
+
+import { UserSummariesList } from './index';
 
 // Mocking Firebase Firestore functions
 vi.mock('firebase/firestore', () => ({
-    getFirestore: vi.fn(() => ({
-      collection: vi.fn(() => ({
-        where: vi.fn(() => ({
-          get: vi.fn(async () => ({
-            docs: [
-              {
-                id: '1',
-                data: () => ({
-                  title: 'Summary 1',
-                  tags: ['Tag 1', 'Tag 2'],
-                  visibility: 'Public',
-                  created: new Date(1630444800000), // September 1, 2021
-                }),
-              },
-              {
-                id: '2',
-                data: () => ({
-                  title: 'Summary 2',
-                  tags: ['Tag 2', 'Tag 3'],
-                  visibility: 'Private',
-                  created: new Date(1640995200000), // January 1, 2022
-                }),
-              },
-              // Add more mock data entries as needed
-            ],
-          })),
+  getFirestore: vi.fn(() => ({
+    collection: vi.fn(() => ({
+      where: vi.fn(() => ({
+        get: vi.fn(async () => ({
+          docs: [
+            {
+              id: '1',
+              data: () => ({
+                title: 'Summary 1',
+                tags: ['Tag 1', 'Tag 2'],
+                visibility: 'Public',
+                created: new Date(1630444800000), // September 1, 2021
+              }),
+            },
+            {
+              id: '2',
+              data: () => ({
+                title: 'Summary 2',
+                tags: ['Tag 2', 'Tag 3'],
+                visibility: 'Private',
+                created: new Date(1640995200000), // January 1, 2022
+              }),
+            },
+            // Add more mock data entries as needed
+          ],
         })),
       })),
     })),
-    collection: vi.fn(),
-    query: vi.fn(),
-    where: vi.fn(),
-    getDocs: vi.fn(),
-  }));
-  
+  })),
+  collection: vi.fn(),
+  query: vi.fn(),
+  where: vi.fn(),
+  getDocs: vi.fn(),
+}));
+
 
 
 
@@ -94,39 +94,74 @@ describe('UserSummariesList', () => {
     expect(paragraphElement).toBeInTheDocument();
   });
 
- // Test utils
- const renderWithSummaries = async (userId) => {
-
+  // Test utils
+  const renderWithSummaries = async (userId) => {
     const ui = render(
-      <MemoryRouter> 
-        <UserSummariesList />
-      </MemoryRouter>, 
-      {/* auth */}
+      <AuthProvider>
+        <MemoryRouter>
+          <UserSummariesList />
+        </MemoryRouter>
+      </AuthProvider>
     );
-    
+
     const summaries = await fetchSummaries(userId);
-  
+
     return {
       ...ui,
-      summaries
+      summaries,
     };
-  }
-  
-  // Test code
-  it('displays summaries', async () => {
-  
-    const userId = '1';
-  
-    const { summaries } = await renderWithSummaries(userId);
-  
-    // Log and assert on summaries
-  
-  });
-  
+  };
+
   // Implement fetch summaries
   const fetchSummaries = async (userId) => {
-    // Call API, return data
+    // Simulate API call or use mock data
+    const mockSummaries = [
+      {
+        id: '1',
+        title: 'Summary 1',
+        tags: ['Tag 1', 'Tag 2'],
+        visibility: 'Public',
+        created: new Date(1630444800000), // September 1, 2021
+      },
+      {
+        id: '2',
+        title: 'Summary 2',
+        tags: ['Tag 2', 'Tag 3'],
+        visibility: 'Private',
+        created: new Date(1640995200000), // January 1, 2022
+      },
+      // Add more mock summaries as needed
+    ];
+
+    return mockSummaries;
   };
-  
+
+
+  it('displays summaries', async () => {
+
+
+    // Render the component
+    render(
+      <MemoryRouter>
+        <UserSummariesList />
+      </MemoryRouter>
+    );
+
+    // Wait for the asynchronous operations in useEffect to complete
+    await waitFor(() => {
+      // Now you can perform your assertions
+      const titleColumnHeader = screen.getByRole('columnheader', { name: /Title/i });
+      const tagsColumnHeader = screen.getByRole('columnheader', { name: /Tags/i });
+      const visibilityColumnHeader = screen.getByRole('columnheader', { name: /Visibility/i });
+      const createdColumnHeader = screen.getByRole('columnheader', { name: /Created/i });
+
+      expect(titleColumnHeader).toBeInTheDocument();
+      expect(tagsColumnHeader).toBeInTheDocument();
+      expect(visibilityColumnHeader).toBeInTheDocument();
+      expect(createdColumnHeader).toBeInTheDocument();
+    });
+  });
+
+
 
 });
