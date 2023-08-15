@@ -112,11 +112,10 @@ class UserController {
 
       await sgMail.send({
         to: result.email,
-        from: `Learnt.me <${process.env.SENDER_EMAIL}>`,
+        from: `Audify.me <${process.env.SENDER_EMAIL}>`,
         subject: "Verify your email",
         html: `<div style="width: 70%; margin: 0 auto; ">
-          <h2>Learnt.me<h2>
-          <p>Thanks for signing up for Learnt.me! We're excited to have you as an early user. Just verify your email and start supercharging speech!</p>
+          <p>Thanks for signing up for Audify.me! We're excited to have you as an early user. Just verify your email and start supercharging speech!</p>
           <h6 style="font-size: 18px">Verify your email:</h6>
           <a style="margin-top:1em; padding: 1em; background-color: #33b249; text-decoration: none ; color: white" href="${url}"> <b>Verify Your Email Address</b></a></div>`,
       });
