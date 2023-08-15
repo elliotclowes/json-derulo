@@ -1,19 +1,9 @@
 import React, { useState } from 'react';
-import { generateLearningSuggestions } from ''; 
 
 
 function App() {
   const [youtubeUrl, setYoutubeUrl] = useState('');
   const [subtitles, setSubtitles] = useState('');
-<<<<<<< HEAD
-  const [isLoading, setIsLoading] = useState(false);
-  const [suggestions, setSuggestions] = useState('');
-
-  const handleProcessVideo = async () => {
-    try {
-      setIsLoading(true);
-
-=======
   const [isLoading, setIsLoading] = useState(false);  
   
   const currentDate = new Date();
@@ -37,7 +27,6 @@ const formattedDate = currentDate.toISOString();
         setIsLoading(false); // Set loading to false in case of an error
         return;
       }
->>>>>>> a7af73ea3a56990d22df17345436d9557b8d36e5
       const response = await fetch('http://localhost:3000/video/fetch_subtitles', {
       method: 'POST',
       headers: {
@@ -53,26 +42,14 @@ const formattedDate = currentDate.toISOString();
       const data = await response.json();
       console.log(data);
 
-      setSubtitles(data.summary);
-      setIsLoading(false);
+      // Update subtitles state with the fetched data
+      setSubtitles(data.summary); // Assuming data.summary is the correct property
+      
+      setIsLoading(false); // Set loading to false after fetching subtitles
+
     } catch (error) {
       console.error('Error processing video:', error);
-      setIsLoading(false);
-    }
-  };
-
-  const handleGenerateSuggestions = async () => {
-    try {
-      setIsLoading(true);
-
-
-      const suggestionsText = await generateLearningSuggestions(subtitles);
-
-      setSuggestions(suggestionsText);
-      setIsLoading(false);
-    } catch (error) {
-      console.error('Error generating suggestions:', error);
-      setIsLoading(false);
+      setIsLoading(false); // Make sure loading is set to false in case of an error
     }
   };
 
@@ -93,27 +70,17 @@ const formattedDate = currentDate.toISOString();
       <button className="loadButton" onClick={handleProcessVideo}>
         Process Video
       </button>
-
+      
       <div
         id="content"
         className={isLoading ? 'hidden' : ''}
       >
+        {/* Your content goes here */}
         <p>This is the content that gets loaded.</p>
       </div>
 
-      {subtitles && (
-        <div>
-          {subtitles}
-          <button onClick={handleGenerateSuggestions}>Generate Suggestions</button>
-        </div>
-      )}
-
-      {suggestions && (
-        <div>
-          <h2>Suggestions:</h2>
-          <p>{suggestions}</p>
-        </div>
-      )}
+      {/* Display subtitles below the button */}
+      {subtitles && <div>{subtitles}</div>}
     </div>
   );
 }
