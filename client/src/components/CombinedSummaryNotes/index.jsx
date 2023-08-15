@@ -58,14 +58,10 @@ function CombinedSummaryNotes() {
           <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
             <img
               className="h-8 w-auto"
-              src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-              alt="Your Company"
+              src="https://firebasestorage.googleapis.com/v0/b/learnt-me-test.appspot.com/o/manual%2Flogo.svg?alt=media&token=1b976e10-5cf3-42e0-827a-136ced55ba58"
+              alt="Audify.me"
             />
             <div className="flex items-center gap-x-8">
-              <button type="button" className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-300">
-                <span className="sr-only">View notifications</span>
-                <BellIcon className="h-6 w-6" aria-hidden="true" />
-              </button>
               <a href="#" className="-m-1.5 p-1.5">
                 <span className="sr-only">Your profile</span>
                 <img

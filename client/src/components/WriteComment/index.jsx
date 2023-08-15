@@ -101,7 +101,7 @@ export default function WriteComment({ documentId, blockId }) {
                       <span className="font-medium text-gray-900">{activityItem.person.name}</span>
                     </div>
                     <time dateTime={activityItem.dateTime} className="flex-none py-0.5 text-xs leading-5 text-gray-500">
-                      {activityItem.date}
+                      {activityItem.dateTime}
                     </time>
                   </div>
                   <p className="text-sm leading-5 text-gray-500">{activityItem.comment}</p>
@@ -121,7 +121,7 @@ export default function WriteComment({ documentId, blockId }) {
                   invoice.
                 </p>
                 <time dateTime={activityItem.dateTime} className="flex-none py-0.5 text-xs leading-5 text-gray-500">
-                  {activityItem.date}
+                {activityItem.dateTime}
                 </time>
               </>
             )}
