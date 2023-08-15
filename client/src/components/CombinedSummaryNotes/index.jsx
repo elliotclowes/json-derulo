@@ -8,21 +8,16 @@ function CombinedSummaryNotes() {
   const { documentId } = useParams();
   const [blocks, setBlocks] = useState([]);
   const db = getFirestore(app);
+  const [isLoading, setIsLoading] = useState(false);
+  const [nextSteps, setNextSteps] = useState([]);
 
   const updateSummaryBlock = async (blockId, newText) => {
-    // Get the Firestore reference to the specific document
     const summariesCollection = collection(db, 'summaries');
     const summariesRef = doc(summariesCollection, documentId);
-  
-    // Create a path to the specific block you want to update
     const blockPath = `blocks.${blockId}.text`;
-  
-    // Create an object representing the update
     const updateObject = {
       [blockPath]: newText,
     };
-  
-    // Update the text of the specific block
     await updateDoc(summariesRef, updateObject).catch(error => {
       console.error('Error updating block:', error);
     });
@@ -49,6 +44,49 @@ function CombinedSummaryNotes() {
     updateSummaryBlock(`block${blockId + 1}`, newText);
   };
 
+  const handleLearnMore = async () => {
+    try {
+      setIsLoading(true);
+      const prompt = "Please provide 3 bullet points on what to learn next and make them 1-4 word each :";
+      const combinedText = blocks.join(' ');
+      const response = await fetch('http://localhost:3000/audio/chatgpt', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          prompt: prompt,
+          content: combinedText
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Error fetching next steps');
+      }
+
+      const contentType = response.headers.get('content-type');
+
+      if (contentType && contentType.includes('application/json')) {
+        const data = await response.json();
+
+        if (data && data.nextSteps) {
+          setNextSteps(data.nextSteps);
+        } else {
+          throw new Error('Invalid JSON response');
+        }
+      } else {
+        const plainTextResponse = await response.text();
+        const sentences = plainTextResponse.split('. '); 
+        setNextSteps(sentences);
+      }
+
+    } catch (error) {
+      console.error('Error fetching next steps:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="container mx-auto px-4">
       <div id="blocks-display" className="space-y-4">
@@ -61,6 +99,23 @@ function CombinedSummaryNotes() {
             />
           </div>
         ))}
+      </div>
+
+      <button className="learnMoreButton" onClick={handleLearnMore} disabled={isLoading}>
+        Learn More
+      </button>
+
+      <div className="nextSteps">
+        {nextSteps.length > 0 && (
+          <div>
+            <h2>What to Learn Next:</h2>
+            <ul>
+              {nextSteps.map((step, index) => (
+                <li key={index}>{step}</li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </div>
   );

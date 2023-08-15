@@ -19,27 +19,6 @@ const trimToTokenLimit = (text, limit) => {
   return text;
 };
 
-const generateLearningSuggestions = async (transcript) => {
-  try {
-    const TOKEN_LIMIT = 3900;
-    transcript = trimToTokenLimit(transcript, TOKEN_LIMIT);
-
-    const prompt = `After reading the summary, suggest three bullet points on what to learn next:\n\n${transcript}`;
-
-    const chatCompletion = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo",
-      messages: [{role: "system", content: "You are a helpful assistant that suggests learning points."}],
-      max_tokens: 100,
-      prompt: prompt
-    });
-
-    const content = chatCompletion.data.choices[0].message.content;
-    console.log("Generated learning suggestions:", content);
-    return content;
-  } catch (error) {
-    console.error('Error generating learning suggestions:', error);
-  }
-};
 
 const summarizeTranscript = async (prompt, content) => {
   try {
@@ -61,4 +40,4 @@ const summarizeTranscript = async (prompt, content) => {
   }
 };
 
-module.exports = { generateLearningSuggestions, summarizeTranscript };
+module.exports = { summarizeTranscript };
