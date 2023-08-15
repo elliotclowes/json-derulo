@@ -131,7 +131,7 @@ const TitleInput = () => {
 
 	  <form className="title-form p-4 rounded-lg shadow-md bg-white" onSubmit={handleSubmit}>
 		<div className="mb-4">
-		  <label htmlFor="title" className="block text-sm font-medium text-gray-700">Title:</label>
+		  <label htmlFor="title" className="block text-m font-medium text-black-700">Title:</label>
 		  <input
 			type="text"
 			id="title"
@@ -142,7 +142,7 @@ const TitleInput = () => {
 		  />
 		</div>
 		<div className="mb-4">
-  <label htmlFor="newTag" className="block text-sm font-medium text-gray-700">Add Tags:</label>
+  <label htmlFor="newTag" className="block text-m font-medium text-black-700">Add Tags:</label>
   <div className="mt-2 relative rounded-md shadow-sm">
 	<input
 	  type="text"
@@ -164,21 +164,25 @@ const TitleInput = () => {
 	/>
   </div>
 </div>
-		<div className="mb-4">
-		  <label className="block text-sm font-medium text-gray-700">Select Tags:</label>
-		  <div className="flex gap-2">
-			{userTags.map((tag) => (
-			  <span
-				key={tag}
-				className={`px-3 py-1 text-sm rounded-lg cursor-pointer ${selectedTags.includes(tag) ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}
-				onClick={() => handleTagClick(tag)}
-			  >
-				{tag}
-			  </span>
-			))}
-		  </div>
-		</div>
+			{userTags.length > 0 && (
+			<div className="mb-4">
+				<label className="block text-m font-medium text-black-700">Select Tags:</label>
+				<div className="flex gap-2">
+				{userTags.map((tag) => (
+					<span
+					key={tag}
+					className={`px-3 py-1 text-sm rounded-lg cursor-pointer ${selectedTags.includes(tag) ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black-700'}`}
+					onClick={() => handleTagClick(tag)}
+					>
+					{tag}
+					</span>
+				))}
+				</div>
+			</div>
+			)}
+		<hr></hr><br></br>
 		<fieldset>
+			<label className="block text-m font-medium text-black-700">Visibility</label><br></br>
 			<legend className="sr-only">Visibility</legend>
 			<div className="space-y-5">
 				{visibilitySettings.map((setting) => (
@@ -206,10 +210,12 @@ const TitleInput = () => {
 				))}
 			</div>
 			</fieldset>
-
+			<br></br>
+			<hr></hr>
+<br></br>
 		<button
 		  type="submit"
-		  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus-visible:ring focus-visible:ring-blue-200 focus-visible:ring-opacity-50 transition-colors"
+		  className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 focus:outline-none focus-visible:ring focus-visible:ring-blue-200 focus-visible:ring-opacity-50 transition-colors"
 		>
 		  Create Summary
 		</button>
