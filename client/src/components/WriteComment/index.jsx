@@ -40,6 +40,29 @@ export default function WriteComment({ documentId, blockId }) {
     };
 
 
+
+    function timeAgo(isoTime) {
+      const now = new Date();
+      const timestamp = new Date(isoTime);
+      const secondsPast = (now.getTime() - timestamp.getTime()) / 1000;
+    
+      if (secondsPast < 60) {
+        return `${Math.round(secondsPast)}s ago`;
+      }
+      if (secondsPast < 3600) {
+        return `${Math.round(secondsPast / 60)}m ago`;
+      }
+      if (secondsPast <= 86400) {
+        return `${Math.round(secondsPast / 3600)}h ago`;
+      }
+      if (secondsPast > 86400) {
+        const daysPast = Math.round(secondsPast / 86400);
+        return `${daysPast}d ago`;
+      }
+    }
+    
+
+
   // Function to toggle the visibility of the comment box
   const toggleCommentBox = () => {
     setCommentBoxVisible(!commentBoxVisible);
@@ -132,8 +155,8 @@ const handleCommentSubmit = async (e) => {
                     <div className="py-0.5 text-xs leading-5 text-gray-500">
                       <span className="font-medium text-gray-900">{activityItem.person.name}</span>
                     </div>
-                    <time dateTime={activityItem.dateTime} className="flex-none py-0.5 text-xs leading-5 text-gray-500">
-                      {activityItem.dateTime}
+                    <time dateTime={timeAgo(activityItem.dateTime)} className="flex-none py-0.5 text-xs leading-5 text-gray-500">
+                      {timeAgo(activityItem.dateTime)}
                     </time>
                   </div>
                   <p className="text-sm leading-5 text-gray-500">{activityItem.comment}</p>
@@ -152,8 +175,8 @@ const handleCommentSubmit = async (e) => {
                   <span className="font-medium text-gray-900">{activityItem.person.name}</span> {activityItem.type} the
                   invoice.
                 </p>
-                <time dateTime={activityItem.dateTime} className="flex-none py-0.5 text-xs leading-5 text-gray-500">
-                {activityItem.dateTime}
+                <time dateTime={timeAgo(activityItem.dateTime)} className="flex-none py-0.5 text-xs leading-5 text-gray-500">
+                {timeAgo(activityItem.dateTime)}
                 </time>
               </>
             )}
