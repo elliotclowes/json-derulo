@@ -41,22 +41,32 @@ const generateLearningSuggestions = async (transcript) => {
   }
 };
 
-const summarizeTranscript = async (transcript) => {
+const summarizeTranscript = async (prompt, content) => {
   try {
     const TOKEN_LIMIT = 3900;
+<<<<<<< HEAD
     transcript = trimToTokenLimit(transcript, TOKEN_LIMIT);
+=======
+    // Trim the content to the token limit
+    content = trimToTokenLimit(content, TOKEN_LIMIT);
+>>>>>>> a7af73ea3a56990d22df17345436d9557b8d36e5
 
-    const prompt = `${transcript}`;
-    
     const chatCompletion = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
-      messages: [{role: "user", content: prompt}],
+      messages: [{ role: "user", content: prompt }, { role: "assistant", content: content }],
     });
 
+<<<<<<< HEAD
     const content = chatCompletion.data.choices[0].message.content;
     console.log("Summarized transcript:", content);
     return content;
     
+=======
+    const summary = chatCompletion.data.choices[0].message.content;
+    console.log("🚀 ~ file: chatGPT.js:20 ~ summarizeTranscript ~ chatCompletion:", chatCompletion.data)
+    return summary;
+
+>>>>>>> a7af73ea3a56990d22df17345436d9557b8d36e5
   } catch (error) {
     console.error('Error summarizing transcript:', error);
   }

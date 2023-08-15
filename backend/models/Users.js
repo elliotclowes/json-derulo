@@ -11,6 +11,7 @@ class User {
     email,
     username,
     password,
+    teacher,
     is_verified,
   }) {
     this.id = user_id;
@@ -20,6 +21,7 @@ class User {
     this.email = email;
     this.username = username;
     this.password = password;
+    this.teacher = teacher;
     this.isVerified = is_verified;
   }
 
@@ -64,13 +66,14 @@ class User {
       lastName: last_name,
       email: userEmail,
       username: username,
+      teacher: teacher,
       password,
     } = data;
 
     const query =
-      "INSERT INTO users (first_name, last_name, email, username, password) " +
-      "VALUES ($1, $2, $3, $4, $5) RETURNING user_id";
-    const values = [first_name, last_name, userEmail, username, password];
+      "INSERT INTO users (first_name, last_name, email, username, password, teacher) " +
+      "VALUES ($1, $2, $3, $4, $5, $6) RETURNING user_id";
+    const values = [first_name, last_name, userEmail, username, password, teacher];
     const response = await db.query(query, values);
     const newId = response.rows[0].user_id;
     return User.getById(newId);

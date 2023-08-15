@@ -69,6 +69,8 @@ export default function HoveringToolbar () {
           <FormatButton format="bold" icon="format_bold" />
           <FormatButton format="italic" icon="format_italic" />
           <FormatButton format="underlined" icon="format_underlined" />
+          <FormatButton format="highlight" icon="format_paint" />
+          
         </Menu>
       </Portal>
     );

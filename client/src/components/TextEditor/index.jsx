@@ -16,6 +16,7 @@ export default function TextEditor({ document: initialDocument, onChange }) {
 
   return (
     <div className="App">
+      
       <Editor
         document={document}
         onChange={(newDocument) => {
