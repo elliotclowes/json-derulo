@@ -1,4 +1,4 @@
-require("dotenv").config()
+require("dotenv").config();
 
 const { Configuration, OpenAIApi } = require("openai");
 const encoder = require('gpt-3-encoder');
@@ -8,29 +8,42 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-// This function makes sure the text is under the token limit. If it isn't then it shortens the text by 150 characters and then tries again. It does this until it's under the limit.
 const trimToTokenLimit = (text, limit) => {
-  // Encode the text
   let tokens = encoder.encode(text);
 
-  // Check the number of tokens against the limit
   while (tokens.length > limit) {
-    // Remove the first 150 characters
     text = text.substring(150);
-
-    // Re-encode the shortened text
     tokens = encoder.encode(text);
   }
 
   return text;
 };
- 
+
+const generateLearningSuggestions = async (transcript) => {
+  try {
+    const TOKEN_LIMIT = 3900;
+    transcript = trimToTokenLimit(transcript, TOKEN_LIMIT);
+
+    const prompt = `After reading the summary, suggest three bullet points on what to learn next:\n\n${transcript}`;
+
+    const chatCompletion = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: [{role: "system", content: "You are a helpful assistant that suggests learning points."}],
+      max_tokens: 100,
+      prompt: prompt
+    });
+
+    const content = chatCompletion.data.choices[0].message.content;
+    console.log("Generated learning suggestions:", content);
+    return content;
+  } catch (error) {
+    console.error('Error generating learning suggestions:', error);
+  }
+};
 
 const summarizeTranscript = async (transcript) => {
   try {
-    // Set the token limit
     const TOKEN_LIMIT = 3900;
-    // Trim the transcript to the token limit
     transcript = trimToTokenLimit(transcript, TOKEN_LIMIT);
 
     const prompt = `${transcript}`;
@@ -40,20 +53,13 @@ const summarizeTranscript = async (transcript) => {
       messages: [{role: "user", content: prompt}],
     });
 
-    
     const content = chatCompletion.data.choices[0].message.content;
-    console.log("🚀 ~ file: chatGPT.js:20 ~ summarizeTranscript ~ chatCompletion:", chatCompletion.data)
+    console.log("Summarized transcript:", content);
     return content;
     
   } catch (error) {
-    if (error.response) {
-      console.log(error.response.status);
-      console.log(error.response.data);
-      console.log(content)
-    } else {
-      console.log(error.message);
-    }
+    console.error('Error summarizing transcript:', error);
   }
 };
 
-module.exports = { summarizeTranscript };
+module.exports = { generateLearningSuggestions, summarizeTranscript };

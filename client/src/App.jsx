@@ -17,7 +17,6 @@ function App() {
           <Route path="/settings" element={<UserSettings />} />
           <Route path="/summary" element={<CreateSummary />}/>
           <Route path="/teacher" element={<TeacherSummary />}/>
-          <Route path="/summary/:userId" element={<AllSummary />}/>
           <Route path="/teacher/:documentId" element={< FinalSummary />}/>
           <Route path="/summary/:documentId" element={<Summary />} />
           <Route path="/summaries/" element={<UserSummaries />} />

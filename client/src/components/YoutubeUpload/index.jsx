@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
+import { generateLearningSuggestions } from ''; 
 
 function App() {
   const [youtubeUrl, setYoutubeUrl] = useState('');
   const [subtitles, setSubtitles] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [suggestions, setSuggestions] = useState('');
 
   const handleProcessVideo = async () => {
     try {
-      setIsLoading(true); // Set loading to true when starting to fetch subtitles
+      setIsLoading(true);
 
       const response = await fetch('http://localhost:3000/video/fetch_subtitles', {
         method: 'POST',
@@ -20,14 +22,26 @@ function App() {
       const data = await response.json();
       console.log(data);
 
-      // Update subtitles state with the fetched data
-      setSubtitles(data.summary); // Assuming data.summary is the correct property
-      
-      setIsLoading(false); // Set loading to false after fetching subtitles
-
+      setSubtitles(data.summary);
+      setIsLoading(false);
     } catch (error) {
       console.error('Error processing video:', error);
-      setIsLoading(false); // Make sure loading is set to false in case of an error
+      setIsLoading(false);
+    }
+  };
+
+  const handleGenerateSuggestions = async () => {
+    try {
+      setIsLoading(true);
+
+
+      const suggestionsText = await generateLearningSuggestions(subtitles);
+
+      setSuggestions(suggestionsText);
+      setIsLoading(false);
+    } catch (error) {
+      console.error('Error generating suggestions:', error);
+      setIsLoading(false);
     }
   };
 
@@ -48,17 +62,27 @@ function App() {
       <button className="loadButton" onClick={handleProcessVideo}>
         Process Video
       </button>
-      
+
       <div
         id="content"
         className={isLoading ? 'hidden' : ''}
       >
-        {/* Your content goes here */}
         <p>This is the content that gets loaded.</p>
       </div>
 
-      {/* Display subtitles below the button */}
-      {subtitles && <div>{subtitles}</div>}
+      {subtitles && (
+        <div>
+          {subtitles}
+          <button onClick={handleGenerateSuggestions}>Generate Suggestions</button>
+        </div>
+      )}
+
+      {suggestions && (
+        <div>
+          <h2>Suggestions:</h2>
+          <p>{suggestions}</p>
+        </div>
+      )}
     </div>
   );
 }
