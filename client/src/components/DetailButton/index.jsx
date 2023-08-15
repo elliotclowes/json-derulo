@@ -57,12 +57,12 @@ function ShortenData() {
             await console.log(dataAsString)
             const sendableData = {
                 "prompt": `Please summarize the following transcript:`,
-                "content": dataAsString
+                "content": await dataAsString
             };
             console.log(sendableData)
             await fetch('http://localhost:3000/audio/chatgpt', {
                 method: 'POST',
-                body: JSON.stringify(sendableData),
+                body: sendableData,
                 headers: {
                     'Content-Type': 'application/json'
                 }
