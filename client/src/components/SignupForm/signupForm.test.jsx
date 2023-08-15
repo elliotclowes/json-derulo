@@ -81,7 +81,23 @@ describe('SignupForm', () => {
         expect(alertSpy).toHaveBeenCalledWith("Something went wrong.");
     });
 
+    it('should handle form field changes', () => {
+        const { getByLabelText } = render(<BrowserRouter><SignupForm /></BrowserRouter>);
 
+        fireEvent.change(getByLabelText(/first name/i), { target: { value: 'John' } });
+        fireEvent.change(getByLabelText(/last name/i), { target: { value: 'Doe' } });
+        fireEvent.change(getByLabelText(/email/i), { target: { value: 'john@example.com' } });
+        fireEvent.change(getByLabelText(/username/i), { target: { value: 'johndoe' } });
+        fireEvent.change(getByLabelText(/password/i), { target: { value: 'securepassword' } });
+        fireEvent.click(getByLabelText(/teacher/i));
+
+        expect(getByLabelText(/first name/i)).toHaveValue('John');
+        expect(getByLabelText(/last name/i)).toHaveValue('Doe');
+        expect(getByLabelText(/email/i)).toHaveValue('john@example.com');
+        expect(getByLabelText(/username/i)).toHaveValue('johndoe');
+        expect(getByLabelText(/password/i)).toHaveValue('securepassword');
+        expect(getByLabelText(/teacher/i)).toBeChecked();
+    });
 
 
 
