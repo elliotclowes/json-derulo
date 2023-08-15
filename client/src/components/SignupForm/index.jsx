@@ -37,7 +37,7 @@ export default function SignupForm() {
     } else {
       const errorResponse = await res.json();
       if (errorResponse.error === 'Username already registered.') {
-        alert('Username already exists. Please choose a different username.')
+        alert('Username already registered. Please choose a different username.')
       } else if (errorResponse.error === 'Email already registered.') {
         alert('Email already registered. Please use a different email.')
       } else {
