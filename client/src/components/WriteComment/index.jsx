@@ -1,54 +1,78 @@
-import { Fragment, useState } from 'react'
+import React, { Fragment, useState, useEffect } from 'react'
 import { CheckCircleIcon, PlusIcon } from '@heroicons/react/24/solid'
-import {
-  FaceFrownIcon,
-  FaceSmileIcon,
-  FireIcon,
-  HandThumbUpIcon,
-  HeartIcon,
-  PaperClipIcon,
-  XMarkIcon,
-} from '@heroicons/react/20/solid'
 import { Listbox, Transition } from '@headlessui/react'
 
-const activity = [
-  {
-    userID: 1,
-    type: 'commented',
-    person: {
-      name: 'Chelsea Hagon',
-      imageUrl:
-        'https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    },
-    comment: 'Called client, they reassured me the invoice would be paid by the 25th.',
-    date: '3d ago',
-    dateTime: '2023-01-23T15:56',
-  },
-  {
-    userID: 2,
-    type: 'commented',
-    person: {
-      name: 'Chelsea Hagon',
-      imageUrl:
-        'https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    },
-    comment: 'I think Winston Churchill is one of the greatest icons of the 21st century. And I would like to see more lessons on him..',
-    date: '3d ago',
-    dateTime: '2023-01-23T15:56',
-  },
-]
+import { getFirestore, collection, doc, updateDoc, onSnapshot, getDoc } from 'firebase/firestore';
+import { app } from '/firebase-config.js';
+
+// const activity = [
+//   {
+//     userID: 1,
+//     type: 'commented',
+//     person: {
+//       name: 'Chelsea Hagon',
+//       imageUrl:
+//         'https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+//     },
+//     comment: 'Called client, they reassured me the invoice would be paid by the 25th.',
+//     date: '3d ago',
+//     dateTime: '2023-01-23T15:56',
+//   },
+//   {
+//     userID: 2,
+//     type: 'commented',
+//     person: {
+//       name: 'Chelsea Hagon',
+//       imageUrl:
+//         'https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+//     },
+//     comment: 'I think Winston Churchill is one of the greatest icons of the 21st century. And I would like to see more lessons on him..',
+//     date: '3d ago',
+//     dateTime: '2023-01-23T15:56',
+//   },
+// ]
 
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function WriteComment({ comments }) {
+export default function WriteComment({ documentId, blockId }) {
   const [commentBoxVisible, setCommentBoxVisible] = useState(false);
+  const [activity, setActivity] = useState([]);
+
+
   // Function to toggle the visibility of the comment box
   const toggleCommentBox = () => {
     setCommentBoxVisible(!commentBoxVisible);
   };
+
+  const db = getFirestore(app);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+          const summariesCollection = collection(db, 'summaries');
+          const docRef = doc(summariesCollection, documentId);
+          const docSnapshot = await getDoc(docRef);  // Fetch the document
+  
+          if (docSnapshot.exists) {  // Check if the document exists
+              const data = docSnapshot.data();
+              
+              // Access the block using the blockId as a key
+              const block = data.blocks[blockId];
+              if (block && block.comments) {
+                  setActivity(block.comments);
+              }
+          }
+      } catch (error) {
+          console.error("Error fetching data: ", error);
+      }
+    };
+    fetchData();
+}, [documentId, blockId]);
+
+
 
 
   return (

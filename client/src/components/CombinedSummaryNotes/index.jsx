@@ -4,6 +4,9 @@ import { getFirestore, collection, doc, updateDoc, onSnapshot } from 'firebase/f
 import { app } from '/firebase-config.js';
 import { Footer, AudioRecorder, TextEditor, WriteComment, InfoBox } from "../../components";
 import { BellIcon } from '@heroicons/react/24/outline'
+
+
+
 function CombinedSummaryNotes() {
   const { documentId } = useParams();
   const [blocks, setBlocks] = useState([]);
@@ -40,9 +43,14 @@ function CombinedSummaryNotes() {
     });
     return () => unsubscribe();
   }, [documentId, db]);
+  
   const handleBlockSubmit = (blockId, newText) => {
     updateSummaryBlock(`block${blockId + 1}`, newText);
   };
+
+
+
+
   return (
     <>
 <div className="flex min-h-full flex-col">
@@ -69,28 +77,28 @@ function CombinedSummaryNotes() {
             </div>
           </div>
         </header>
-{/* Wrapper */}
-<div className="mx-auto w-full max-w-7xl grow xl:px-2">
-      {blocks.map((blockText, index) => (
-        <div key={index} className="lg:flex">
-          {/* Left sidebar */}
-          <div className="border-b border-gray-200 px-4 py-6 sm:px-6 lg:pl-8 xl:w-64 xl:shrink-0 xl:border-b-0 xl:border-r xl:pl-6">
+    {/* Wrapper */}
+    <div className="mx-auto w-full max-w-7xl grow xl:px-2">
+    {blocks.map((blockText, index) => (
+      <div key={index} className="lg:flex">
+        {/* Left sidebar */}
+        <div className="border-b border-gray-200 px-4 py-6 sm:px-6 lg:pl-8 xl:w-64 xl:shrink-0 xl:border-b-0 xl:border-r xl:pl-6">
           <p>Left</p>
-          </div>
-          {/* Main content */}
-          <div className="px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-6">
-            <TextEditor 
-              document={blockText} 
-              onChange={(newText) => updateSummaryBlock(`block${index + 1}`, newText)} 
-              onSubmit={(newText) => handleBlockSubmit(index, newText)} 
-            />
-          </div>
-          {/* Right sidebar */}
-          <div className="shrink-0 border-t border-gray-200 px-4 py-6 sm:px-6 lg:w-96 lg:border-l lg:border-t-0 lg:pr-8 xl:pr-6">
-          <WriteComment />
-          </div>
         </div>
-      ))}
+        {/* Main content */}
+        <div className="px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-6">
+          <TextEditor 
+            document={blockText} 
+            onChange={(newText) => updateSummaryBlock(`block${index + 1}`, newText)} 
+            onSubmit={(newText) => handleBlockSubmit(index, newText)} 
+          />
+        </div>
+        {/* Right sidebar */}
+        <div className="shrink-0 border-t border-gray-200 px-4 py-6 sm:px-6 lg:w-96 lg:border-l lg:border-t-0 lg:pr-8 xl:pr-6">
+          <WriteComment documentId={documentId} blockId={`block${index + 1}`} />
+        </div>
+      </div>
+    ))}
     </div>
     <div className="px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-6">
       <AudioRecorder documentId={documentId} />
