@@ -12,9 +12,24 @@ export default function SignupForm() {
     password: '',
   });
 
+  const [emailError, setEmailError] = useState('');
+
   function handleChange(e) {
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
     setForm({ ...form, [e.target.name]: value });
+
+    if (e.target.name === 'email') {
+      validateEmail(value);
+    }
+  }
+
+  function validateEmail(email) {
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    if (!emailRegex.test(email)) {
+      setEmailError('Please enter a valid email address.');
+    } else {
+      setEmailError('');
+    }
   }
 
   async function handleSubmit(e) {
@@ -88,6 +103,7 @@ export default function SignupForm() {
           onChange={handleChange}
           className="input input-bordered w-full"
         />
+        {emailError && <p className="error-message">{emailError}</p>}
       </div>
       <div>
         <label htmlFor="username" className="block text-sm font-medium">
