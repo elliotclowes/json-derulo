@@ -2,12 +2,19 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "../../contexts";
 
+import { getFirestore, collection, doc, setDoc, updateDoc, onSnapshot, getDoc } from 'firebase/firestore';
+import { app } from '/firebase-config.js';
+
+
 export default function LoginForm() {
   const [form, setForm] = useState({ username: "", password: "" });
   const { setUser } = useAuth();
   const navigate = useNavigate();
 
+  const db = getFirestore(app);
+
   async function handleSubmit(e) {
+
     e.preventDefault();
     const options = {
       method: "POST",
@@ -29,6 +36,13 @@ export default function LoginForm() {
           lastName: data.user.lastName,
           userId: data.user.id,
         });
+        try {
+          const userCollection = collection(db, 'users');
+          const userDocRef = doc(userCollection, data.user.id.toString());
+          await setDoc(userDocRef, data.user);
+        } catch (error) {
+          console.error("Error adding user to Firestore: ", error);
+        }
         // set token to local storage
         localStorage.setItem("token", data.token);
         localStorage.setItem("id", data.user.id);

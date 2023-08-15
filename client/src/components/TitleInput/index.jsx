@@ -104,7 +104,7 @@ const TitleInput = () => {
             }
           ],
           audioURL: "",
-          comments: [{}]
+          comments: []
         }
       },
       created: formattedDate,

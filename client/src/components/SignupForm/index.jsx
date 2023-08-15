@@ -150,7 +150,9 @@ export default function SignupForm() {
                   <label htmlFor="teacher" className="ml-3 block text-sm leading-6 text-gray-700">Are you a teacher?</label>
                 </div>
               </div>
-
+              <div>
+      {emailError && <span className="text-red-500">{emailError}</span>}
+    </div>
               <div>
                 <button
                   type="submit"
