@@ -48,26 +48,25 @@ export default function WriteComment({ documentId, blockId }) {
   const db = getFirestore(app);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-          const summariesCollection = collection(db, 'summaries');
-          const docRef = doc(summariesCollection, documentId);
-          const docSnapshot = await getDoc(docRef);  // Fetch the document
+    const summariesCollection = collection(db, 'summaries');
+    const docRef = doc(summariesCollection, documentId);
   
-          if (docSnapshot.exists) {  // Check if the document exists
-              const data = docSnapshot.data();
-              
-              // Access the block using the blockId as a key
-              const block = data.blocks[blockId];
-              if (block && block.comments) {
-                  setActivity(block.comments);
-              }
-          }
-      } catch (error) {
-          console.error("Error fetching data: ", error);
-      }
+    // Set up the real-time listener
+    const unsubscribe = onSnapshot(docRef, (docSnapshot) => {
+        if (docSnapshot.exists) {
+            const data = docSnapshot.data();
+            const block = data.blocks[blockId];
+            if (block && block.comments) {
+                setActivity(block.comments);
+            }
+        }
+    });
+
+    // Cleanup function
+    return () => {
+        unsubscribe();
     };
-    fetchData();
+
 }, [documentId, blockId]);
 
 

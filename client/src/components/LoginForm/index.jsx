@@ -32,23 +32,34 @@ export default function LoginForm() {
 	  } else if (data.authenticated) {
 		// set AuthContext to username
 		setUser({
-		  firstName: data.user.firstName,
-		  lastName: data.user.lastName,
-		  userId: data.user.id,
+			firstName: data.user.firstName,
+			lastName: data.user.lastName,
+			userId: data.user.id,
 		});
-		try {
-		  const userCollection = collection(db, 'users');
-		  const userDocRef = doc(userCollection, data.user.id.toString());
-		  await setDoc(userDocRef, data.user, { merge: true });
-		} catch (error) {
-		  console.error("Error adding user to Firestore: ", error);
+	
+		const userCollection = collection(db, 'users');
+		const userDocRef = doc(userCollection, data.user.id.toString());
+		const userDocSnapshot = await getDoc(userDocRef);
+	
+		// If the user exists and doesn't have an imageUrl, then set it
+		if (userDocSnapshot.exists() && !userDocSnapshot.data().imageUrl) {
+			data.user.imageUrl = 'https://firebasestorage.googleapis.com/v0/b/learnt-me-test.appspot.com/o/manual%2Fblankavatar-small-min.jpg?alt=media&token=8c28cd62-1b1b-48fc-98f9-cfa0fc077022';
 		}
+	
+		try {
+			await setDoc(userDocRef, data.user, { merge: true });
+		} catch (error) {
+			console.error("Error adding user to Firestore: ", error);
+		}
+	
 		// set token to local storage
 		localStorage.setItem("token", data.token);
 		localStorage.setItem("id", data.user.id);
 		localStorage.setItem("firstname", data.user.firstName);
+	
 		navigate("/dash");
-	  }
+	}
+	
 	}
   }
 
