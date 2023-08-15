@@ -94,19 +94,25 @@ class User {
   }
 
   async update() {
-    const query =
-      "UPDATE users SET first_name = $1, last_name = $2, username = $3, password = $4 " +
-      "WHERE user_id = $5";
-    const values = [
-      this.firstName,
-      this.lastName,
-      this.username,
-      this.password,
-      this.id,
-    ];
-    await db.query(query, values);
-    return this;
+    try {
+      const query =
+        "UPDATE users SET first_name = $1, last_name = $2, username = $3, password = $4 " +
+        "WHERE user_id = $5";
+      const values = [
+        this.firstName,
+        this.lastName,
+        this.username,
+        this.password,
+        this.id,
+      ];
+      await db.query(query, values);
+      return this;
+    } catch (err) {
+      console.error('Error updating user:', err);
+      throw err;
+    }
   }
+  
 
   async delete() {
     await db.query("DELETE FROM users WHERE user_id = $1", [this.id]);

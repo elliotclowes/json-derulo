@@ -73,6 +73,7 @@ class UserController {
       user.email = email || user.email;
       user.username = username || user.username;
       user.password = password || user.password;
+      await user.update();
       res.status(202).json(user);
     } catch (error) {
       res.status(404).json({ error: "User not found." });
