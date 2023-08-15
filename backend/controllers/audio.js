@@ -28,3 +28,14 @@ exports.saveAudio = async (req, res) => {
     }
   });
 };
+
+
+exports.summarizeTranscript = async (req, res) => {
+  try {
+    const { prompt, content } = req.body; // Extract prompt and content from the request
+    const summary = await summarizeTranscript(prompt, content);
+    res.status(200).send(summary);
+  } catch (error) {
+    res.status(500).send(`Error summarizing transcript: ${error.message}`);
+  }
+};
