@@ -19,24 +19,6 @@ describe('SignupForm', () => {
         );
     });
 
-    it('should render sign up page with form fields', () => {
-        render(
-            <BrowserRouter>
-                <SignupForm />
-            </BrowserRouter>
-        );
-
-        const firstNameInput = screen.getByRole('textbox', { name: /first name/i });
-        const lastNameInput = screen.getByRole('textbox', { name: /last name/i });
-        const emailInput = screen.getByRole('textbox', { name: /email/i });
-        const usernameInput = screen.getByRole('textbox', { name: /username/i });
-
-        expect(firstNameInput).toBeTruthy();
-        expect(lastNameInput).toBeTruthy();
-        expect(emailInput).toBeTruthy();
-        expect(usernameInput).toBeTruthy();
-    })
-
     it('should submit the form and display success alert', async () => {
         render(
             <BrowserRouter>
@@ -63,7 +45,7 @@ describe('SignupForm', () => {
 
         fireEvent.click(submitButton);
 
-        await new Promise((resolve) => setTimeout(resolve, 0)); // This waits for any asynchronous operations
+        await new Promise((resolve) => setTimeout(resolve, 0));
 
         expect(alertSpy).toHaveBeenCalledWith(
             "Register Successfully! Verification Email has been sent to your email. Please verify your account before enjoying our app."
@@ -98,6 +80,26 @@ describe('SignupForm', () => {
 
         expect(alertSpy).toHaveBeenCalledWith("Something went wrong.");
     });
+
+    it('should handle form field changes', () => {
+        const { getByLabelText } = render(<BrowserRouter><SignupForm /></BrowserRouter>);
+
+        fireEvent.change(getByLabelText(/first name/i), { target: { value: 'John' } });
+        fireEvent.change(getByLabelText(/last name/i), { target: { value: 'Doe' } });
+        fireEvent.change(getByLabelText(/email/i), { target: { value: 'john@example.com' } });
+        fireEvent.change(getByLabelText(/username/i), { target: { value: 'johndoe' } });
+        fireEvent.change(getByLabelText(/password/i), { target: { value: 'securepassword' } });
+        fireEvent.click(getByLabelText(/teacher/i));
+
+        expect(getByLabelText(/first name/i)).toHaveValue('John');
+        expect(getByLabelText(/last name/i)).toHaveValue('Doe');
+        expect(getByLabelText(/email/i)).toHaveValue('john@example.com');
+        expect(getByLabelText(/username/i)).toHaveValue('johndoe');
+        expect(getByLabelText(/password/i)).toHaveValue('securepassword');
+        expect(getByLabelText(/teacher/i)).toBeChecked();
+    });
+
+
 
 
 });

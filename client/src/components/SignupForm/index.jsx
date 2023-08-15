@@ -11,9 +11,24 @@ export default function SignupForm() {
     password: "",
   });
 
+  const [emailError, setEmailError] = useState('');
+
   function handleChange(e) {
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
     setForm({ ...form, [e.target.name]: value });
+
+    if (e.target.name === 'email') {
+      validateEmail(value);
+    }
+  }
+
+  function validateEmail(email) {
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    if (!emailRegex.test(email)) {
+      setEmailError('Please enter a valid email address.');
+    } else {
+      setEmailError('');
+    }
   }
 
   async function handleSubmit(e) {
@@ -25,15 +40,23 @@ export default function SignupForm() {
       },
       body: JSON.stringify(form),
     });
+
     if (res.ok) {
       const user = await res.json();
       alert("Register Successfully! Verification Email has been sent to your email. Please verify your account before enjoying our app.");
     } else {
-      alert("Something went wrong.");
+      const errorResponse = await res.json();
+      if (errorResponse.error === 'Username already registered.') {
+        alert('Username already registered. Please choose a different username.')
+      } else if (errorResponse.error === 'Email already registered.') {
+        alert('Email already registered. Please use a different email.')
+      } else {
+        alert('Something went wrong.')
+      }
     }
   }
-
-  return (
+  
+    return (
     <div className="flex min-h-full flex-1">
             <div className="relative hidden w-0 flex-1 lg:block">
           <img

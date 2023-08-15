@@ -106,6 +106,21 @@ class User {
 
     return response.rows[0];
   }
+
+  static async checkUsernameExists(username) {
+    const query = 'SELECT * FROM users WHERE username = $1';
+    const values = [username];
+    const result = await db.query(query, values);
+    return result.rows.length > 0;
+  }
+
+  static async checkEmailExists(email) {
+    const query = 'SELECT * FROM users WHERE email = $1';
+    const values = [email];
+    const result = await db.query(query, values);
+    return result.rows.length > 0;
+  }
+
 }
 
 module.exports = User;
