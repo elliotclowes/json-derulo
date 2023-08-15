@@ -100,6 +100,11 @@ function App() {
         </div>
       )}
 
+     
+      <strong><button className="loadButton" onClick={handleProcessVideo}>
+        Upload Video
+      </button></strong>
+      <br />
       <input
         type="text"
         value={youtubeUrl}

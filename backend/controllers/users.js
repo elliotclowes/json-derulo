@@ -50,6 +50,17 @@ class UserController {
     }
   }
 
+  static async getUserByToken(req, res) {
+    const { token } = req.body;
+
+    try {
+      const user = await User.getOneByToken(token);
+      res.status(200).json(user);
+    } catch (error) {
+      console.log(error);
+      res.status(404).json({ error: "Token not found." });
+    }
+  }
   static async updateUser(req, res) {
     const { id } = req.params;
     const { firstName, lastName, email, username, password } = req.body;
@@ -82,8 +93,15 @@ class UserController {
     const rounds = parseInt(process.env.BCRYPT_SALT_ROUNDS);
     try {
       const data = req.body;
+
+      if (await User.checkUsernameExists(data.username)) {
+        return res.status(400).json({ error: 'Username already registered.' });
+      }
+
+      if (await User.checkEmailExists(data.email)) {
+        return res.status(400).json({ error: 'Email already registered.' });
+      }
       
-      console.log(req.body);
       const salt = await bcrypt.genSalt(rounds);
       data.password = await bcrypt.hash(data.password, salt);
       const result = await User.create(data);
@@ -144,7 +162,7 @@ class UserController {
       const verifiedToken = await Verification.getOneByToken(token);
       await Verification.deleteByToken(verifiedToken.token_id);
       await User.verifyUser(verifiedToken.user_id);
-      
+
       // Redirecting to a frontend success page
       res.redirect(frontEndUrl + 'login');
     } catch (error) {

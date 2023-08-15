@@ -1,7 +1,6 @@
 const { v4: uuidv4 } = require("uuid");
 const db = require("../database/db");
 require("dotenv").config(); 
-
 class Token {
     constructor({ token_id, user_id, token }) {
         this.token_id = token_id;
@@ -21,7 +20,6 @@ class Token {
         const { token_id, user_id: createdUserId } = response.rows[0];
         return new Token({ token_id, user_id: createdUserId, token });
     }
-
     static async getOneById(token_id) {
         const query = "SELECT * FROM tokens WHERE token_id = $1";
         const response = await db.query(query, [token_id]);
@@ -31,22 +29,22 @@ class Token {
             return new Token(response.rows[0]);
         }
     }
-
     static async getOneByToken(token) {
-        const query = "SELECT * FROM tokens WHERE token = $1";
+        // const query = "SELECT * FROM tokens AS t JOIN users as u ON t.user_id = u.user_id WHERE token = $1";
+        const query = "SELECT T.token_id, T.token, T.user_id, U.first_name, U.last_name, U.email, U.username, U.teacher FROM tokens AS T INNER JOIN users as U ON T.user_id = U.user_id WHERE token = $1";
+        // const query = "SELECT user_id FROM tokens WHERE token = $1"
         const response = await db.query(query, [token]);
+        console.log(response.rows)
         if (response.rows.length !== 1) {
-            throw new Error("Unable to locate token.");
+            throw new Error("Unable to locate token."); 
+            
         } else {
-           return new Token(response.rows[0]);
+           return (response.rows[0]);
         }
     }
-
     static async deleteByToken(token) {
         const query = "DELETE FROM tokens WHERE token = $1";
         await db.query(query, [token]);
     }
-
 }
-
 module.exports = Token;
