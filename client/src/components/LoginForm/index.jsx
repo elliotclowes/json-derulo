@@ -39,7 +39,7 @@ export default function LoginForm() {
 		try {
 		  const userCollection = collection(db, 'users');
 		  const userDocRef = doc(userCollection, data.user.id.toString());
-		  await setDoc(userDocRef, data.user);
+		  await setDoc(userDocRef, data.user, { merge: true });
 		} catch (error) {
 		  console.error("Error adding user to Firestore: ", error);
 		}
