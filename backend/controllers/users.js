@@ -4,7 +4,8 @@ require("dotenv").config();
 const User = require("../models/Users");
 const Token = require("../models/Token");
 const Verification = require("../models/Verification");
-require('dotenv').config();
+const { db, bucket } = require('../database/firebase');
+const pathModule = require('path');
 
 const frontEndUrl = process.env.FRONTEND_URL;
 class UserController {
@@ -169,6 +170,47 @@ class UserController {
       res.redirect(frontEndUrl + 'signup');
     }
   }
+
+
+  static async fileUpload(req, res) {
+    try {
+        const type = req.body.type; // Get the type as before
+        const file = req.file; // This is the uploaded file data provided by multer
+        
+        if (!file) {
+            throw new Error('No file provided');
+        }
+
+        if (!type) {
+          throw new Error('Type not provided');
+      }
+
+        const destination = `${type}/${file.originalname}`; 
+
+        // Using the stream method to upload the file data
+        const blob = bucket.file(destination);
+        const blobStream = blob.createWriteStream();
+
+        blobStream.on('finish', async () => {
+            await blob.makePublic(); // Make the file publicly accessible
+            const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+            res.status(200).json({ url: publicUrl });
+        });
+
+        blobStream.on('error', (error) => {
+            console.error(`Error uploading ${type} file:`, error);
+            res.status(500).json({ error: `Error uploading ${type} file: ${error.message}` });
+        });
+
+        blobStream.end(file.buffer);  // Use the buffer data from multer
+
+    } catch (error) {
+        console.error(`Error uploading ${type} file:`, error);
+        res.status(500).json({ error: `Error uploading ${type} file: ${error.message}` });
+    }
+}
+
+
 }
 
 module.exports = UserController;
