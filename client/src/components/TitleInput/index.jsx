@@ -156,6 +156,7 @@ const TitleInput = () => {
 		  const newTag = event.target.value;
 		  if (newTag.trim() !== "") {
 			setUserTags([newTag, ...userTags]);
+			setSelectedTags([newTag, ...selectedTags]); // Automatically select the new tag
 			event.target.value = "";
 		  }
 		}
