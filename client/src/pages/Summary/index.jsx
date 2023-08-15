@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { Layout, Footer, AudioRecorder, CombinedSummaryNotes } from "../../components";
+import { Layout, Footer, AudioRecorder, CombinedSummaryNotes, DetailButton } from "../../components";
 
 export default function Summary() {
   const { documentId } = useParams();
@@ -7,6 +7,7 @@ export default function Summary() {
   return (
     <Layout>
       <AudioRecorder documentId={documentId} />
+      <DetailButton documentId = {documentId}/>
       <CombinedSummaryNotes documentId={documentId} /> 
       <Footer />
     </Layout>
