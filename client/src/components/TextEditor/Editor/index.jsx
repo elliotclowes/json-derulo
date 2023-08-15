@@ -47,6 +47,10 @@ const HoveringMenuEditor = ({document, onChange}) => {
     if (leaf.underlined) {
       children = <u>{children}</u>;
     }
+    if (leaf.highlight) {
+      children = <span style={{backgroundColor: 'cornflowerblue'}} {...attributes}>{children}</span>;
+    }
+
   
     return <span {...attributes}>{children}</span>;
   };
@@ -69,6 +73,9 @@ const HoveringMenuEditor = ({document, onChange}) => {
             case 'formatUnderline':
               event.preventDefault();
               return toggleMark(editor, 'underlined');
+            case 'formatHighlight':
+              event.preventDefault()
+              return toggleMark(editor, 'highlight')
             default:
               return;
           }

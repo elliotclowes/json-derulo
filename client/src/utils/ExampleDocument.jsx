@@ -1,7 +1,3 @@
-import { getMarkForCommentThreadID } from "./EditorCommentUtils";
-import { v4 as uuid } from 'uuid'
-
-const exampleOverlappingCommentThreadID = uuid();   //these ids should be replaced by a backend service rather than as they are currently
 
 const ExampleDocument = [
     {

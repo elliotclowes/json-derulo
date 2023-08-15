@@ -26,25 +26,22 @@ const trimToTokenLimit = (text, limit) => {
 };
  
 
-const summarizeTranscript = async (transcript) => {
+const summarizeTranscript = async (prompt, content) => {
   try {
     // Set the token limit
     const TOKEN_LIMIT = 3900;
-    // Trim the transcript to the token limit
-    transcript = trimToTokenLimit(transcript, TOKEN_LIMIT);
+    // Trim the content to the token limit
+    content = trimToTokenLimit(content, TOKEN_LIMIT);
 
-    const prompt = `${transcript}`;
-    
     const chatCompletion = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
-      messages: [{role: "user", content: prompt}],
+      messages: [{ role: "user", content: prompt }, { role: "assistant", content: content }],
     });
 
-    
-    const content = chatCompletion.data.choices[0].message.content;
+    const summary = chatCompletion.data.choices[0].message.content;
     console.log("🚀 ~ file: chatGPT.js:20 ~ summarizeTranscript ~ chatCompletion:", chatCompletion.data)
-    return content;
-    
+    return summary;
+
   } catch (error) {
     if (error.response) {
       console.log(error.response.status);

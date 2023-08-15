@@ -7,15 +7,18 @@ export default function SignupForm() {
     lastName: "",
     email: "",
     username: "",
+    teacher:false,
     password: "",
   });
 
   function handleChange(e) {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+    setForm({ ...form, [e.target.name]: value });
   }
-
+  
   async function handleSubmit(e) {
     e.preventDefault();
+    console.log(JSON.stringify(form))
     const res = await fetch("http://localhost:3000/user/register", {
       method: "POST",
       headers: {
@@ -52,59 +55,42 @@ export default function SignupForm() {
           <label htmlFor="lastName" className="block text-sm font-medium">Last name</label>
           <input
             type="text"
-            placeholder="lastName"
-            id="lastName"
-            name="lastName"
+            placeholder="username"
+            name="username"
             onChange={handleChange}
             className="input input-bordered w-full"
           />
         </div>
-      </div>
-      <div>
-        <label htmlFor="email" className="block text-sm font-medium">Email</label>
+        <div>
+          <label className="block text-sm font-medium">Password</label>
+          <input
+            type="password"
+            placeholder="Password"
+            name="password"
+            onChange={handleChange}
+            className="input input-bordered w-full"
+          />
+        </div>
+        <div className="input-field">
+          <input
+            type="submit"
+            className="btn"
+            value="Register"
+          />
+        </div>
+        <br />
         <input
-          type="email"
-          placeholder="email@email.com"
-          id="email"
-          name="email"
-          onChange={handleChange}
-          className="input input-bordered w-full"
+         type="checkbox"
+         name="teacher"
+         onChange={(e) => handleChange(e)}
         />
-      </div>
-      <div>
-        <label htmlFor="username" className="block text-sm font-medium">Username</label>
-        <input
-          type="text"
-          placeholder="username"
-          id="username"
-          name="username"
-          onChange={handleChange}
-          className="input input-bordered w-full"
-        />
-      </div>
-      <div>
-        <label htmlFor="password" className="block text-sm font-medium">Password</label>
-        <input
-          type="password"
-          placeholder="Password"
-          id="password"
-          name="password"
-          onChange={handleChange}
-          className="input input-bordered w-full"
-        />
-      </div>
-      <div className="input-field">
-        <input
-          type="submit"
-          className="btn"
-          value="Register"
-        />
-      </div>
-      <div className="signup text-center">
-        <span>
-          Already have an account? <Link to="/login" className="text-blue-500">Login here</Link>
-        </span>
-      </div>
-    </form>
+        <label>Are you a teacher?</label>
+        <div className="signup text-center">
+          <span>
+            Already have an account? <Link to="/login" className="text-blue-500">Login here</Link>
+          </span>
+        </div>  
+      </form>
+    </>
   );
 }
