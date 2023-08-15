@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 function AudioUpload() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [message, setMessage] = useState('');
-
+  const [summary, setSummary] = useState('');
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
   };
@@ -22,27 +22,27 @@ function AudioUpload() {
         method: 'POST',
         body: formData
       });
-  
+      
       if (response.ok) {
-        const data = await response.text(); 
-        console.log(data,'yoyo'); 
-        const resultElement = document.getElementById('result');
-        resultElement.textContent = data;
+        const data = await response.text();
+        setSummary(data); // Update the summary state with the response
+        console.log(data,'fish')
       } else {
         console.error('Error uploading file.');
       }
+    
     } catch (error) {
       console.error('Error uploading file:', error);
     }
   };
   
-
+  
   return (
     <div>
       <h2>Upload an Audio File</h2>
       <input type="file" accept="audio/*" onChange={handleFileChange} />
       <button onClick={handleUpload}>Upload</button>
-      <div id="result">{message}</div> {/* Display the response here */}
+      <div id="result">{summary}</div> {/* Display the summary here */}
     </div>
   );
   }
