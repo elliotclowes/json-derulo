@@ -1,8 +1,10 @@
 import React from "react";
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+import matchers from '@testing-library/jest-dom/matchers'
 import { BrowserRouter } from 'react-router-dom';
 import Navigation from './index';
+expect.extend(matchers)
 
 
 describe('Navigation', () => {
@@ -11,21 +13,28 @@ describe('Navigation', () => {
     });
 
     it('renders Navigation', () => {
-        <BrowserRouter>
-            render(<Navigation />);
-        </BrowserRouter>
-    });
-
-    it('should have a Navbar with the brand text', () => {
         render(
             <BrowserRouter>
-                <Navigation />
+                <Navigation />;
             </BrowserRouter>
-        );
+        )
 
-        const brandText = screen.getByText('SuperSpeech');
-        expect(brandText).toBeTruthy()
+        expect(screen.getByTestId('layout-component')).toBeInTheDocument();
+    });
+
+    it('renders navigation links', () => {
+        render(
+            <BrowserRouter>
+                <Navigation />;
+            </BrowserRouter>
+        )
+
+        const navigationLinks = screen.getAllByRole('link');
+        expect(navigationLinks).toHaveLength(7);
     });
 
 
 });
+
+
+

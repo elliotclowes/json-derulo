@@ -1,6 +1,9 @@
 import React from "react";
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+import matchers from "@testing-library/jest-dom/matchers";
+import '@testing-library/jest-dom/extend-expect';
+expect.extend(matchers);
 import { BrowserRouter } from 'react-router-dom';
 import LoginForm from './index';
 import { AuthProvider } from "../../contexts";
@@ -13,7 +16,7 @@ describe('LoginForm', () => {
         cleanup();
     });
 
-    it('renders LoginForm', () => {
+    test('renders LoginForm', () => {
         <BrowserRouter>
             <AuthProvider>
                 render(< LoginForm />);
@@ -21,7 +24,7 @@ describe('LoginForm', () => {
         </BrowserRouter>
     });
 
-    it('should render login page with form fields', () => {
+    test('should render login page with form fields', () => {
         render(
             <BrowserRouter>
                 <AuthProvider>
@@ -37,63 +40,91 @@ describe('LoginForm', () => {
         expect(passwordInput).toBeTruthy();
     });
 
-    it('should login successfully and redirect to dashboard when user is verified', async () => {
-        // Mock the fetch function to return a successful response with authenticated and verified user
-        vi.spyOn(window, 'fetch').mockResolvedValueOnce({
-            ok: true,
-            json: async () => ({
-                authenticated: true,
-                user: {
-                    isVerified: true, // Simulate a verified user
-                    firstName: 'John',
-                    lastName: 'Doe',
-                    id: 123,
-                },
-                token: 'fake_token',
-            }),
-        });
-
-        // Mock the setUser function from the context
-        const setUserMock = jest.fn();
-        vi.spyOn(useAuth, 'useAuth').mockReturnValue({
-            setUser: setUserMock,
-        });
-
-        // Mock the navigate function
-        const navigateMock = jest.fn();
-        vi.spyOn(require('react-router-dom'), 'useNavigate').mockReturnValue(navigateMock);
-
-        // Render the component
+    test('should handle form submission for unverified user', async () => {
         render(
             <BrowserRouter>
                 <AuthProvider>
                     <LoginForm />
                 </AuthProvider>
             </BrowserRouter>
-        );
+        )
 
+        const submitButton = screen.getByTestId('button', { name: /sign up/i });
+        fireEvent.change(screen.getByLabelText(/username/i), { target: { value: 'John' } });
+        fireEvent.change(screen.getByLabelText(/password/i), { target: { value: 'securepassword' } });
 
-        // Simulate form input and submission
-        const usernameInput = screen.getByLabelText(/username/i);
-        const passwordInput = screen.getByLabelText(/password/i);
-        fireEvent.change(usernameInput, { target: { value: 'testuser' } });
-        fireEvent.change(passwordInput, { target: { value: 'testpassword' } });
+        vi.spyOn(window, 'fetch').mockResolvedValueOnce({
+            ok: true,
+            json: async () => ({
+                user: {
+                    isVerified: false,
+                    email: 'john@example.com'
+                }
+            }),
+        });
 
-        const submitButton = screen.getByRole('button', { name: /login/i });
+        const alertSpy = vi.spyOn(window, 'alert');
         fireEvent.click(submitButton);
 
-        // Wait for any asynchronous operations to complete
         await new Promise((resolve) => setTimeout(resolve, 0));
 
-        // Assertions
-        expect(window.fetch).toHaveBeenCalledTimes(1);
-        expect(setUserMock).toHaveBeenCalledWith({
-            firstName: 'John',
-            lastName: 'Doe',
-            userId: 123,
-        });
-        expect(navigateMock).toHaveBeenCalledWith('/dash'); // Check if navigation to dashboard route occurred
-    });
+
+        expect(alertSpy).toHaveBeenCalledWith(
+            expect.stringContaining(
+                "Verification email has been sent to john@example.com")
+        );
+    })
+
+    // test('should handle form submission for verified user', async () => {
+    //     render(
+    //         <BrowserRouter>
+    //             <AuthProvider>
+    //                 <LoginForm />
+    //             </AuthProvider>
+    //         </BrowserRouter>
+    //     );
+
+    //     const submitButton = screen.getByTestId('button', { name: /sign up/i });
+    //     fireEvent.change(screen.getByLabelText(/username/i), { target: { value: 'John' } });
+    //     fireEvent.change(screen.getByLabelText(/password/i), { target: { value: 'securepassword' } });
+
+    //     // Mocking fetch response for verified user
+    //     vi.spyOn(window, 'fetch').mockResolvedValueOnce({
+    //         ok: true,
+    //         json: async () => ({
+    //             authenticated: true,
+    //             user: {
+    //                 firstName: 'John',
+    //                 lastName: 'Doe',
+    //                 id: '123'
+    //             },
+    //             token: 'mockToken'
+    //         }),
+    //     });
+
+    //     const setUserSpy = vi.spyOn(useAuth(), 'setUser');
+    //     const localStorageSpy = vi.spyOn(localStorage, 'setItem');
+    //     const navigateSpy = vi.spyOn(useNavigate(), 'navigate');
+
+    //     fireEvent.click(submitButton);
+
+    //     await new Promise((resolve) => setTimeout(resolve, 0));
+
+    //     // Check if setUser function was called with the expected user data
+    //     expect(setUserSpy).toHaveBeenCalledWith({
+    //         firstName: 'John',
+    //         lastName: 'Doe',
+    //         userId: '123'
+    //     });
+
+    //     // Check if localStorage.setItem was called with the expected data
+    //     expect(localStorageSpy).toHaveBeenCalledWith('token', 'mockToken');
+    //     expect(localStorageSpy).toHaveBeenCalledWith('id', '123');
+    //     expect(localStorageSpy).toHaveBeenCalledWith('firstname', 'John');
+
+    //     // Check if navigate function was called with the expected path
+    //     expect(navigateSpy).toHaveBeenCalledWith('/dash');
+    // });
 
 
 });

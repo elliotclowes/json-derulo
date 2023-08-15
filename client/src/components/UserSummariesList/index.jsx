@@ -4,7 +4,7 @@ import { app } from '../../../firebase-config';
 import { useState, useEffect } from 'react';
 import DeleteSummaryConfirmationDialog from '../../components/DeleteSummaryConfirmationDialog';
 
-const getUserID = async () => {
+export async function getUserID() {
   const token = localStorage.getItem('token');
   if (!token) return null;
 
@@ -33,9 +33,9 @@ export default function UserSummariesList() {
     try {
       const db = getFirestore(app);
       const summaryRef = doc(db, 'summaries', deleteSummaryId);
-  
+
       await deleteDoc(summaryRef);
-  
+
       setSummaries(summaries.filter((summary) => summary.id !== deleteSummaryId));
     } catch (error) {
       console.error('Failed to delete summary:', error);
@@ -53,12 +53,12 @@ export default function UserSummariesList() {
         console.error('User not logged in');
         return;
       }
-    
+
       const db = getFirestore(app);
       const summariesCollection = collection(db, 'summaries');
       const q = query(summariesCollection, where('userID', '==', userID));
       const querySnapshot = await getDocs(q);
-    
+
       const summariesArray = [];
       querySnapshot.forEach((doc) => {
         summariesArray.push({ id: doc.id, ...doc.data() });
@@ -86,6 +86,7 @@ export default function UserSummariesList() {
         </div>
         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
           <button
+            data-testid="button"
             type="button"
             className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             onClick={handleCreateNewSummary}
@@ -95,12 +96,12 @@ export default function UserSummariesList() {
         </div>
       </div>
       <div className="mt-8 flow-root">
-      <DeleteSummaryConfirmationDialog
-        open={showDeleteDialog}
-        onClose={() => setShowDeleteDialog(false)}
-        onDelete={handleDeleteSummary}
-        summaryTitle={deleteSummaryTitle}
-      />
+        <DeleteSummaryConfirmationDialog
+          open={showDeleteDialog}
+          onClose={() => setShowDeleteDialog(false)}
+          onDelete={handleDeleteSummary}
+          summaryTitle={deleteSummaryTitle}
+        />
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
             <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
@@ -123,25 +124,25 @@ export default function UserSummariesList() {
                       <span className="sr-only">Edit</span>
                     </th>
                     <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
-                    <span className="sr-only">Delete</span>
-                  </th>
+                      <span className="sr-only">Delete</span>
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
-                      {summaries.map((summary) => (
-                      <tr key={summary.id}>
+                  {summaries.map((summary) => (
+                    <tr key={summary.id}>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                      <Link to={`/summary/${summary.id}`} className="text-indigo-600 hover:text-indigo-900">
-                        {summary.title}
-                      </Link>
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {summary.tags && summary.tags.map((tag, index) => (
-                            <Link key={index} to={`/summaries/tag/${tag}`} className="inline-block px-2 py-1 text-xs font-semibold bg-gray-200 text-gray-800 rounded-full mr-1">
-                              {tag}
-                            </Link>
-                          ))}
-                        </td>
+                        <Link to={`/summary/${summary.id}`} className="text-indigo-600 hover:text-indigo-900">
+                          {summary.title}
+                        </Link>
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                        {summary.tags && summary.tags.map((tag, index) => (
+                          <Link key={index} to={`/summaries/tag/${tag}`} className="inline-block px-2 py-1 text-xs font-semibold bg-gray-200 text-gray-800 rounded-full mr-1">
+                            {tag}
+                          </Link>
+                        ))}
+                      </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{summary.visibility}</td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{new Date(summary.created).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</td>
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
@@ -150,9 +151,9 @@ export default function UserSummariesList() {
                         </a>
                       </td>
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                      <a href="#" onClick={(e) => { e.preventDefault(); handleShowDeleteDialog(summary.id, summary.title); }} className="text-red-600 hover:text-red-900">
-                      Delete<span className="sr-only">, {summary.title}</span>
-                    </a>
+                        <a href="#" onClick={(e) => { e.preventDefault(); handleShowDeleteDialog(summary.id, summary.title); }} className="text-red-600 hover:text-red-900">
+                          Delete<span className="sr-only">, {summary.title}</span>
+                        </a>
                       </td>
                     </tr>
                   ))}
