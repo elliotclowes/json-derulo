@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect } from 'react'
 import { CheckCircleIcon, PlusIcon } from '@heroicons/react/24/solid'
 import { Listbox, Transition } from '@headlessui/react'
 
-import { getFirestore, collection, doc, updateDoc, onSnapshot, getDoc } from 'firebase/firestore';
+import { getFirestore, collection, doc, updateDoc, onSnapshot, getDoc, arrayUnion } from 'firebase/firestore';
 import { app } from '/firebase-config.js';
 
 // const activity = [
@@ -15,23 +15,9 @@ import { app } from '/firebase-config.js';
 //         'https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
 //     },
 //     comment: 'Called client, they reassured me the invoice would be paid by the 25th.',
-//     date: '3d ago',
-//     dateTime: '2023-01-23T15:56',
-//   },
-//   {
-//     userID: 2,
-//     type: 'commented',
-//     person: {
-//       name: 'Chelsea Hagon',
-//       imageUrl:
-//         'https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-//     },
-//     comment: 'I think Winston Churchill is one of the greatest icons of the 21st century. And I would like to see more lessons on him..',
-//     date: '3d ago',
 //     dateTime: '2023-01-23T15:56',
 //   },
 // ]
-
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -40,6 +26,18 @@ function classNames(...classes) {
 export default function WriteComment({ documentId, blockId }) {
   const [commentBoxVisible, setCommentBoxVisible] = useState(false);
   const [activity, setActivity] = useState([]);
+  const [commentText, setCommentText] = useState('');
+
+
+  const getUserID = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) return null;
+  
+    const response = await fetch(`http://localhost:3000/token/get/${token}`);
+    const data = await response.json();
+  
+    return data.user_id
+    };
 
 
   // Function to toggle the visibility of the comment box
@@ -71,6 +69,41 @@ export default function WriteComment({ documentId, blockId }) {
     };
     fetchData();
 }, [documentId, blockId]);
+
+
+
+const handleCommentSubmit = async (e) => {
+  e.preventDefault();
+
+  const userID = await getUserID();
+
+  const newComment = {
+      userID: userID,
+      type: 'commented',
+      person: {
+          name: 'Elliot Clowes', // This should ideally come from the user's profile, for now, I'm hardcoding
+          imageUrl: 'https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',  // This too
+      },
+      comment: commentText,
+      dateTime: new Date().toISOString(),  // Setting it to the current time
+  };
+
+  try {
+      const summariesCollection = collection(db, 'summaries');
+      const docRef = doc(summariesCollection, documentId);
+      
+      await updateDoc(docRef, {
+          [`blocks.${blockId}.comments`]: arrayUnion(newComment)
+      });
+
+      // Reset the comment box
+      setCommentText('');
+      setCommentBoxVisible(false);
+
+  } catch (error) {
+      console.error("Error adding comment: ", error);
+  }
+}
 
 
 
@@ -147,7 +180,7 @@ export default function WriteComment({ documentId, blockId }) {
           alt=""
           className="h-8 w-8 flex-none rounded-full bg-gray-50"
         />
-        <form action="#" className="relative flex-auto">
+        <form action="#" className="relative flex-auto" onSubmit={handleCommentSubmit}>
           <div className="overflow-hidden rounded-lg pb-12 shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-indigo-600">
             <label htmlFor="comment" className="sr-only">
               Add your comment
@@ -158,7 +191,8 @@ export default function WriteComment({ documentId, blockId }) {
               id="comment"
               className="block w-full resize-none border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
               placeholder="Add your comment..."
-              defaultValue={''}
+              value={commentText}
+              onChange={e => setCommentText(e.target.value)}
             />
           </div>
           <div className="absolute inset-x-0 bottom-0 flex justify-between py-2 pl-3 pr-2">
