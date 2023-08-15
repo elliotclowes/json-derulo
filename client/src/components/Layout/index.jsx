@@ -2,7 +2,7 @@ import { Fragment, useState } from 'react'
 import { Dialog, Menu, Transition } from '@headlessui/react'
 import {
   Bars3Icon,
-  ChartPieIcon,
+  PlusCircleIcon,
   Cog6ToothIcon,
   DocumentDuplicateIcon,
   FolderIcon,
@@ -16,15 +16,15 @@ const navigation = [
   { name: 'Dashboard', href: '/dash', icon: HomeIcon, current: true },
   { name: 'Classes', href: '#', icon: UsersIcon, current: false },
   { name: 'Summaries', href: '/summaries', icon: DocumentDuplicateIcon, current: false },
-  { name: 'New Summary', href: '/summary', icon: ChartPieIcon, current: false },
+  { name: 'New Summary', href: '/summary', icon: PlusCircleIcon, current: false },
 ]
 const teams = [
   { id: 1, name: 'History', href: '#', initial: 'H', current: false },
   { id: 2, name: 'Geography', href: '#', initial: 'G', current: false },
 ]
 const userNavigation = [
-  { name: 'Your profile', href: '#' },
-  { name: 'Sign out', href: '#' },
+  { name: 'Your profile', href: '/settings' },
+  { name: 'Sign out', href: '/signout' },
 ]
 
 function classNames(...classes) {
@@ -146,7 +146,7 @@ export default function Layout({ children }) {
                         </li>
                         <li className="mt-auto">
                           <a
-                            href="#"
+                            href="/settings"
                             className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
                           >
                             <Cog6ToothIcon className="h-6 w-6 shrink-0" aria-hidden="true" />
@@ -218,7 +218,7 @@ export default function Layout({ children }) {
                 </li>
                 <li className="mt-auto">
                   <a
-                    href="#"
+                    href="/settings"
                     className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
                   >
                     <Cog6ToothIcon className="h-6 w-6 shrink-0" aria-hidden="true" />
