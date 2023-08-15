@@ -129,7 +129,7 @@ const TitleInput = () => {
   return (
 	<>
 
-	  <form className="title-form p-4 rounded-lg shadow-md bg-white" onSubmit={handleSubmit}>
+	  <form className="title-form p-4 rounded-lg shadow-md bg-gray-500/10" onSubmit={handleSubmit}>
 		<div className="mb-4">
 		  <label htmlFor="title" className="block text-m font-medium text-black-700">Title:</label>
 		  <input
@@ -166,12 +166,11 @@ const TitleInput = () => {
 </div>
 			{userTags.length > 0 && (
 			<div className="mb-4">
-				<label className="block text-m font-medium text-black-700">Select Tags:</label>
 				<div className="flex gap-2">
 				{userTags.map((tag) => (
 					<span
 					key={tag}
-					className={`px-3 py-1 text-sm rounded-lg cursor-pointer ${selectedTags.includes(tag) ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black-700'}`}
+					className={`px-3 py-1 text-sm rounded-lg cursor-pointer ${selectedTags.includes(tag) ? 'bg-indigo-500 text-white' : 'bg-indigo-200/70 text-black-700'}`}
 					onClick={() => handleTagClick(tag)}
 					>
 					{tag}
