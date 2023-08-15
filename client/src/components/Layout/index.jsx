@@ -40,10 +40,9 @@ export default function Layout({ children }) {
 
   useEffect(() => {
     const firstname = localStorage.getItem('firstname');
-    const capitalizedFirstName = firstname.charAt(0).toUpperCase() + firstname.slice(1);
     const imageUrl = localStorage.getItem('imageUrl');
 
-    if (capitalizedFirstName) setUsername(capitalizedFirstName);
+    if (firstname) setUsername(firstname);
     if (imageUrl) setUserImage(imageUrl);
 
   }, []);
