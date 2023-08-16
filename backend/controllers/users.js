@@ -4,7 +4,8 @@ require("dotenv").config();
 const User = require("../models/Users");
 const Token = require("../models/Token");
 const Verification = require("../models/Verification");
-require('dotenv').config();
+const { db, bucket } = require('../database/firebase');
+const pathModule = require('path');
 
 const frontEndUrl = process.env.FRONTEND_URL;
 class UserController {
@@ -72,6 +73,7 @@ class UserController {
       user.email = email || user.email;
       user.username = username || user.username;
       user.password = password || user.password;
+      await user.update();
       res.status(202).json(user);
     } catch (error) {
       res.status(404).json({ error: "User not found." });
@@ -112,12 +114,10 @@ class UserController {
 
       await sgMail.send({
         to: result.email,
-        from: `Learnt.me <${process.env.SENDER_EMAIL}>`,
+        from: `Audify.me <${process.env.SENDER_EMAIL}>`,
         subject: "Verify your email",
         html: `<div style="width: 70%; margin: 0 auto; ">
-          <h2>Learnt.me<h2>
-          <p>Thanks for signing up for Learnt.me! We're excited to have you as an early user. Just verify your email and start supercharging speech!</p>
-          <h6 style="font-size: 18px">Verify your email:</h6>
+          <h3>Thanks for signing up for Audify.me! We're excited to have you as an early user. Just verify your email and start supercharging speech!</h3>
           <a style="margin-top:1em; padding: 1em; background-color: #33b249; text-decoration: none ; color: white" href="${url}"> <b>Verify Your Email Address</b></a></div>`,
       });
       console.log("run");
@@ -170,6 +170,47 @@ class UserController {
       res.redirect(frontEndUrl + 'signup');
     }
   }
+
+
+  static async fileUpload(req, res) {
+    try {
+        const type = req.body.type; // Get the type as before
+        const file = req.file; // This is the uploaded file data provided by multer
+        
+        if (!file) {
+            throw new Error('No file provided');
+        }
+
+        if (!type) {
+          throw new Error('Type not provided');
+      }
+
+        const destination = `${type}/${file.originalname}`; 
+
+        // Using the stream method to upload the file data
+        const blob = bucket.file(destination);
+        const blobStream = blob.createWriteStream();
+
+        blobStream.on('finish', async () => {
+            await blob.makePublic(); // Make the file publicly accessible
+            const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+            res.status(200).json({ url: publicUrl });
+        });
+
+        blobStream.on('error', (error) => {
+            console.error(`Error uploading ${type} file:`, error);
+            res.status(500).json({ error: `Error uploading ${type} file: ${error.message}` });
+        });
+
+        blobStream.end(file.buffer);  // Use the buffer data from multer
+
+    } catch (error) {
+        console.error(`Error uploading ${type} file:`, error);
+        res.status(500).json({ error: `Error uploading ${type} file: ${error.message}` });
+    }
+}
+
+
 }
 
 module.exports = UserController;
