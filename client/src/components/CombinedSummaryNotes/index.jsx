@@ -4,6 +4,7 @@ import { getFirestore, collection, doc, updateDoc, onSnapshot } from 'firebase/f
 import { app } from '/firebase-config.js';
 import TextEditor from '../../components/TextEditor';
 import DetailButton  from '../DetailButton';
+import AddMoreDetailButton from '../MoreDetailButton'
 
 function CombinedSummaryNotes() {
   const { documentId } = useParams();
@@ -57,20 +58,35 @@ function CombinedSummaryNotes() {
     // Update the state with the extracted data
     console.log("LOOL",data)
     await setDataFromDetailButton(data);
-    console.log(dataFromDetailButton)
+    
     await setShortSummary(true)
     console.log(shortSummary)
   };
+  useEffect(()=>{
+    console.log(dataFromDetailButton)
+    setShortSummary(!shortSummary)
+    console.log(shortSummary)
+  },[dataFromDetailButton])
+
+  useEffect(() => {
+    if (!shortSummary && dataFromDetailButton && blocks.length > 0 && blocks[0].length > 0) {
+      setBlocks(prevBlocks => {
+        const updatedBlocks = [...prevBlocks];
+        updatedBlocks[0][0].children[0].text = dataFromDetailButton;
+        return updatedBlocks;
+      });
+    }
+  }, [shortSummary, dataFromDetailButton]);
 
   return (
     <div className="container mx-auto px-4">
       <div id="blocks-display" className="space-y-4">
         {blocks.map((blockText, index) => (
-          
           <div key={index} className="border p-4 rounded">
-            <DetailButton document = {blockText} onDetailButtonClick={handleDetailButtonClick} d/>
+            <DetailButton document={blockText} onDetailButtonClick={handleDetailButtonClick} />
+            <AddMoreDetailButton document={blockText} onDetailButtonClick={handleDetailButtonClick} />
             <TextEditor 
-              document={shortSummary &&blockText.length>1? [blockText[0].children[0].text = dataFromDetailButton]:blockText} 
+              document={blockText} 
               onChange={(newText) => updateSummaryBlock(`block${index + 1}`, newText)} 
               onSubmit={(newText) => handleBlockSubmit(index, newText)} 
             />
