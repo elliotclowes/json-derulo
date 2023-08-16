@@ -3,11 +3,13 @@ import { useParams } from 'react-router-dom';
 import { getFirestore, collection, doc, updateDoc, onSnapshot } from 'firebase/firestore';
 import { app } from '/firebase-config.js';
 import { Footer, AudioRecorder, TextEditor, WriteComment, InfoBox } from "../../components";
+import { useExtractedText } from "../../contexts/";
 import { BellIcon } from '@heroicons/react/24/outline'
 
 
 
 function CombinedSummaryNotes() {
+  const { extractedTexts } = useExtractedText();
   const { documentId } = useParams();
   const [blocks, setBlocks] = useState([]);
   const db = getFirestore(app);
@@ -96,16 +98,55 @@ function CombinedSummaryNotes() {
     }
   };
 
+  const shortenSummary = async (blockText) => {
+    try {
+      setIsLoading(true);
+      const textContent = blockText[0]?.children[0]?.text;
+      const response = await fetch('http://localhost:3000/audio/chatgpt', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          prompt: "Please shorten the summary to 3 sentences:",
+          content: textContent
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Error shortening the summary');
+      }
+
+      const shortenedText = await response.text();
+      return shortenedText;
+
+    } catch (error) {
+      console.error('Error fetching shortened summary:', error);
+      return blockText;  // if there's an error, we return the original text
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleShortenSummaryClick = async (blockText, blockIndex) => {
+    const shortenedText = await shortenSummary(blockText);
+    console.log("🚀 ~ file: index.jsx:131 ~ handleShortenSummaryClick ~ shortenedText:", shortenedText)
+    console.log("🚀 ~ file: index.jsx:134 ~ handleShortenSummaryClick ~ `block${blockIndex + 1}`:", `block${blockIndex + 1}`)
+    updateSummaryBlock(`block${blockIndex + 1}`, shortenedText);
+  };
+    
+
+
   return (
     <>
-<div className="flex min-h-full flex-col">
+    <div className="flex min-h-full flex-col">
         <header className="shrink-0 bg-gray-900">
           <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-            <img
+            <a href="/"><img
               className="h-8 w-auto"
               src="https://firebasestorage.googleapis.com/v0/b/learnt-me-test.appspot.com/o/manual%2Flogo.svg?alt=media&token=1b976e10-5cf3-42e0-827a-136ced55ba58"
               alt="Audify.me"
-            />
+            /></a>
             <div className="flex items-center gap-x-8">
               <a href="#" className="-m-1.5 p-1.5">
                 <span className="sr-only">Your profile</span>
@@ -119,35 +160,47 @@ function CombinedSummaryNotes() {
           </div>
         </header>
     {/* Wrapper */}
-    <div className="mx-auto w-full max-w-7xl grow xl:px-2">
-    {blocks.map((blockText, index) => (
-      <div key={index} className="lg:flex">
-        {/* Left sidebar */}
-        <div className="border-b border-gray-200 px-4 py-6 sm:px-6 lg:pl-8 xl:w-64 xl:shrink-0 xl:border-b-0 xl:border-r xl:pl-6">
-          <p>Left</p>
+        <div className="mx-auto w-full max-w-7xl grow xl:px-2">
+          {blocks.map((blockText, index) => (
+            <div key={index} className="lg:flex">
+              {/* Left Sidebar (Shorten & InfoBox) */}
+              <div className="border-b border-gray-200 px-4 py-6 sm:px-6 lg:pl-8 xl:w-64 xl:shrink-0 xl:border-b-0 xl:border-r xl:pl-6">
+                <button onClick={() => handleShortenSummaryClick(blockText, index)}>
+                  Shorten Summary
+                </button>
+                {/* InfoBox for Each Block */}
+                <InfoBox
+  blockId={`block${index + 1}`} 
+  extractedText={extractedTexts[`block${index + 1}`]}
+/>
+              </div>
+  
+              {/* Main content */}
+              <div className="px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-6">
+                <TextEditor 
+                  document={blockText} 
+                  onChange={(newText) => updateSummaryBlock(`block${index + 1}`, newText)} 
+                  onSubmit={(newText) => handleBlockSubmit(index, newText)} 
+                  blockId={`block${index + 1}`}
+                />
+              </div>
+  
+              {/* Right sidebar */}
+              <div className="shrink-0 border-t border-gray-200 px-4 py-6 sm:px-6 lg:w-96 lg:border-l lg:border-t-0 lg:pr-8 xl:pr-6">
+                <WriteComment documentId={documentId} blockId={`block${index + 1}`} />
+              </div>
+            </div>
+          ))}
         </div>
-        {/* Main content */}
+  
+        {/* Audio and Next Steps */}
         <div className="px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-6">
-          <TextEditor 
-            document={blockText} 
-            onChange={(newText) => updateSummaryBlock(`block${index + 1}`, newText)} 
-            onSubmit={(newText) => handleBlockSubmit(index, newText)} 
-          />
-        </div>
-        {/* Right sidebar */}
-        <div className="shrink-0 border-t border-gray-200 px-4 py-6 sm:px-6 lg:w-96 lg:border-l lg:border-t-0 lg:pr-8 xl:pr-6">
-          <WriteComment documentId={documentId} blockId={`block${index + 1}`} />
-        </div>
-      </div>
-    ))}
-    </div>
-    <div className="px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-6">
-      <AudioRecorder documentId={documentId} />
-      <button className="learnMoreButton" onClick={handleLearnMore} disabled={isLoading}>
-        Learn More
-      </button>
-
-      <div className="nextSteps">
+          <AudioRecorder documentId={documentId} />
+          <button className="learnMoreButton" onClick={handleLearnMore} disabled={isLoading}>
+            Learn More
+          </button>
+  
+          <div className="nextSteps">
             {nextSteps.length > 0 && (
               <div>
                 <h2>What to Learn Next:</h2>
@@ -159,8 +212,8 @@ function CombinedSummaryNotes() {
               </div>
             )}
           </div>
-        </div>
       </div>
+    </div>
     </>
   );
 }

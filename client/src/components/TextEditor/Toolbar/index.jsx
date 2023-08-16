@@ -6,15 +6,34 @@ import {
   Text,
   createEditor,
   Range,
+  Path
 } from 'slate';
 import { css } from '@emotion/css';
-
+import { useExtractedText } from "../../../contexts/";
 import { Button, Icon, Menu, Portal } from '../Button';
 
-export default function HoveringToolbar () {
+
+
+
+export default function HoveringToolbar({ blockId }) {
     const ref = useRef(null); // Fixed parentheses
     const editor = useSlate();
     const inFocus = useFocused();
+
+    const { extractedTexts, setExtractedTexts } = useExtractedText();
+
+    const handleExtractText = () => {
+      const text = extractSelectedText(editor);
+      if (text) {
+        console.log("Selected Text for block:", blockId, text);
+  
+        // Set the extracted text for this specific block
+        setExtractedTexts(prevTexts => ({
+          ...prevTexts,
+          [blockId]: text
+        }));
+      }
+    };
   
     useEffect(() => {
       const el = ref.current;
@@ -44,6 +63,37 @@ export default function HoveringToolbar () {
         el.offsetWidth / 2 +
         rect.width / 2}px`;
     });
+
+    const extractSelectedText = (editor) => {
+      if (!editor.selection) return;  // Check if anything is selected
+  
+      const selectedTexts = [];
+  
+      // This will iterate over text nodes within the selection
+      for (const [node, path] of Editor.nodes(editor, {
+          match: n => Text.isText(n),
+          at: editor.selection,
+      })) {
+          // If the text node's path matches the anchor's path, use the anchor's offset
+          const startOffset = Path.equals(path, editor.selection.anchor.path)
+              ? editor.selection.anchor.offset
+              : 0;
+          
+          // If the text node's path matches the focus's path, use the focus's offset
+          const endOffset = Path.equals(path, editor.selection.focus.path)
+              ? editor.selection.focus.offset
+              : node.text.length;
+  
+          // Extract the text from the text node based on the offsets
+          const selectedText = node.text.slice(startOffset, endOffset);
+          selectedTexts.push(selectedText);
+      }
+  
+      return selectedTexts.join(' ');
+  };
+  
+  
+
   
     return (
       <Portal>
@@ -70,6 +120,7 @@ export default function HoveringToolbar () {
           <FormatButton format="italic" icon="format_italic" />
           <FormatButton format="underlined" icon="format_underlined" />
           <FormatButton format="highlight" icon="format_paint" />
+          <Button onMouseDown={(event) => {event.preventDefault(); handleExtractText();}}>Extract Text</Button>
           
         </Menu>
       </Portal>
