@@ -1,4 +1,4 @@
-require("dotenv").config();
+require("dotenv").config()
 
 const { Configuration, OpenAIApi } = require("openai");
 const encoder = require('gpt-3-encoder');
@@ -8,20 +8,27 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
+// This function makes sure the text is under the token limit. If it isn't then it shortens the text by 150 characters and then tries again. It does this until it's under the limit.
 const trimToTokenLimit = (text, limit) => {
+  // Encode the text
   let tokens = encoder.encode(text);
 
+  // Check the number of tokens against the limit
   while (tokens.length > limit) {
+    // Remove the first 150 characters
     text = text.substring(150);
+
+    // Re-encode the shortened text
     tokens = encoder.encode(text);
   }
 
   return text;
 };
-
+ 
 
 const summarizeTranscript = async (prompt, content) => {
   try {
+    // Set the token limit
     const TOKEN_LIMIT = 3900;
     // Trim the content to the token limit
     content = trimToTokenLimit(content, TOKEN_LIMIT);
@@ -36,7 +43,13 @@ const summarizeTranscript = async (prompt, content) => {
     return summary;
 
   } catch (error) {
-    console.error('Error summarizing transcript:', error);
+    if (error.response) {
+      console.log(error.response.status);
+      console.log(error.response.data);
+      console.log(content)
+    } else {
+      console.log(error.message);
+    }
   }
 };
 
