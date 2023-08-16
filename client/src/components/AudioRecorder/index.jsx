@@ -7,6 +7,7 @@ const AudioRecorder = ({ documentId }) => {
 
   const [audiosContainer, setAudiosContainer] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
 
   const captureUserMedia = (mediaConstraints, successCallback, errorCallback) => {
     navigator.mediaDevices.getUserMedia(mediaConstraints).then(successCallback).catch(errorCallback);
@@ -92,11 +93,23 @@ const AudioRecorder = ({ documentId }) => {
       setIsRecording(false);
       setIsPaused(false);
     },
+    pauseRecording: () => {
+      mediaRecorder.pause();
+      setIsPaused(true);
+    },
+    resumeRecording: () => {
+      mediaRecorder.resume();
+      setIsPaused(false);
+    },
+    saveRecording: () => {
+    mediaRecorder.stop();
+      mediaRecorder.save();
+    },
   };
 
   return (
     <div className="container mx-auto px-4">
-      <Controls handlers={handlers} isRecording={isRecording} />
+      <Controls handlers={handlers} isRecording={isRecording} isPaused={isPaused} />
       <AudioContainer />
     </div>
   );

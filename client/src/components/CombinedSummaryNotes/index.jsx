@@ -5,13 +5,15 @@ import { app } from '/firebase-config.js';
 import { Footer, AudioRecorder, TextEditor, WriteComment, InfoBox } from "../../components";
 import { useExtractedText } from "../../contexts/";
 import { BellIcon } from '@heroicons/react/24/outline'
-
-
+import DetailButton  from '../DetailButton';
+import AddMoreDetailButton from '../MoreDetailButton'
 
 function CombinedSummaryNotes() {
   const { extractedTexts } = useExtractedText();
   const { documentId } = useParams();
   const [blocks, setBlocks] = useState([]);
+  const [dataFromDetailButton, setDataFromDetailButton] = useState("")
+  const [shortSummary, setShortSummary] = useState(false)
   const db = getFirestore(app);
   const [isLoading, setIsLoading] = useState(false);
   const [nextSteps, setNextSteps] = useState([]);
@@ -53,7 +55,6 @@ function CombinedSummaryNotes() {
   const handleBlockSubmit = (blockId, newText) => {
     updateSummaryBlock(`block${blockId + 1}`, newText);
   };
-
 
   const handleLearnMore = async () => {
     try {
@@ -98,42 +99,30 @@ function CombinedSummaryNotes() {
     }
   };
 
-  const shortenSummary = async (blockText) => {
-    try {
-      setIsLoading(true);
-      const textContent = blockText[0]?.children[0]?.text;
-      const response = await fetch('http://localhost:3000/audio/chatgpt', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          prompt: "Please shorten the summary to 3 sentences:",
-          content: textContent
-        })
+  const handleDetailButtonClick = async (data) => {
+    console.log("preUpdate",dataFromDetailButton)
+    // Update the state with the extracted data
+    console.log("LOOL",data)
+    await setDataFromDetailButton(data);
+
+    await setShortSummary(true)
+    console.log(shortSummary)
+  };
+  useEffect(()=>{
+    console.log(dataFromDetailButton)
+    setShortSummary(!shortSummary)
+    console.log(shortSummary)
+  },[dataFromDetailButton])
+
+  useEffect(() => {
+    if (!shortSummary && dataFromDetailButton && blocks.length > 0 && blocks[0].length > 0) {
+      setBlocks(prevBlocks => {
+        const updatedBlocks = [...prevBlocks];
+        updatedBlocks[0][0].children[0].text = dataFromDetailButton;
+        return updatedBlocks;
       });
-
-      if (!response.ok) {
-        throw new Error('Error shortening the summary');
-      }
-
-      const shortenedText = await response.text();
-      return shortenedText;
-
-    } catch (error) {
-      console.error('Error fetching shortened summary:', error);
-      return blockText;  // if there's an error, we return the original text
-    } finally {
-      setIsLoading(false);
     }
-  };
-
-  const handleShortenSummaryClick = async (blockText, blockIndex) => {
-    const shortenedText = await shortenSummary(blockText);
-    console.log("🚀 ~ file: index.jsx:131 ~ handleShortenSummaryClick ~ shortenedText:", shortenedText)
-    console.log("🚀 ~ file: index.jsx:134 ~ handleShortenSummaryClick ~ `block${blockIndex + 1}`:", `block${blockIndex + 1}`)
-    updateSummaryBlock(`block${blockIndex + 1}`, shortenedText);
-  };
+  }, [shortSummary, dataFromDetailButton]);
     
 
 
@@ -165,9 +154,8 @@ function CombinedSummaryNotes() {
             <div key={index} className="lg:flex">
               {/* Left Sidebar (Shorten & InfoBox) */}
               <div className="border-b border-gray-200 px-4 py-6 sm:px-6 lg:pl-8 xl:w-64 xl:shrink-0 xl:border-b-0 xl:border-r xl:pl-6">
-                <button onClick={() => handleShortenSummaryClick(blockText, index)}>
-                  Shorten Summary
-                </button>
+              <DetailButton document={blockText} onDetailButtonClick={handleDetailButtonClick} />
+            <AddMoreDetailButton document={blockText} onDetailButtonClick={handleDetailButtonClick} />
                 {/* InfoBox for Each Block */}
                 <InfoBox
   blockId={`block${index + 1}`} 
