@@ -74,7 +74,7 @@ const updateFirebase = async () => {
     //Talking to the db
     const summariesCollection = collection(db, 'summaries');
     const summariesRef = doc(summariesCollection, documentId);
-    const blockPath = `blocks.block1.text.0.text`
+    const blockPath = `blocks.block1.text.0.children.0.text`
     const updateObject = {
         [blockPath]: [data],
       }
@@ -152,30 +152,3 @@ export default ShortenData;
 
 
 
-//     const handleShortenSummary = async () => {
-//     if (confirm('Confirming will permanently alter your summary. Do you want to continue?')) {
-//         await makeDataJson();
-//         console.log(dataAsString);
-//         console.log(sendableData);
-
-//         try {
-//             const response = await fetch('http://localhost:3000/audio/chatgpt', {
-//                 method: 'POST',
-//                 body: JSON.stringify(sendableData),
-//                 headers: {
-//                     'Content-Type': 'application/json'
-//                 }
-//             });
-
-//             if (response.ok) {
-//                 const data = await response.text();
-//                 setSummary(data); // Update the summary state with the response
-//                 console.log(data, 'fish');
-//             } else {
-//                 console.error('Error uploading file.');
-//             }
-//         } catch (error) {
-//             console.error('Error:', error);
-//         }
-//     }
-// };

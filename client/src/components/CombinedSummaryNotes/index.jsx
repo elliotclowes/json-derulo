@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { getFirestore, collection, doc, updateDoc, onSnapshot } from 'firebase/firestore';
 import { app } from '/firebase-config.js';
 import TextEditor from '../../components/TextEditor';
+import DetailButton  from '../DetailButton';
 
 function CombinedSummaryNotes() {
   const { documentId } = useParams();
