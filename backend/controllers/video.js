@@ -20,7 +20,7 @@ async function fetchSubtitles(req, res) {
     
     console.log(transcript, 'fish');
 
-    const summary = await summarizeTranscript(transcript); 
+    const summary = await summarizeTranscript('summarise this transcript',  transcript); 
     const summaryRef = db.collection('summaries.fish').doc();
     await summaryRef.set({ 
       summary: summary,

@@ -13,6 +13,8 @@ const TitleInput = () => {
   const db = getFirestore(app);
   const navigate = useNavigate();
 
+  
+
   const handleTitleChange = (event) => {
 	setTitle(event.target.value);
   };
