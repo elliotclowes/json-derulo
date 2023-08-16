@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS verification_tokens CASCADE;
 DROP FUNCTION IF EXISTS GetUserAndTokenInfoByToken(token_value VARCHAR(255));
 
 CREATE TABLE users (
-    user_id SERIAL GENERATED ALWAYS AS IDENTITY,
+    user_id INT GENERATED ALWAYS AS IDENTITY,
     first_name VARCHAR(255) NOT NULL,
     last_name VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE users (
     
 );
 CREATE TABLE tokens (
-    token_id SERIAL GENERATED ALWAYS AS IDENTITY,
+    token_id INT GENERATED ALWAYS AS IDENTITY,
     user_id INT,
     token VARCHAR(255) NOT NULL,
     PRIMARY KEY (token_id),
