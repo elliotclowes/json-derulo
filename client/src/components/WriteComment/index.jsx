@@ -155,8 +155,23 @@ const handleCommentSubmit = async (e) => {
 
   } catch (error) {
       console.error("Error adding comment: ", error);
-  }
+  }  
 }
+
+useEffect(() => {
+  const handleEscKey = (event) => {
+    if (event.key === 'Escape' && commentBoxVisible) {
+      setCommentBoxVisible(false);
+    }
+  };
+
+  document.addEventListener('keydown', handleEscKey);
+
+  // Cleanup function to remove the event listener
+  return () => {
+    document.removeEventListener('keydown', handleEscKey);
+  };
+}, [commentBoxVisible]);
 
 
 
