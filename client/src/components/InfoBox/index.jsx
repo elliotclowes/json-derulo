@@ -8,7 +8,11 @@ export default function InfoBox({ blockId }) {
 	// Fetch the extracted text for this block using its ID
 	const extractedText = extractedTexts[blockId] || '';  // default to an empty string if not found
 
-	// State to hold the response
+	// If extractedText is empty, return nothing
+	if (!extractedText) {
+	  return null;
+	}
+
 	const [responseText, setResponseText] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -52,7 +56,7 @@ export default function InfoBox({ blockId }) {
 	return (
 	  <div className="bg-gray-50 sm:rounded-lg">
 		<div className="px-2 py-3 sm:p-4">
-		  <h3 className="text-base font-semibold leading-6 text-gray-900">{extractedText}</h3>
+		  <h3 className="text-sm font-semibold leading-6 text-gray-900">{extractedText}</h3>
 		  <div className="mt-2 max-w-xl text-sm text-gray-700">
 			<p>{isLoading ? 'Loading...' : responseText}</p>  {/* Display response or loading */}
 		  </div>
