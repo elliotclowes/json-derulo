@@ -61,16 +61,17 @@ const formattedDate = currentDate.toISOString();
         </div>
       )}
 
+     
+      <strong><button className="loadButton" onClick={handleProcessVideo}>
+        Upload Video
+      </button></strong>
+      <br />
       <input
         type="text"
         value={youtubeUrl}
         onChange={(e) => setYoutubeUrl(e.target.value)}
         placeholder="Enter YouTube URL"
       />
-      <button className="loadButton" onClick={handleProcessVideo}>
-        Process Video
-      </button>
-      
       <div
         id="content"
         className={isLoading ? 'hidden' : ''}

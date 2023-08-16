@@ -11,7 +11,7 @@ const API_TOKEN = process.env.AAI_KEY;
 exports.saveAudio = async (req, res) => {
   const path = `./uploads/${req.file.originalname}`;
   const documentId = req.body.documentId; // Extract the documentId from the request
-
+  console.log(documentId,'applesauce')
   fs.rename(req.file.path, path, async err => {
     if (err) {
       res.status(500).send(`Error saving audio file: ${err}`);
