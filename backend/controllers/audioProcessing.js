@@ -4,13 +4,7 @@ const { summarizeTranscript } = require('./chatGPT');
 const { db, bucket } = require('../database/firebase')
 const pathModule = require('path');
 
-
-
 const API_TOKEN = process.env.AAI_KEY;
-
-
-
-// OLD: HZpgoFnM6Ht4M16YuTWk
 
 async function processAudio(path, documentId) {
   console.log("🚀 ~ file: audioProcessing.js:12 ~ processAudio ~ path:", path)

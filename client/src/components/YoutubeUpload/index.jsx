@@ -1,55 +1,94 @@
 import React, { useState } from 'react';
 
-
 function App() {
   const [youtubeUrl, setYoutubeUrl] = useState('');
   const [subtitles, setSubtitles] = useState('');
-  const [isLoading, setIsLoading] = useState(false);  
-  
+  const [isLoading, setIsLoading] = useState(false);
+  const [nextSteps, setNextSteps] = useState([]);
+
   const currentDate = new Date();
-const formattedDate = currentDate.toISOString();
+  const formattedDate = currentDate.toISOString();
 
   const handleProcessVideo = async () => {
     try {
-      setIsLoading(true); // Set loading to true when starting to fetch subtitles
+      setIsLoading(true);
+
       const getuserID = async () => {
-        const token =localStorage.getItem('token');
-        if(!token) return null;
-        const response = await fetch (`http://localhost:3000/token/get/${token}`);
+        const token = localStorage.getItem('token');
+        if (!token) return null;
+        const response = await fetch(`http://localhost:3000/token/get/${token}`);
         const data = await response.json();
-        console.log(data, 'fish')
-        return data.user_id.toString()
+        return data.user_id.toString();
       };
-      console.log( await getuserID(),'hello')
-      const user_id = await getuserID(); // Fetch the user ID
+      const user_id = await getuserID();
       if (!user_id) {
         console.error("Failed to fetch user ID.");
-        setIsLoading(false); // Set loading to false in case of an error
+        setIsLoading(false);
         return;
       }
       const response = await fetch('http://localhost:3000/video/fetch_subtitles', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        url: youtubeUrl,
-        user_id: user_id,
-        timestamp: formattedDate
-      })
-});
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          url: youtubeUrl,
+          user_id: user_id,
+          timestamp: formattedDate
+        })
+      });
 
       const data = await response.json();
-      console.log(data);
-
-      // Update subtitles state with the fetched data
-      setSubtitles(data.summary); // Assuming data.summary is the correct property
-      
-      setIsLoading(false); // Set loading to false after fetching subtitles
+      setSubtitles(data.summary);
+      setIsLoading(false);
 
     } catch (error) {
       console.error('Error processing video:', error);
-      setIsLoading(false); // Make sure loading is set to false in case of an error
+      setIsLoading(false);
+    }
+  };
+
+  const handleLearnMore = async () => {
+    try {
+      setIsLoading(true);
+  
+      const prompt = "Please provide 3 bullet points on what to learn next and make them 1-4 word each :";
+  
+      const response = await fetch('http://localhost:3000/audio/chatgpt', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          prompt: prompt,
+          content: subtitles
+        })
+      });
+  
+      if (!response.ok) {
+        throw new Error('Error fetching next steps');
+      }
+  
+      const contentType = response.headers.get('content-type');
+  
+      if (contentType && contentType.includes('application/json')) {
+        const data = await response.json();
+  
+        if (data && data.nextSteps) {
+          setNextSteps(data.nextSteps);
+        } else {
+          throw new Error('Invalid JSON response');
+        }
+      } else {
+        const plainTextResponse = await response.text();
+        const sentences = plainTextResponse.split('. '); 
+        setNextSteps(sentences);
+      }
+  
+    } catch (error) {
+      console.error('Error fetching next steps:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -72,16 +111,32 @@ const formattedDate = currentDate.toISOString();
         onChange={(e) => setYoutubeUrl(e.target.value)}
         placeholder="Enter YouTube URL"
       />
-      <div
-        id="content"
-        className={isLoading ? 'hidden' : ''}
-      >
-        {/* Your content goes here */}
+      <button className="loadButton" onClick={handleProcessVideo}>
+        Process Video
+      </button>
+
+      <div id="content" className={isLoading ? 'hidden' : ''}>
         <p>This is the content that gets loaded.</p>
       </div>
 
-      {/* Display subtitles below the button */}
       {subtitles && <div>{subtitles}</div>}
+
+      <button className="learnMoreButton" onClick={handleLearnMore} disabled={isLoading}>
+        Learn More
+      </button>
+
+      <div className="nextSteps">
+        {nextSteps.length > 0 && (
+          <div>
+            <h2>What to Learn Next:</h2>
+            <ul>
+              {nextSteps.map((step, index) => (
+                <li key={index}>{step}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
