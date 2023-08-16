@@ -120,25 +120,32 @@ export default function HoveringToolbar({ blockId }) {
           <FormatButton format="italic" icon="format_italic" />
           <FormatButton format="underlined" icon="format_underlined" />
           <FormatButton format="highlight" icon="format_paint" />
-          <Button onMouseDown={(event) => {event.preventDefault(); handleExtractText();}}>Extract Text</Button>
+          <FormatButton format="extract_text" icon="question_mark" action={handleExtractText} />
+
           
         </Menu>
       </Portal>
     );
   };
   
-  const FormatButton = ({ format, icon }) => {
+  const FormatButton = ({ format, icon, action }) => {
     const editor = useSlate();
+    const handleMouseDown = action ? action : () => toggleMark(editor, format);
     return (
       <Button
-        
-        active={isMarkActive(editor, format)}
-        onClick={() => toggleMark(editor, format)}
+        active={format !== "extract_text" && isMarkActive(editor, format)}
+        onMouseDown={(event) => {
+          event.preventDefault();
+          handleMouseDown();
+        }}
       >
-        <Icon active={isMarkActive(editor, format)}>{icon}</Icon>
+        <Icon active={format !== "extract_text" && isMarkActive(editor, format)}>
+          {icon}
+        </Icon>
       </Button>
     );
   };
+  
 
   const toggleMark = (editor, format) => {
     const isActive = isMarkActive(editor, format);
