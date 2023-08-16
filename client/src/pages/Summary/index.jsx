@@ -7,7 +7,7 @@ export default function Summary() {
   return (
     <Layout>
       <AudioRecorder documentId={documentId} />
-      <DetailButton documentId = {documentId}/>
+      {/* <DetailButton documentId = {documentId}/> */}
       <CombinedSummaryNotes documentId={documentId} /> 
       <Footer />
     </Layout>

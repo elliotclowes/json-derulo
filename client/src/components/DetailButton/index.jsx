@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getFirestore, collection, doc, updateDoc, onSnapshot } from 'firebase/firestore';
 import { app } from '/firebase-config.js';
+import { stringify } from "uuid";
 
 
-function ShortenData() {
-    const { documentId } = useParams();
+function ShortenData({onDetailButtonClick, document}) {
+    // const { documentId } = useParams();
     const [blocks, setBlocks] = useState([]);
     const [dataAsString, setDataAsString] = useState("");
     const [summary, setSummary] = useState('');
@@ -15,40 +16,38 @@ function ShortenData() {
     })
     const [buttonTag, setButtonTag] = useState("Less Detail")
 
-    const db = getFirestore(app);
+    // const db = getFirestore(app);
 
-    useEffect(() => {
-        const summariesCollection = collection(db, 'summaries');
-        const docRef = doc(summariesCollection, documentId);
+    // useEffect(() => {
+    //     const summariesCollection = collection(db, 'summaries');
+    //     const docRef = doc(summariesCollection, documentId);
 
-        const unsubscribe = onSnapshot(docRef, (docSnapshot) => {
-            if (docSnapshot.exists()) {
-                const data = docSnapshot.data();
-                const blocksArray = data.blockOrder.map(blockId => data.blocks[blockId].text);
-                setBlocks(blocksArray);
-            } else {
-                console.log("No such document!");
-            }
-        });
+    //     const unsubscribe = onSnapshot(docRef, (docSnapshot) => {
+    //         if (docSnapshot.exists()) {
+    //             const data = docSnapshot.data();
+    //             const blocksArray = data.blockOrder.map(blockId => data.blocks[blockId].text);
+    //             setBlocks(blocksArray);
+    //         } else {
+    //             console.log("No such document!");
+    //         }
+    //     });
 
-        return () => unsubscribe();
-    }, [documentId, db]);
+    //     return () => unsubscribe();
+    // }, [documentId, db]);
 
-    const makeDataJson = async () => {
+    const makeDataJson = async (document) => {
         let compiledData = await dataAsString
         
-        for (let i = 0; i < blocks.length; i++){
-            for (let j =0 ; j<blocks[i].length; j++){
-                if (blocks[i][j].children.length>1){
-                    for (let k=0; k<blocks[i][j].children.length; k ++){
-                        compiledData += (blocks[i][j].children[k].text)
-                    }
-                }
-                else if (blocks[i][j].children[0].text) {
-                    compiledData += (blocks[i][j].children[0].text)
-                    
-                }
+        for (let i = 0; i < document.length; i++){
+            if (document[i].children.length>1){
+                for (let j =0 ; j<document[i].length; j++){
+                    compiledData += (document[i].children[j].text)
+            }}
+            else if (document[i].children[0].text) {
+                compiledData += (document[i].children[0].text)
+                
             }
+            
         }
         setDataAsString(compiledData)
         setSendableData({
@@ -62,7 +61,7 @@ function ShortenData() {
         console.log("Sendable Object: ", sendableData)
     }, [dataAsString])
 
-const updateFirebase = async () => {
+const sendBackData = async () => {
     setButtonTag('Less Detail')
     const data = await handleShortenSummary()
     console.log(data, "   summary")
@@ -72,18 +71,19 @@ const updateFirebase = async () => {
         "content": ''
     })
     //Talking to the db
-    const summariesCollection = collection(db, 'summaries');
-    const summariesRef = doc(summariesCollection, documentId);
-    const blockPath = `blocks.block1.text.0.children.0.text`
-    const updateObject = {
-        [blockPath]: [data],
-      }
-    await updateDoc(summariesRef, updateObject).catch(error => {
-    console.error('Error updating block:', error);
-    });
+    // const summariesCollection = collection(db, 'summaries');
+    // const summariesRef = doc(summariesCollection, documentId);
+    // const blockPath = `blocks.block1.text.0.children.0.text`
+    // const updateObject = {
+    //     [blockPath]: [data],
+    //   }
+    // await updateDoc(summariesRef, updateObject).catch(error => {
+    // console.error('Error updating block:', error);
+    // });
     
 
     console.log("hello!!!!!")
+    onDetailButtonClick(data)
 }
 
 //when the user doesn't want a shorter summary just update state variables to reset all
@@ -98,10 +98,11 @@ const noButton = () => {
 }
     
 const handleShortenSummary = async () => {
+    console.log("this is the document:", document)
     if(buttonTag == 'Less Detail'){setButtonTag(`Confirm?`)} 
     if(buttonTag == 'Confirm?') {
     setButtonTag('Less Detail');
-    setDataAsString("");
+    setDataAsString('');
     setSummary('');
     setSendableData({
         "prompt": `Please summarize the following transcript:`,
@@ -109,7 +110,7 @@ const handleShortenSummary = async () => {
         })
     }
     try {
-        await makeDataJson();
+        await makeDataJson(document)
         const response = await fetch('http://localhost:3000/audio/chatgpt', {
             method: 'POST',
             body: JSON.stringify(sendableData),
@@ -138,7 +139,7 @@ const handleShortenSummary = async () => {
     return (
         <>
         <button disabled={buttonTag == 'Confirm?'? true: false} onClick={handleShortenSummary}>{buttonTag}</button>
-        {buttonTag == 'Confirm?'? <><button onClick={updateFirebase}>Yes</button> 
+        {buttonTag == 'Confirm?'? <><button onClick={sendBackData}>Yes</button> 
         <button onClick={noButton}>No</button>
         <p style={{fontSize: '10px',color: 'red'}}>Warning! Clicking 'Yes' will overwrite your current changes and produce a new summary</p>
         

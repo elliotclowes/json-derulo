@@ -8,6 +8,8 @@ import DetailButton  from '../DetailButton';
 function CombinedSummaryNotes() {
   const { documentId } = useParams();
   const [blocks, setBlocks] = useState([]);
+  const [dataFromDetailButton, setDataFromDetailButton] = useState("")
+  const [shortSummary, setShortSummary] = useState(false)
   const db = getFirestore(app);
 
   const updateSummaryBlock = async (blockId, newText) => {
@@ -50,13 +52,22 @@ function CombinedSummaryNotes() {
     updateSummaryBlock(`block${blockId + 1}`, newText);
   };
 
+  const handleDetailButtonClick = (data) => {
+    // Update the state with the extracted data
+    console.log("LOOL",data)
+    setDataFromDetailButton(data);
+    setShortSummary(true)
+    console.log(shortSummary)
+  };
+
   return (
     <div className="container mx-auto px-4">
       <div id="blocks-display" className="space-y-4">
         {blocks.map((blockText, index) => (
           <div key={index} className="border p-4 rounded">
+            {index==0?<DetailButton document = {blockText} onDetailButtonClick={handleDetailButtonClick} d/>:null}
             <TextEditor 
-              document={blockText} 
+              document={index===0 && shortSummary?dataFromDetailButton:blockText} 
               onChange={(newText) => updateSummaryBlock(`block${index + 1}`, newText)} 
               onSubmit={(newText) => handleBlockSubmit(index, newText)} 
             />
