@@ -5,19 +5,6 @@ import { Listbox, Transition } from '@headlessui/react'
 import { getFirestore, collection, doc, updateDoc, onSnapshot, getDoc, arrayUnion } from 'firebase/firestore';
 import { app } from '/firebase-config.js';
 
-// const activity = [
-//   {
-//     userID: 1,
-//     type: 'commented',
-//     person: {
-//       name: 'Chelsea Hagon',
-//       imageUrl:
-//         'https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-//     },
-//     comment: 'Called client, they reassured me the invoice would be paid by the 25th.',
-//     dateTime: '2023-01-23T15:56',
-//   },
-// ]
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -176,6 +163,7 @@ const handleCommentSubmit = async (e) => {
 
   return (
     <>
+    <div className="hoverWrapper relative group">
       <ul role="list" className="space-y-6">
         {activity.map((activityItem, activityItemIdx) => (
           <li key={activityItem.userID} className="relative flex gap-x-4">
@@ -230,7 +218,9 @@ const handleCommentSubmit = async (e) => {
 
       {/* Clickable text to toggle comment box */}
       {!commentBoxVisible &&
-      <div className="mt-4 cursor-pointer text-indigo-600 flex justify-center items-center" onClick={toggleCommentBox}>
+      <div className="mt-4 cursor-pointer text-indigo-600 flex justify-center items-center transition-opacity duration-500 ease-in-out opacity-0 group-hover:opacity-100 group-hover:visible invisible" onClick={toggleCommentBox}>
+
+
   <button
     type="button"
     className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
@@ -275,6 +265,7 @@ const handleCommentSubmit = async (e) => {
         </form>
       </div>
       )}
+      </div>
     </>
   )
 }
