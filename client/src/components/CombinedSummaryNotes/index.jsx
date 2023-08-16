@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams,  useNavigate  } from 'react-router-dom';
 import { getFirestore, collection, doc, updateDoc, onSnapshot } from 'firebase/firestore';
 import { app } from '/firebase-config.js';
 import { Footer, AudioRecorder, TextEditor, WriteComment, InfoBox } from "../../components";
@@ -7,13 +7,14 @@ import { BellIcon } from '@heroicons/react/24/outline'
 
 
 
+
 function CombinedSummaryNotes() {
   const { documentId } = useParams();
   const [blocks, setBlocks] = useState([]);
-  const [authenticatedUserId, setAuthenticatedUserId] = useState(null); // Initialize as null
   const db = getFirestore(app);
   const [isLoading, setIsLoading] = useState(false);
   const [nextSteps, setNextSteps] = useState([]);
+  const navigate = useNavigate();
 
 
   const updateSummaryBlock = async (blockId, newText) => {
@@ -35,36 +36,33 @@ function CombinedSummaryNotes() {
     });
   };
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(user => {
-      if (user) {
-        setAuthenticatedUserId(user.uid);
-      } else {
-        setAuthenticatedUserId(null);
-      }
-    });
-  
-    return () => unsubscribe(); // Cleanup when the component unmounts
-  }, []);
-  useEffect(() => {
     const summariesCollection = collection(db, 'summaries');
     const docRef = doc(summariesCollection, documentId);
     const unsubscribe = onSnapshot(docRef, (docSnapshot) => {
       if (docSnapshot.exists()) {
         const data = docSnapshot.data();
-        const blocksArray = data.blockOrder.map(blockId => {
-          const block = data.blocks[blockId];
-          if (block.visibility === 'public' || block.user_id === authenticatedUserId) {
-            return block.text;
-          }
-          return ''; // If not authorized to view this block
-        });
+        console.log(data,'soup')
+        const blocksArray = data.blockOrder.map(blockId => data.blocks[blockId].text);
         setBlocks(blocksArray);
+        const localStorageData = JSON.parse(localStorage.getItem('id'));
+      console.log(localStorageData,'house');
+        
+  
+        const visibilityFromFirestore = data.visibility;
+        console.log(visibilityFromFirestore,'monkey');
+        if (localStorageData !== data.userID && visibilityFromFirestore === 'private') {
+          // Implement your access restriction logic here
+          // For example, redirect the user or show an error message
+          console.log('Access denied');
+          navigate('/dash');
+        }
+ 
       } else {
         console.log("No such document!");
       }
     });
     return () => unsubscribe();
-  }, [documentId, db, authenticatedUserId]);
+  }, [documentId, db]);
   
   const handleBlockSubmit = (blockId, newText) => {
     updateSummaryBlock(`block${blockId + 1}`, newText);
