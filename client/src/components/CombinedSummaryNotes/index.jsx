@@ -4,9 +4,9 @@ import { getFirestore, collection, doc, updateDoc, onSnapshot } from 'firebase/f
 import { app } from '/firebase-config.js';
 import { Footer, AudioRecorder, TextEditor, WriteComment, InfoBox } from "../../components";
 import { useExtractedText } from "../../contexts/";
-import { BellIcon } from '@heroicons/react/24/outline'
 import DetailButton  from '../DetailButton';
 import AddMoreDetailButton from '../MoreDetailButton'
+import { PlusIcon } from '@heroicons/react/20/solid'
 
 function CombinedSummaryNotes() {
   const { extractedTexts } = useExtractedText();
@@ -183,26 +183,47 @@ function CombinedSummaryNotes() {
         </div>
   
         {/* Audio and Next Steps */}
-        <div className="px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-6">
-          <AudioRecorder documentId={documentId} />
-          <button className="learnMoreButton" onClick={handleLearnMore} disabled={isLoading}>
-            Learn More
-          </button>
+        <div className="flex flex-col items-center justify-center px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-6">
+
+
+        <AudioRecorder documentId={documentId} />
+          
+        <div className="bg-gray-100 py-24 sm:py-6 rounded-lg">
+  <div className="mx-auto max-w-7xl px-6 lg:px-8">
+    <div className="mx-auto max-w-2xl lg:text-center">
+      <p className="mt-2 text-2xl font-bold tracking-tight text-indigo-600 sm:text-3xl">
+        Learn this next...
+      </p>
+      <p className="mt-6 text-m leading-8 text-gray-700">
+        We'll use AI to analyse your summary and give<br></br> you some suggestions on what you should learn next!
+      </p>
+      
+      <button type="button" className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 mt-4" onClick={handleLearnMore} disabled={isLoading}>
+        Look into the future
+      </button>
+
   
-          <div className="nextSteps">
-            {nextSteps.length > 0 && (
-              <div>
-                <h2>What to Learn Next:</h2>
-                <ul>
-                  {nextSteps.map((step, index) => (
-                    <li key={index}>{step}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
+      <div className="nextSteps mt-4">
+        {nextSteps.length > 0 && (
+          <div>
+            <h2>What to Learn Next:</h2>
+            <ul>
+              {nextSteps.map((step, index) => (
+                <li key={index}>{step}</li>
+              ))}
+            </ul>
           </div>
+        )}
       </div>
     </div>
+  </div>
+</div>
+
+
+</div>
+    </div>
+    <Footer />
+    <br></br>
     </>
   );
 }

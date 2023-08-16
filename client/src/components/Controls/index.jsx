@@ -10,7 +10,7 @@ const Controls = ({ handlers, isRecording }) => (
         disabled={isRecording}
         className={`rounded-full px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 mr-2 ${isRecording ? 'bg-green-300' : 'bg-green-600'}`}
       >
-        {isRecording ? 'Recording...' : 'Start'}
+        {isRecording ? 'Recording...' : 'Start recording'}
       </button>
     <button
         type="button"
