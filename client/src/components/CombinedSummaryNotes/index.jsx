@@ -139,14 +139,14 @@ function CombinedSummaryNotes() {
 
   return (
     <>
-<div className="flex min-h-full flex-col">
+    <div className="flex min-h-full flex-col">
         <header className="shrink-0 bg-gray-900">
           <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-            <img
+            <a href="/"><img
               className="h-8 w-auto"
               src="https://firebasestorage.googleapis.com/v0/b/learnt-me-test.appspot.com/o/manual%2Flogo.svg?alt=media&token=1b976e10-5cf3-42e0-827a-136ced55ba58"
               alt="Audify.me"
-            />
+            /></a>
             <div className="flex items-center gap-x-8">
               <a href="#" className="-m-1.5 p-1.5">
                 <span className="sr-only">Your profile</span>
@@ -160,37 +160,43 @@ function CombinedSummaryNotes() {
           </div>
         </header>
     {/* Wrapper */}
-    <div className="mx-auto w-full max-w-7xl grow xl:px-2">
-    {blocks.map((blockText, index) => (
+        <div className="mx-auto w-full max-w-7xl grow xl:px-2">
+          {blocks.map((blockText, index) => (
             <div key={index} className="lg:flex">
-                <div className="border-b border-gray-200 px-4 py-6 sm:px-6 lg:pl-8 xl:w-64 xl:shrink-0 xl:border-b-0 xl:border-r xl:pl-6">
-                  <button onClick={() => handleShortenSummaryClick(blockText, index)}>
-                        Shorten Summary
-                    </button>
-                    <InfoBox extractedText={extractedText} />
-                </div>
-        {/* Main content */}
+              {/* Left Sidebar (Shorten & InfoBox) */}
+              <div className="border-b border-gray-200 px-4 py-6 sm:px-6 lg:pl-8 xl:w-64 xl:shrink-0 xl:border-b-0 xl:border-r xl:pl-6">
+                <button onClick={() => handleShortenSummaryClick(blockText, index)}>
+                  Shorten Summary
+                </button>
+                {/* InfoBox for Each Block */}
+                <InfoBox extractedText={extractedText} />
+              </div>
+  
+              {/* Main content */}
+              <div className="px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-6">
+                <TextEditor 
+                  document={blockText} 
+                  onChange={(newText) => updateSummaryBlock(`block${index + 1}`, newText)} 
+                  onSubmit={(newText) => handleBlockSubmit(index, newText)} 
+                />
+              </div>
+  
+              {/* Right sidebar */}
+              <div className="shrink-0 border-t border-gray-200 px-4 py-6 sm:px-6 lg:w-96 lg:border-l lg:border-t-0 lg:pr-8 xl:pr-6">
+                <WriteComment documentId={documentId} blockId={`block${index + 1}`} />
+              </div>
+            </div>
+          ))}
+        </div>
+  
+        {/* Audio and Next Steps */}
         <div className="px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-6">
-          <TextEditor 
-            document={blockText} 
-            onChange={(newText) => updateSummaryBlock(`block${index + 1}`, newText)} 
-            onSubmit={(newText) => handleBlockSubmit(index, newText)} 
-          />
-        </div>
-        {/* Right sidebar */}
-        <div className="shrink-0 border-t border-gray-200 px-4 py-6 sm:px-6 lg:w-96 lg:border-l lg:border-t-0 lg:pr-8 xl:pr-6">
-          <WriteComment documentId={documentId} blockId={`block${index + 1}`} />
-        </div>
-      </div>
-    ))}
-    </div>
-    <div className="px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-6">
-      <AudioRecorder documentId={documentId} />
-      <button className="learnMoreButton" onClick={handleLearnMore} disabled={isLoading}>
-        Learn More
-      </button>
-
-      <div className="nextSteps">
+          <AudioRecorder documentId={documentId} />
+          <button className="learnMoreButton" onClick={handleLearnMore} disabled={isLoading}>
+            Learn More
+          </button>
+  
+          <div className="nextSteps">
             {nextSteps.length > 0 && (
               <div>
                 <h2>What to Learn Next:</h2>
