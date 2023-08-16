@@ -3,10 +3,17 @@ import { useParams } from "react-router-dom";
 import { getFirestore, collection, doc, updateDoc, onSnapshot } from 'firebase/firestore';
 import { app } from '/firebase-config.js';
 
+
 function ShortenData() {
     const { documentId } = useParams();
     const [blocks, setBlocks] = useState([]);
     const [dataAsString, setDataAsString] = useState("");
+    const [summary, setSummary] = useState('');
+    const [sendableData, setSendableData] = useState({
+        "prompt": `Please summarize the following transcript:`,
+        "content": dataAsString
+    })
+    const [buttonTag, setButtonTag] = useState("Less Detail")
 
     const db = getFirestore(app);
 
@@ -27,8 +34,8 @@ function ShortenData() {
         return () => unsubscribe();
     }, [documentId, db]);
 
-    const makeDataJson = () => {
-        let compiledData = dataAsString
+    const makeDataJson = async () => {
+        let compiledData = await dataAsString
         
         for (let i = 0; i < blocks.length; i++){
             for (let j =0 ; j<blocks[i].length; j++){
@@ -44,38 +51,131 @@ function ShortenData() {
             }
         }
         setDataAsString(compiledData)
+        setSendableData({
+            "prompt": `Please summarize the following transcript:`,
+            "content": compiledData
+        })
+        return dataAsString,sendableData
     };
-    useEffect(() => {
+    useEffect( () => {
         console.log("Updated dataAsString:", dataAsString)
+        console.log("Sendable Object: ", sendableData)
     }, [dataAsString])
 
+const updateFirebase = async () => {
+    setButtonTag('Less Detail')
+    const data = await handleShortenSummary()
+    console.log(data, "   summary")
+    setDataAsString('')
+    setSendableData({
+        "prompt": `Please summarize the following transcript:`,
+        "content": ''
+    })
+    //Talking to the db
+    const summariesCollection = collection(db, 'summaries');
+    const summariesRef = doc(summariesCollection, documentId);
+    const blockPath = `blocks.block1.text.0.text`
+    const updateObject = {
+        [blockPath]: [data],
+      }
+    await updateDoc(summariesRef, updateObject).catch(error => {
+    console.error('Error updating block:', error);
+    });
+    
 
+    console.log("hello!!!!!")
+}
 
-    const handleShortenSummary = async() => {
-        if (confirm('Confirming will permanently alter your summary. Do you want to continue? ')) {
-            await makeDataJson()
-            await console.log(dataAsString)
-            const sendableData = {
-                "prompt": `Please summarize the following transcript:`,
-                "content": await dataAsString
-            };
-            console.log(sendableData)
-            await fetch('http://localhost:3000/audio/chatgpt', {
-                method: 'POST',
-                body: sendableData,
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => console.log('Successfully received shortened text:', data))
-            .catch(error => console.error('Error uploading file:', error));
+//when the user doesn't want a shorter summary just update state variables to reset all
+const noButton = () => {
+    setButtonTag('Less Detail')
+    setDataAsString('')
+    setSendableData({
+        "prompt": `Please summarize the following transcript:`,
+        "content": ''
+    })
+    console.log('no!!!!')
+}
+    
+const handleShortenSummary = async () => {
+    if(buttonTag == 'Less Detail'){setButtonTag(`Confirm?`)} 
+    if(buttonTag == 'Confirm?') {
+    setButtonTag('Less Detail');
+    setDataAsString("");
+    setSummary('');
+    setSendableData({
+        "prompt": `Please summarize the following transcript:`,
+        "content": dataAsString
+        })
+    }
+    try {
+        await makeDataJson();
+        const response = await fetch('http://localhost:3000/audio/chatgpt', {
+            method: 'POST',
+            body: JSON.stringify(sendableData),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        console.log(await dataAsString);
+        console.log(await sendableData);
+        if (response.ok) {
+            const data = await response.text();
+            setSummary(data); // Update the summary state with the response
+            console.log(data, 'fish');
+            return data
+        } else {
+            console.error('Error uploading file.');
         }
-    };
+    } catch (error) {
+        console.error('Error:', error);
+    }
+    
+    
+    
+};
 
     return (
-        <button onClick={handleShortenSummary}>Shorten Summary</button>
+        <>
+        <button disabled={buttonTag == 'Confirm?'? true: false} onClick={handleShortenSummary}>{buttonTag}</button>
+        {buttonTag == 'Confirm?'? <><button onClick={updateFirebase}>Yes</button> 
+        <button onClick={noButton}>No</button>
+        <p style={{fontSize: '10px',color: 'red'}}>Warning! Clicking 'Yes' will overwrite your current changes and produce a new summary</p>
+        
+        </>: null}
+        </>
     );
 }
 
 export default ShortenData;
+
+
+
+
+//     const handleShortenSummary = async () => {
+//     if (confirm('Confirming will permanently alter your summary. Do you want to continue?')) {
+//         await makeDataJson();
+//         console.log(dataAsString);
+//         console.log(sendableData);
+
+//         try {
+//             const response = await fetch('http://localhost:3000/audio/chatgpt', {
+//                 method: 'POST',
+//                 body: JSON.stringify(sendableData),
+//                 headers: {
+//                     'Content-Type': 'application/json'
+//                 }
+//             });
+
+//             if (response.ok) {
+//                 const data = await response.text();
+//                 setSummary(data); // Update the summary state with the response
+//                 console.log(data, 'fish');
+//             } else {
+//                 console.error('Error uploading file.');
+//             }
+//         } catch (error) {
+//             console.error('Error:', error);
+//         }
+//     }
+// };
