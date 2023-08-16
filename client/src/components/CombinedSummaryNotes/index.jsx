@@ -9,7 +9,7 @@ import { BellIcon } from '@heroicons/react/24/outline'
 
 
 function CombinedSummaryNotes() {
-  const { extractedText } = useExtractedText();
+  const { extractedTexts } = useExtractedText();
   const { documentId } = useParams();
   const [blocks, setBlocks] = useState([]);
   const db = getFirestore(app);
@@ -169,7 +169,10 @@ function CombinedSummaryNotes() {
                   Shorten Summary
                 </button>
                 {/* InfoBox for Each Block */}
-                <InfoBox extractedText={extractedText} />
+                <InfoBox
+  blockId={`block${index + 1}`} 
+  extractedText={extractedTexts[`block${index + 1}`]}
+/>
               </div>
   
               {/* Main content */}
@@ -178,6 +181,7 @@ function CombinedSummaryNotes() {
                   document={blockText} 
                   onChange={(newText) => updateSummaryBlock(`block${index + 1}`, newText)} 
                   onSubmit={(newText) => handleBlockSubmit(index, newText)} 
+                  blockId={`block${index + 1}`}
                 />
               </div>
   
@@ -208,8 +212,8 @@ function CombinedSummaryNotes() {
               </div>
             )}
           </div>
-        </div>
       </div>
+    </div>
     </>
   );
 }

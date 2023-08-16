@@ -13,7 +13,7 @@ import { withHistory } from 'slate-history';
 import HoveringToolbar from '../Toolbar'
 
 
-const HoveringMenuEditor = ({document, onChange}) => {
+const HoveringMenuEditor = ({document, onChange, blockId}) => {
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
 
 
@@ -74,7 +74,7 @@ const HoveringMenuEditor = ({document, onChange}) => {
 
   return (
     <Slate editor={editor} initialValue={document} onChange={onChange}>
-      <HoveringToolbar />
+      <HoveringToolbar blockId={blockId} />
       <Editable
         renderElement={renderElement}
         renderLeaf={props => <Leaf {...props} />}

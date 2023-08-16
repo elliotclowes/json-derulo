@@ -14,20 +14,25 @@ import { Button, Icon, Menu, Portal } from '../Button';
 
 
 
-export default function HoveringToolbar () {
+export default function HoveringToolbar({ blockId }) {
     const ref = useRef(null); // Fixed parentheses
     const editor = useSlate();
     const inFocus = useFocused();
 
-    const { setExtractedText } = useExtractedText();
+    const { extractedTexts, setExtractedTexts } = useExtractedText();
 
     const handleExtractText = () => {
       const text = extractSelectedText(editor);
       if (text) {
-          console.log("Selected Text: ", text);
-          setExtractedText(text);
+        console.log("Selected Text for block:", blockId, text);
+  
+        // Set the extracted text for this specific block
+        setExtractedTexts(prevTexts => ({
+          ...prevTexts,
+          [blockId]: text
+        }));
       }
-  };
+    };
   
     useEffect(() => {
       const el = ref.current;
