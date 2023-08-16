@@ -54,7 +54,7 @@ function CombinedSummaryNotes() {
           // Implement your access restriction logic here
           // For example, redirect the user or show an error message
           console.log('Access denied');
-          navigate('/dash');
+          navigate('*');
         }
  
       } else {
