@@ -152,32 +152,34 @@ function CombinedSummaryNotes() {
         <div className="mx-auto w-full max-w-7xl grow xl:px-2">
         {blocks.map((blockText, index) => (
   <div key={index} className="lg:flex">
+
+    
     {/* Left Sidebar (Shorten & InfoBox) */}
-    <div className="border-b border-gray-200 px-4 py-6 sm:px-6 lg:pl-8 xl:w-80 xl:shrink-0 xl:border-b-0 xl:border-r xl:pl-6">
-      { index !== 0 && <DetailButton document={blockText} onDetailButtonClick={handleDetailButtonClick} />}
-      { index !== 0 && <AddMoreDetailButton document={blockText} onDetailButtonClick={handleDetailButtonClick} />}
-      {/* InfoBox for Each Block */}
-      <InfoBox
-        blockId={`block${index + 1}`} 
-        extractedText={extractedTexts[`block${index + 1}`]}
-      />
-    </div>
+<div className="w-1/4 border-b border-gray-200 px-4 py-6 sm:px-6 lg:pl-8 xl:w-84 xl:border-b-0 xl:border-r xl:pl-6">
+  {index !== 0 && <DetailButton document={blockText} onDetailButtonClick={handleDetailButtonClick} />}
+  {index !== 0 && <AddMoreDetailButton document={blockText} onDetailButtonClick={handleDetailButtonClick} />}
+  {/* InfoBox for Each Block */}
+  <InfoBox
+    blockId={`block${index + 1}`} 
+    extractedText={extractedTexts[`block${index + 1}`]}
+  />
+</div>
 
   
               {/* Main content */}
-              <div className="px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-6">
-                <TextEditor 
-                  document={blockText} 
-                  onChange={(newText) => updateSummaryBlock(`block${index + 1}`, newText)} 
-                  onSubmit={(newText) => handleBlockSubmit(index, newText)} 
-                  blockId={`block${index + 1}`}
-                />
-              </div>
-  
-              {/* Right sidebar */}
-              <div className="shrink-0 border-t border-gray-200 px-4 py-6 sm:px-6 lg:w-96 lg:border-l lg:border-t-0 lg:pr-8 xl:pr-6">
-                <WriteComment documentId={documentId} blockId={`block${index + 1}`} />
-              </div>
+<div className="flex-1 px-4 py-6 sm:px-6 lg:pl-8">
+  <TextEditor 
+    document={blockText} 
+    onChange={(newText) => updateSummaryBlock(`block${index + 1}`, newText)} 
+    onSubmit={(newText) => handleBlockSubmit(index, newText)} 
+    blockId={`block${index + 1}`}
+  />
+</div>
+
+{/* Right sidebar */}
+<div className="shrink-0 border-t border-gray-200 px-4 py-6 sm:px-6 lg:w-1/4 lg:border-l lg:border-t-0 lg:pr-8 xl:w-84">
+  <WriteComment documentId={documentId} blockId={`block${index + 1}`} />
+</div>
             </div>
           ))}
         </div>
