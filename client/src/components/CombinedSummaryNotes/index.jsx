@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams,  useNavigate  } from 'react-router-dom';
 import { getFirestore, collection, doc, updateDoc, onSnapshot } from 'firebase/firestore';
 import { app } from '/firebase-config.js';
 import { Footer, AudioRecorder, TextEditor, WriteComment, InfoBox } from "../../components";
 import { BellIcon } from '@heroicons/react/24/outline'
+
 
 
 
@@ -13,6 +14,7 @@ function CombinedSummaryNotes() {
   const db = getFirestore(app);
   const [isLoading, setIsLoading] = useState(false);
   const [nextSteps, setNextSteps] = useState([]);
+  const navigate = useNavigate();
 
 
   const updateSummaryBlock = async (blockId, newText) => {
@@ -39,8 +41,22 @@ function CombinedSummaryNotes() {
     const unsubscribe = onSnapshot(docRef, (docSnapshot) => {
       if (docSnapshot.exists()) {
         const data = docSnapshot.data();
+        console.log(data,'soup')
         const blocksArray = data.blockOrder.map(blockId => data.blocks[blockId].text);
         setBlocks(blocksArray);
+        const localStorageData = JSON.parse(localStorage.getItem('id'));
+      console.log(localStorageData,'house');
+        
+  
+        const visibilityFromFirestore = data.visibility;
+        console.log(visibilityFromFirestore,'monkey');
+        if (localStorageData !== data.userID && visibilityFromFirestore === 'private') {
+          // Implement your access restriction logic here
+          // For example, redirect the user or show an error message
+          console.log('Access denied');
+          navigate('*');
+        }
+ 
       } else {
         console.log("No such document!");
       }

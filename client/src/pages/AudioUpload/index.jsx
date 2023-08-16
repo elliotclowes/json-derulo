@@ -1,9 +1,9 @@
-import { Layout, Footer,  YoutubeUpload } from "../../components";
+import { Layout, Footer, AudioUpload } from "../../components";
 
 export default function Youtube() {
   return (
     <Layout>
-      <YoutubeUpload />
+      <AudioUpload />
       <Footer />
     </Layout>
   );
