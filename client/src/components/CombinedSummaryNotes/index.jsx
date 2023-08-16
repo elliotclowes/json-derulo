@@ -10,6 +10,7 @@ import { BellIcon } from '@heroicons/react/24/outline'
 function CombinedSummaryNotes() {
   const { documentId } = useParams();
   const [blocks, setBlocks] = useState([]);
+  const [authenticatedUserId, setAuthenticatedUserId] = useState(null); // Initialize as null
   const db = getFirestore(app);
   const updateSummaryBlock = async (blockId, newText) => {
     // Get the Firestore reference to the specific document
@@ -30,19 +31,36 @@ function CombinedSummaryNotes() {
     });
   };
   useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      if (user) {
+        setAuthenticatedUserId(user.uid);
+      } else {
+        setAuthenticatedUserId(null);
+      }
+    });
+  
+    return () => unsubscribe(); // Cleanup when the component unmounts
+  }, []);
+  useEffect(() => {
     const summariesCollection = collection(db, 'summaries');
     const docRef = doc(summariesCollection, documentId);
     const unsubscribe = onSnapshot(docRef, (docSnapshot) => {
       if (docSnapshot.exists()) {
         const data = docSnapshot.data();
-        const blocksArray = data.blockOrder.map(blockId => data.blocks[blockId].text);
+        const blocksArray = data.blockOrder.map(blockId => {
+          const block = data.blocks[blockId];
+          if (block.visibility === 'public' || block.user_id === authenticatedUserId) {
+            return block.text;
+          }
+          return ''; // If not authorized to view this block
+        });
         setBlocks(blocksArray);
       } else {
         console.log("No such document!");
       }
     });
     return () => unsubscribe();
-  }, [documentId, db]);
+  }, [documentId, db, authenticatedUserId]);
   
   const handleBlockSubmit = (blockId, newText) => {
     updateSummaryBlock(`block${blockId + 1}`, newText);
