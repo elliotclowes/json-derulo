@@ -52,11 +52,13 @@ function CombinedSummaryNotes() {
     updateSummaryBlock(`block${blockId + 1}`, newText);
   };
 
-  const handleDetailButtonClick = (data) => {
+  const handleDetailButtonClick = async (data) => {
+    console.log("preUpdate",dataFromDetailButton)
     // Update the state with the extracted data
     console.log("LOOL",data)
-    setDataFromDetailButton(data);
-    setShortSummary(true)
+    await setDataFromDetailButton(data);
+    console.log(dataFromDetailButton)
+    await setShortSummary(true)
     console.log(shortSummary)
   };
 
@@ -64,10 +66,11 @@ function CombinedSummaryNotes() {
     <div className="container mx-auto px-4">
       <div id="blocks-display" className="space-y-4">
         {blocks.map((blockText, index) => (
+          
           <div key={index} className="border p-4 rounded">
-            {index==0?<DetailButton document = {blockText} onDetailButtonClick={handleDetailButtonClick} d/>:null}
+            <DetailButton document = {blockText} onDetailButtonClick={handleDetailButtonClick} d/>
             <TextEditor 
-              document={index===0 && shortSummary?dataFromDetailButton:blockText} 
+              document={shortSummary &&blockText.length>1? [blockText[0].children[0].text = dataFromDetailButton]:blockText} 
               onChange={(newText) => updateSummaryBlock(`block${index + 1}`, newText)} 
               onSubmit={(newText) => handleBlockSubmit(index, newText)} 
             />
