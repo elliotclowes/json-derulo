@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 
 
-function AddMoreDetailButton({onDetailButtonClick, document}) {
+function AddMoreDetailButton({onDetailButtonClick, document, index}) {
 
     const [dataAsString, setDataAsString] = useState("");
     const [summary, setSummary] = useState('');
     const [sendableData, setSendableData] = useState({
-        "prompt": `Please add more detail to the following text`,
+        "prompt": `Please add more detail to the following text with some extra facts`,
         "content": dataAsString
     })
     const [buttonTag, setButtonTag] = useState("More Detail")
@@ -27,7 +27,7 @@ function AddMoreDetailButton({onDetailButtonClick, document}) {
         }
         setDataAsString(compiledData)
         setSendableData({
-            "prompt": `Please add more detail to the following text`,
+            "prompt": `Please add more detail to the following text with some extra facts`,
             "content": compiledData
         })
         return dataAsString,sendableData
@@ -43,14 +43,14 @@ const sendBackData = async () => {
     console.log(data, "   summary")
     setDataAsString('')
     setSendableData({
-        "prompt": `Please add more detail to the following text`,
+        "prompt": `Please add more detail to the following text with some extra facts`,
         "content": ''
     })
     
     
 
     console.log("hello!!!!!")
-    onDetailButtonClick(data)
+    onDetailButtonClick(data, index)
 }
 
 //when the user doesn't want a shorter summary just update state variables to reset all
@@ -58,7 +58,7 @@ const noButton = () => {
     setButtonTag('More Detail')
     setDataAsString('')
     setSendableData({
-        "prompt": `Please add more detail to the following text`,
+        "prompt": `Please add more detail to the following text with some extra facts`,
         "content": ''
     })
     console.log('no!!!!')
@@ -72,7 +72,7 @@ const handleShortenSummary = async () => {
     setDataAsString('');
     setSummary('');
     setSendableData({
-        "prompt": `Please add more detail to the following text:`,
+        "prompt": `Please add more detail to the following text with some extra facts:`,
         "content": dataAsString
         })
     }

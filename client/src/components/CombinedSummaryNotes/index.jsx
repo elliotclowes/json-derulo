@@ -17,6 +17,7 @@ function CombinedSummaryNotes() {
   const db = getFirestore(app);
   const [isLoading, setIsLoading] = useState(false);
   const [nextSteps, setNextSteps] = useState([]);
+  const [detailIndex, setDetailIndex] = useState(1)
 
 
   const updateSummaryBlock = async (blockId, newText) => {
@@ -99,12 +100,12 @@ function CombinedSummaryNotes() {
     }
   };
 
-  const handleDetailButtonClick = async (data) => {
+  const handleDetailButtonClick = async (data, index) => {
     console.log("preUpdate",dataFromDetailButton)
     // Update the state with the extracted data
     console.log("LOOL",data)
     await setDataFromDetailButton(data);
-
+    await setDetailIndex(index)
     await setShortSummary(true)
     console.log(shortSummary)
   };
@@ -117,8 +118,9 @@ function CombinedSummaryNotes() {
   useEffect(() => {
     if (!shortSummary && dataFromDetailButton && blocks.length > 0 && blocks[0].length > 0) {
       setBlocks(prevBlocks => {
+        console.log(blocks)
         const updatedBlocks = [...prevBlocks];
-        updatedBlocks[0][0].children[0].text = dataFromDetailButton;
+        updatedBlocks[detailIndex][0].children[0].text = dataFromDetailButton;
         return updatedBlocks;
       });
     }
@@ -154,8 +156,10 @@ function CombinedSummaryNotes() {
             <div key={index} className="lg:flex">
               {/* Left Sidebar (Shorten & InfoBox) */}
               <div className="border-b border-gray-200 px-4 py-6 sm:px-6 lg:pl-8 xl:w-64 xl:shrink-0 xl:border-b-0 xl:border-r xl:pl-6">
-              <DetailButton document={blockText} onDetailButtonClick={handleDetailButtonClick} />
-            <AddMoreDetailButton document={blockText} onDetailButtonClick={handleDetailButtonClick} />
+                {index!=0?<>
+                  <DetailButton document={blockText} onDetailButtonClick={handleDetailButtonClick} index={index}/>
+                  <AddMoreDetailButton document={blockText} onDetailButtonClick={handleDetailButtonClick} index={index}/>
+                </>:null}
                 {/* InfoBox for Each Block */}
                 <InfoBox
   blockId={`block${index + 1}`} 
