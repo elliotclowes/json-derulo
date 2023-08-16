@@ -3,11 +3,13 @@ import { useParams } from 'react-router-dom';
 import { getFirestore, collection, doc, updateDoc, onSnapshot } from 'firebase/firestore';
 import { app } from '/firebase-config.js';
 import { Footer, AudioRecorder, TextEditor, WriteComment, InfoBox } from "../../components";
+import { useExtractedText } from "../../contexts/";
 import { BellIcon } from '@heroicons/react/24/outline'
 
 
 
 function CombinedSummaryNotes() {
+  const { extractedText } = useExtractedText();
   const { documentId } = useParams();
   const [blocks, setBlocks] = useState([]);
   const db = getFirestore(app);
@@ -165,7 +167,7 @@ function CombinedSummaryNotes() {
                   <button onClick={() => handleShortenSummaryClick(blockText, index)}>
                         Shorten Summary
                     </button>
-                    <InfoBox />
+                    <InfoBox extractedText={extractedText} />
                 </div>
         {/* Main content */}
         <div className="px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-6">

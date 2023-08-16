@@ -1,5 +1,6 @@
 import React, { useMemo, useRef, useEffect, useCallback } from 'react';
 import { Slate, Editable, withReact, useSlate, useFocused } from 'slate-react';
+import { useExtractedText } from "../../../contexts/";
 import {
   Editor,
   Transforms,

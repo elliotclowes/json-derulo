@@ -1,13 +1,14 @@
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import { Login, ProtectedRoute, Signup, Homepage, Dash, Summary, Recorder, Notes, CreateSummary, YoutubeUpload, TeacherSummary, FinalSummary, UserSummaries, UserTagSummaries, SearchResults, UserSettings, SignOut } from "./pages";
-import { AuthProvider } from "./contexts";
+import { AuthProvider, ExtractedTextProvider } from "./contexts";
 
 
 function App() {
   return (
     <>
       <AuthProvider>
+      <ExtractedTextProvider>
       {/* <Navigation /> */}
         <Routes>
           {/* <Route path="/" element={<Navigation />} /> */}
@@ -36,6 +37,7 @@ function App() {
             }
           />
         </Routes>
+      </ExtractedTextProvider>
       </AuthProvider>
     </>
   );

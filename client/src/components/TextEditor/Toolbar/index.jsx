@@ -8,19 +8,24 @@ import {
   Range,
 } from 'slate';
 import { css } from '@emotion/css';
-
+import { useExtractedText } from "../../../contexts/";
 import { Button, Icon, Menu, Portal } from '../Button';
+
+
+
 
 export default function HoveringToolbar () {
     const ref = useRef(null); // Fixed parentheses
     const editor = useSlate();
     const inFocus = useFocused();
 
+    const { setExtractedText } = useExtractedText();
+
     const handleExtractText = () => {
       const text = extractSelectedText(editor);
       if (text) {
           console.log("Selected Text: ", text);
-          // You can then pass this text to your desired component/function
+          setExtractedText(text);
       }
   };
   

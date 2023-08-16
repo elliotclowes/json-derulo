@@ -33,3 +33,18 @@ export const RecordingsProivder = ({children}) =>{
 }
 
 export const useRecording = () => useContext(RecordingsContext);
+
+
+const ExtractedTextContext = createContext();
+
+export const ExtractedTextProvider = ({ children }) => {
+  const [extractedText, setExtractedText] = useState('');
+
+  return (
+    <ExtractedTextContext.Provider value={{ extractedText, setExtractedText }}>
+      {children}
+    </ExtractedTextContext.Provider>
+  );
+};
+
+export const useExtractedText = () => useContext(ExtractedTextContext);
