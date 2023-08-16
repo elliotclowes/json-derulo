@@ -88,13 +88,13 @@ const TitleInput = () => {
 
   const handleSubmit = async (event) => {
 	event.preventDefault();
-
+  
 	const userID = await getUserID();
 	if (userID === null) {
 	  console.error('User not logged in');
 	  return;
 	}
-
+  
 	const data = {
 	  blockOrder: ["block1"],
 	  blocks: {
@@ -102,12 +102,12 @@ const TitleInput = () => {
 		  text: [
 			{
 			  type: "h2",
-			  children: [{ text: title }]
-			}
+			  children: [{ text: title }],
+			},
 		  ],
 		  audioURL: "",
-		  comments: []
-		}
+		  comments: [],
+		},
 	  },
 	  created: formattedDate,
 	  tags: selectedTags,
@@ -116,12 +116,13 @@ const TitleInput = () => {
 	  type: "user",
 	  userID: userID,
 	  visibility: visibility,
+	  nextSteps: "", 
 	};
-
+  
 	try {
 	  const docRef = await addDoc(collection(db, 'summaries'), data);
 	  console.log('Document written with ID:', docRef.id);
-
+  
 	  navigate(`/summary/${docRef.id}`);
 	} catch (error) {
 	  console.error('Error adding document:', error);
