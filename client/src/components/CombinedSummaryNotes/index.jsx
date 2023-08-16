@@ -112,6 +112,45 @@ function CombinedSummaryNotes() {
     }
   };
 
+  const shortenSummary = async (blockText) => {
+    try {
+      setIsLoading(true);
+      const textContent = blockText[0]?.children[0]?.text;
+      const response = await fetch('http://localhost:3000/audio/chatgpt', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          prompt: "Please shorten the summary to 3 sentences:",
+          content: textContent
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Error shortening the summary');
+      }
+
+      const shortenedText = await response.text();
+      return shortenedText;
+
+    } catch (error) {
+      console.error('Error fetching shortened summary:', error);
+      return blockText;  // if there's an error, we return the original text
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleShortenSummaryClick = async (blockText, blockIndex) => {
+    const shortenedText = await shortenSummary(blockText);
+    console.log("🚀 ~ file: index.jsx:131 ~ handleShortenSummaryClick ~ shortenedText:", shortenedText)
+    console.log("🚀 ~ file: index.jsx:134 ~ handleShortenSummaryClick ~ `block${blockIndex + 1}`:", `block${blockIndex + 1}`)
+    updateSummaryBlock(`block${blockIndex + 1}`, shortenedText);
+  };
+    
+
+
   return (
     <>
 <div className="flex min-h-full flex-col">
@@ -137,11 +176,13 @@ function CombinedSummaryNotes() {
     {/* Wrapper */}
     <div className="mx-auto w-full max-w-7xl grow xl:px-2">
     {blocks.map((blockText, index) => (
-      <div key={index} className="lg:flex">
-        {/* Left sidebar */}
-        <div className="border-b border-gray-200 px-4 py-6 sm:px-6 lg:pl-8 xl:w-64 xl:shrink-0 xl:border-b-0 xl:border-r xl:pl-6">
-          <p>Left</p>
-        </div>
+            <div key={index} className="lg:flex">
+                <div className="border-b border-gray-200 px-4 py-6 sm:px-6 lg:pl-8 xl:w-64 xl:shrink-0 xl:border-b-0 xl:border-r xl:pl-6">
+                  <button onClick={() => handleShortenSummaryClick(blockText, index)}>
+                        Shorten Summary
+                    </button>
+                    <InfoBox />
+                </div>
         {/* Main content */}
         <div className="px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-6">
           <TextEditor 
