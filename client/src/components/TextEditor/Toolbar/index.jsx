@@ -15,6 +15,14 @@ export default function HoveringToolbar () {
     const ref = useRef(null); // Fixed parentheses
     const editor = useSlate();
     const inFocus = useFocused();
+
+    const handleExtractText = () => {
+      const text = extractSelectedText(editor);
+      if (text) {
+          console.log("Selected Text: ", text);
+          // You can then pass this text to your desired component/function
+      }
+  };
   
     useEffect(() => {
       const el = ref.current;
@@ -44,6 +52,23 @@ export default function HoveringToolbar () {
         el.offsetWidth / 2 +
         rect.width / 2}px`;
     });
+
+    const extractSelectedText = (editor) => {
+      if (!editor.selection) return;  // Check if anything is selected
+  
+      const textNodes = Array.from(
+          Editor.nodes(editor, {
+              match: n => Text.isText(n),
+              at: editor.selection,
+          })
+      );
+  
+      const text = textNodes
+          .map(([n]) => n.text)
+          .join(' ');
+      return text;
+  };
+
   
     return (
       <Portal>
@@ -70,6 +95,7 @@ export default function HoveringToolbar () {
           <FormatButton format="italic" icon="format_italic" />
           <FormatButton format="underlined" icon="format_underlined" />
           <FormatButton format="highlight" icon="format_paint" />
+          <Button onMouseDown={(event) => {event.preventDefault(); handleExtractText();}}>Extract Text</Button>
           
         </Menu>
       </Portal>
