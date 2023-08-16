@@ -18,20 +18,35 @@ const HoveringMenuEditor = ({document, onChange}) => {
 
   const renderElement = useCallback(props => {
     const { element, children, attributes } = props;
-  switch (element.type) {
-    case "paragraph":
-      return <p {...attributes}>{children}</p>;
-    case "h1":
-      return <h1 {...attributes}>{children}</h1>;
-    case "h2":
-      return <h2 {...attributes}>{children}</h2>;
-    case "h3":
-      return <h3 {...attributes}>{children}</h3>;
-    case "h4":
-      return <h4 {...attributes}>{children}</h4>;
-    default:
-      // For the default case, we delegate to Slate's default rendering. 
-      return <p {...props.attributes}>{props.children}</p>;
+    switch (element.type) {
+      case "paragraph":
+        return <p {...attributes}>{children}</p>;
+      case "h1":
+        return <h1 {...attributes}>{children}</h1>;
+      case "h2":
+        // Updated rendering for h2
+        return (
+          <div className="md:flex md:items-center md:justify-between" {...attributes}>
+      <div className="min-w-0 flex-1">
+        <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
+        {children}
+        </h2>
+      </div>
+    </div>
+        );
+      case "h3":
+        return (
+          <div className="border-b border-gray-200 pb-5" {...attributes}>
+            <h3 className="text-base font-semibold leading-6 text-gray-900">
+              {children}
+            </h3>
+          </div>
+        );
+      case "h4":
+        return <h4 {...attributes}>{children}</h4>;
+      default:
+        // For the default case, we delegate to Slate's default rendering. 
+        return <p {...props.attributes}>{props.children}</p>;
     }
   }, [])
 
