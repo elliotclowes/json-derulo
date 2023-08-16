@@ -197,14 +197,14 @@ function CombinedSummaryNotes() {
         <div className="bg-gray-100 py-24 sm:py-6 rounded-lg shadow">
   <div className="mx-auto max-w-7xl shadowpx-6 lg:px-8">
     <div className="mx-auto max-w-2xl lg:text-center">
-      <p className="mt-2 text-2xl font-bold tracking-tight text-indigo-600 sm:text-3xl">
+      <p className="mt-2 text-2xl font-bold tracking-tight text-blue-700 sm:text-3xl">
         Learn this next...
       </p>
       <p className="mt-6 text-m leading-8 text-gray-700">
         We'll use AI to analyse your summary and give<br></br> you some suggestions on what you should learn next!
       </p>
       
-      <button type="button" className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 mt-4" onClick={handleLearnMore} disabled={isLoading}>
+      <button type="button" className="rounded-md bg-blue-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 mt-4" onClick={handleLearnMore} disabled={isLoading}>
         Look into the future
       </button>
 
