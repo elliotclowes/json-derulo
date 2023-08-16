@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useParams,  useNavigate  } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { getFirestore, collection, doc, updateDoc, onSnapshot } from 'firebase/firestore';
 import { app } from '/firebase-config.js';
 import { Footer, AudioRecorder, TextEditor, WriteComment, InfoBox } from "../../components";
 import { BellIcon } from '@heroicons/react/24/outline'
-
 
 
 
@@ -14,7 +13,6 @@ function CombinedSummaryNotes() {
   const db = getFirestore(app);
   const [isLoading, setIsLoading] = useState(false);
   const [nextSteps, setNextSteps] = useState([]);
-  const navigate = useNavigate();
 
 
   const updateSummaryBlock = async (blockId, newText) => {
@@ -41,22 +39,8 @@ function CombinedSummaryNotes() {
     const unsubscribe = onSnapshot(docRef, (docSnapshot) => {
       if (docSnapshot.exists()) {
         const data = docSnapshot.data();
-        console.log(data,'soup')
         const blocksArray = data.blockOrder.map(blockId => data.blocks[blockId].text);
         setBlocks(blocksArray);
-        const localStorageData = JSON.parse(localStorage.getItem('id'));
-      console.log(localStorageData,'house');
-        
-  
-        const visibilityFromFirestore = data.visibility;
-        console.log(visibilityFromFirestore,'monkey');
-        if (localStorageData !== data.userID && visibilityFromFirestore === 'private') {
-          // Implement your access restriction logic here
-          // For example, redirect the user or show an error message
-          console.log('Access denied');
-          navigate('*');
-        }
- 
       } else {
         console.log("No such document!");
       }
@@ -72,8 +56,15 @@ function CombinedSummaryNotes() {
   const handleLearnMore = async () => {
     try {
       setIsLoading(true);
-      const prompt = "Please provide 3 bullet points on what to learn next and make them 1-4 word each :";
-      const combinedText = blocks.join(' ');
+      const prompt = "Please provide 3 bullet points on what to learn next and make them 1-4 words each :";
+      const combinedText = blocks.map(blockText => {
+        if (typeof blockText === 'object') {
+          // Convert the object to a string representation
+          return JSON.stringify(blockText);
+        }
+        return blockText; // If it's already a string, leave it as is
+      }).join(' ');
+      
       const response = await fetch('http://localhost:3000/audio/chatgpt', {
         method: 'POST',
         headers: {
@@ -84,16 +75,16 @@ function CombinedSummaryNotes() {
           content: combinedText
         })
       });
-
+  
       if (!response.ok) {
         throw new Error('Error fetching next steps');
       }
-
+  
       const contentType = response.headers.get('content-type');
-
+  
       if (contentType && contentType.includes('application/json')) {
         const data = await response.json();
-
+  
         if (data && data.nextSteps) {
           setNextSteps(data.nextSteps);
         } else {
@@ -104,52 +95,13 @@ function CombinedSummaryNotes() {
         const sentences = plainTextResponse.split('. '); 
         setNextSteps(sentences);
       }
-
+  
     } catch (error) {
       console.error('Error fetching next steps:', error);
     } finally {
       setIsLoading(false);
     }
   };
-
-  const shortenSummary = async (blockText) => {
-    try {
-      setIsLoading(true);
-      const textContent = blockText[0]?.children[0]?.text;
-      const response = await fetch('http://localhost:3000/audio/chatgpt', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          prompt: "Please shorten the summary to 3 sentences:",
-          content: textContent
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error('Error shortening the summary');
-      }
-
-      const shortenedText = await response.text();
-      return shortenedText;
-
-    } catch (error) {
-      console.error('Error fetching shortened summary:', error);
-      return blockText;  // if there's an error, we return the original text
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleShortenSummaryClick = async (blockText, blockIndex) => {
-    const shortenedText = await shortenSummary(blockText);
-    console.log("🚀 ~ file: index.jsx:131 ~ handleShortenSummaryClick ~ shortenedText:", shortenedText)
-    console.log("🚀 ~ file: index.jsx:134 ~ handleShortenSummaryClick ~ `block${blockIndex + 1}`:", `block${blockIndex + 1}`)
-    updateSummaryBlock(`block${blockIndex + 1}`, shortenedText);
-  };
-    
-
 
   return (
     <>
@@ -176,13 +128,11 @@ function CombinedSummaryNotes() {
     {/* Wrapper */}
     <div className="mx-auto w-full max-w-7xl grow xl:px-2">
     {blocks.map((blockText, index) => (
-            <div key={index} className="lg:flex">
-                <div className="border-b border-gray-200 px-4 py-6 sm:px-6 lg:pl-8 xl:w-64 xl:shrink-0 xl:border-b-0 xl:border-r xl:pl-6">
-                  <button onClick={() => handleShortenSummaryClick(blockText, index)}>
-                        Shorten Summary
-                    </button>
-                    <InfoBox />
-                </div>
+      <div key={index} className="lg:flex">
+        {/* Left sidebar */}
+        <div className="border-b border-gray-200 px-4 py-6 sm:px-6 lg:pl-8 xl:w-64 xl:shrink-0 xl:border-b-0 xl:border-r xl:pl-6">
+          <p>Left</p>
+        </div>
         {/* Main content */}
         <div className="px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-6">
           <TextEditor 
