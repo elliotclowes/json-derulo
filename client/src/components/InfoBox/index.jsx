@@ -10,8 +10,8 @@ export default function InfoBox({ blockId }) {
 
     return (
       <div className="bg-gray-50 sm:rounded-lg">
-        <div className="px-4 py-5 sm:p-6">
-          <div className="mt-2 max-w-xl text-sm text-gray-500">
+        <div className="px-2 py-3 sm:p-4">
+          <div className="mt-2 max-w-xl text-sm text-gray-700">
             <p>{extractedText}</p>
           </div>
           {/* <div className="mt-5">

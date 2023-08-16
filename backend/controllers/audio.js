@@ -45,16 +45,16 @@ exports.summarizeTranscript = async (req, res) => {
 
 
 
-exports.shortenTranscript = async (req, res) => {
-  try {
-    const { documentId, prompt, content } = req.body; // Extract prompt and content from the request
-    console.log("🚀 ~ file: audio.js:36 ~ exports.summarizeTranscript= ~ content:", content)
-    console.log("🚀 ~ file: audio.js:36 ~ exports.summarizeTranscript= ~ prompt:", prompt)
-    const summary = await shortenTranscript(prompt, content);
-    const store = await shortenTranscript(documentId, summarycontent);
-    console.log("🚀 ~ file: audio.js:39 ~ exports.summarizeTranscript= ~ summary:", summary)
-    res.status(200).send(store);
-  } catch (error) {
-    res.status(500).send(`Error summarizing transcript: ${error.message}`);
-  }
-};
+// exports.shortenTranscript = async (req, res) => {
+//   try {
+//     const { documentId, prompt, content } = req.body; // Extract prompt and content from the request
+//     console.log("🚀 ~ file: audio.js:36 ~ exports.summarizeTranscript= ~ content:", content)
+//     console.log("🚀 ~ file: audio.js:36 ~ exports.summarizeTranscript= ~ prompt:", prompt)
+//     const summary = await shortenTranscript(prompt, content);
+//     const store = await shortenTranscript(documentId, summarycontent);
+//     console.log("🚀 ~ file: audio.js:39 ~ exports.summarizeTranscript= ~ summary:", summary)
+//     res.status(200).send(store);
+//   } catch (error) {
+//     res.status(500).send(`Error summarizing transcript: ${error.message}`);
+//   }
+// };
