@@ -163,6 +163,10 @@ function CombinedSummaryNotes() {
     blockId={`block${index + 1}`} 
     extractedText={extractedTexts[`block${index + 1}`]}
   />
+     <audio class="w-64" controls autoPlay>
+            <source src="https://storage.googleapis.com/learnt-me-test.appspot.com/audio/part2-ebjcncafkcjxrrrmlysd.wav" type="audio/wav" />
+            Your browser does not support the audio element.
+        </audio>
 </div>
 
   
@@ -190,8 +194,8 @@ function CombinedSummaryNotes() {
 
         <AudioRecorder documentId={documentId} />
           
-        <div className="bg-gray-100 py-24 sm:py-6 rounded-lg">
-  <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="bg-gray-100 py-24 sm:py-6 rounded-lg shadow">
+  <div className="mx-auto max-w-7xl shadowpx-6 lg:px-8">
     <div className="mx-auto max-w-2xl lg:text-center">
       <p className="mt-2 text-2xl font-bold tracking-tight text-indigo-600 sm:text-3xl">
         Learn this next...
