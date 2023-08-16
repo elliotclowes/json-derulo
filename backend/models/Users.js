@@ -60,6 +60,20 @@ class User {
     return new User(response.rows[0]);
   }
 
+  static async getOneByToken(token) {
+    // const query = "SELECT * FROM tokens AS t JOIN users as u ON t.user_id = u.user_id WHERE token = $1";
+    const query = "SELECT U.first_name, U.last_name, U.email, U.username, U.teacher, T.token, T.user_id  FROM users AS u LEFT JOIN tokens as T ON T.user_id = U.user_id WHERE token = $1";
+    // const query = "SELECT user_id FROM tokens WHERE token = $1"
+    const response = await db.query(query, [token]);
+    console.log(response,'fishy')
+    if (response.rows.length !== 1) {
+        throw new Error("Unable to locate token."); 
+    } else {
+       return new User(response.rows[0]);
+    }
+}
+
+
   static async create(data) {
     const {
       firstName: first_name,
@@ -80,19 +94,25 @@ class User {
   }
 
   async update() {
-    const query =
-      "UPDATE users SET first_name = $1, last_name = $2, username = $3, password = $4 " +
-      "WHERE user_id = $5";
-    const values = [
-      this.firstName,
-      this.lastName,
-      this.username,
-      this.password,
-      this.id,
-    ];
-    await db.query(query, values);
-    return this;
+    try {
+      const query =
+        "UPDATE users SET first_name = $1, last_name = $2, username = $3, password = $4 " +
+        "WHERE user_id = $5";
+      const values = [
+        this.firstName,
+        this.lastName,
+        this.username,
+        this.password,
+        this.id,
+      ];
+      await db.query(query, values);
+      return this;
+    } catch (err) {
+      console.error('Error updating user:', err);
+      throw err;
+    }
   }
+  
 
   async delete() {
     await db.query("DELETE FROM users WHERE user_id = $1", [this.id]);
@@ -106,6 +126,21 @@ class User {
 
     return response.rows[0];
   }
+
+  static async checkUsernameExists(username) {
+    const query = 'SELECT * FROM users WHERE username = $1';
+    const values = [username];
+    const result = await db.query(query, values);
+    return result.rows.length > 0;
+  }
+
+  static async checkEmailExists(email) {
+    const query = 'SELECT * FROM users WHERE email = $1';
+    const values = [email];
+    const result = await db.query(query, values);
+    return result.rows.length > 0;
+  }
+
 }
 
 module.exports = User;

@@ -1,22 +1,26 @@
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS tokens CASCADE;
 DROP TABLE IF EXISTS verification_tokens CASCADE;
+DROP FUNCTION IF EXISTS GetUserAndTokenInfoByToken(token_value VARCHAR(255));
 
 CREATE TABLE users (
-    user_id SERIAL PRIMARY KEY,
+    user_id INT GENERATED ALWAYS AS IDENTITY,
     first_name VARCHAR(255) NOT NULL,
     last_name VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     username VARCHAR(50) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     teacher BOOLEAN DEFAULT false,
-    is_verified BOOLEAN DEFAULT false
+    is_verified BOOLEAN DEFAULT false,
+    PRIMARY KEY (user_id)
+    
 );
-
 CREATE TABLE tokens (
-    token_id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
-    token VARCHAR(255) NOT NULL
+    token_id INT GENERATED ALWAYS AS IDENTITY,
+    user_id INT,
+    token VARCHAR(255) NOT NULL,
+    PRIMARY KEY (token_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
 CREATE TABLE verification_tokens (
@@ -24,10 +28,6 @@ CREATE TABLE verification_tokens (
     user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
     token VARCHAR(255) NOT NULL
 );
-
-
-
--- Sample Data --
 
 INSERT INTO users (first_name, last_name, email, username, password, teacher, is_verified)
 VALUES

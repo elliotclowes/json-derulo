@@ -1,13 +1,14 @@
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
-import { Login, ProtectedRoute, Signup, Homepage, Dash, Summary, Recorder, Notes, CreateSummary, YoutubeUpload, TeacherSummary, FinalSummary, UserSummaries, UserTagSummaries, SearchResults, UserSettings } from "./pages";
-import { AuthProvider } from "./contexts";
+import { Login, ProtectedRoute, Signup, Homepage, Dash, Summary, Recorder, Notes, CreateSummary, YoutubeUpload, TeacherSummary, FinalSummary, UserSummaries, UserTagSummaries, SearchResults, UserSettings, SignOut } from "./pages";
+import { AuthProvider, ExtractedTextProvider } from "./contexts";
 
 
 function App() {
   return (
     <>
       <AuthProvider>
+      <ExtractedTextProvider>
       {/* <Navigation /> */}
         <Routes>
           {/* <Route path="/" element={<Navigation />} /> */}
@@ -20,6 +21,7 @@ function App() {
           <Route path="/teacher/:documentId" element={< FinalSummary />}/>
           <Route path="/summary/:documentId" element={<Summary />} />
           <Route path="/summaries/" element={<UserSummaries />} />
+          <Route path="/signout" element={<SignOut />} />
           <Route path="/summaries/tag/:tagName" element={<UserTagSummaries />} />
           <Route path="/recorder" element={<Recorder />} />
           <Route path="/video" element={<YoutubeUpload />} />
@@ -35,6 +37,7 @@ function App() {
             }
           />
         </Routes>
+      </ExtractedTextProvider>
       </AuthProvider>
     </>
   );

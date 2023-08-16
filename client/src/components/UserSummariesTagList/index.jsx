@@ -4,16 +4,6 @@ import { app } from '../../../firebase-config';
 import { useState, useEffect } from 'react';
 import DeleteSummaryConfirmationDialog from '../../components/DeleteSummaryConfirmationDialog';
 
-const getUserID = async () => {
-  const token = localStorage.getItem('token');
-  if (!token) return null;
-
-  const response = await fetch(`http://localhost:3000/token/get/${token}`);
-  const data = await response.json();
-
-  return data.user_id.toString();
-};
-
 export default function UserSummariesTagList() {
   const navigate = useNavigate();
   const [summaries, setSummaries] = useState([]);
@@ -35,7 +25,7 @@ export default function UserSummariesTagList() {
     const response = await fetch(`http://localhost:3000/token/get/${token}`);
     const data = await response.json();
 
-    return data.user_id.toString();
+    return data.user_id
   };
 
   // Function to handle the deletion
