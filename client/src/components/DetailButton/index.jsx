@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { MinusIcon } from '@heroicons/react/20/solid'
 
 
 function ShortenData({onDetailButtonClick, document, index}) {
@@ -104,19 +105,31 @@ const handleShortenSummary = async () => {
     
 };
 
-    return (
-        <>
-        <button disabled={buttonTag == 'Confirm?'? true: false} onClick={handleShortenSummary}>{buttonTag}</button>
-        {buttonTag == 'Confirm?'? <><button onClick={sendBackData}>Yes</button> 
-        <button onClick={noButton}>No</button>
-        <p style={{fontSize: '10px',color: 'red'}}>Warning! Clicking 'Yes' will overwrite your current changes and produce a new summary</p>
-        
-        </>: null}
-        </>
-    );
+return (
+    <>
+        {/* Button design */}
+        {buttonTag !== 'Confirm?' && (
+            <button
+                type="button"
+                className="rounded-full bg-indigo-600 p-1.5 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                onClick={handleShortenSummary}
+            >
+                <MinusIcon className="h-5 w-5" aria-hidden="true" />
+            </button>
+        )}
+
+        {/* Confirm action buttons */}
+        {buttonTag === 'Confirm?' && (
+            <>
+                <button onClick={sendBackData}>Yes</button>
+                <button onClick={noButton}>No</button>
+                <p style={{ fontSize: '10px', color: 'red' }}>
+                    Warning! Clicking 'Yes' will overwrite your current changes and produce a new summary
+                </p>
+            </>
+        )}
+    </>
+);
 }
 
 export default ShortenData;
-
-
-
