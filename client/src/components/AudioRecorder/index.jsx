@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Controls from '../Controls';
 import AudioContainer from '../AudioContainer';
 
-const AudioRecorder = ({ documentId, blocks }) => {
+const AudioRecorder = ({ documentId, blocks, isOwner }) => {
   console.log("🚀 ~ file: index.jsx:6 ~ AudioRecorder ~ blocks:", blocks)
   const [isLoading, setIsLoading] = useState(false);
   const [nextSteps, setNextSteps] = useState([]);
@@ -119,6 +119,7 @@ const AudioRecorder = ({ documentId, blocks }) => {
     },
   };
 
+  console.log('OWNERRRRR', isOwner)
 
 
   const handleLearnMore = async () => {

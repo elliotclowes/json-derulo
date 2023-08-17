@@ -42,6 +42,8 @@ function CombinedSummaryNotes() {
   const [detailIndex, setDetailIndex] = useState(1);
   const [username, setUsername] = useState(""); // For the user's name
   const [userImage, setUserImage] = useState(""); // For the user's image URL
+  const [isOwner, setIsOwner] = useState(false);
+
 
 
   const updateSummaryBlock = async (blockId, newText) => {
@@ -86,24 +88,18 @@ function CombinedSummaryNotes() {
 
 
   const handleDetailButtonClick = async (data, index) => {
-    console.log("preUpdate",dataFromDetailButton)
     // Update the state with the extracted data
-    console.log("LOOL",data)
     await setDataFromDetailButton(data);
     await setDetailIndex(index)
     await setShortSummary(true)
-    console.log(shortSummary)
   };
   useEffect(()=>{
-    console.log(dataFromDetailButton)
     setShortSummary(!shortSummary)
-    console.log(shortSummary)
   },[dataFromDetailButton])
 
   useEffect(() => {
     if (!shortSummary && dataFromDetailButton && blocks.length > 0 && blocks[0].length > 0) {
       setBlocks(prevBlocks => {
-        console.log(blocks)
         const updatedBlocks = [...prevBlocks];
         updatedBlocks[detailIndex][0].children[0].text = dataFromDetailButton;
         return updatedBlocks;
@@ -119,6 +115,21 @@ function CombinedSummaryNotes() {
     if (imageUrl) setUserImage(imageUrl);
 
   }, []);
+
+  useEffect(() => {
+    const storedId = localStorage.getItem('id'); // Assuming the id is stored with key 'id'
+    if (storedId) {
+      const summariesCollection = collection(db, 'summaries');
+      const docRef = doc(summariesCollection, documentId);
+      onSnapshot(docRef, (docSnapshot) => {
+        if (docSnapshot.exists()) {
+          const data = docSnapshot.data();
+          setIsOwner(data.userID == storedId); // Assuming the userID field is named 'userID'
+          
+        }
+      });
+    }
+  }, [documentId, db]);
     
 
 
@@ -327,7 +338,7 @@ function CombinedSummaryNotes() {
         <div className="flex flex-col items-center justify-center px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-6">
 
 
-        <AudioRecorder documentId={documentId} blocks={blocks} />
+        <AudioRecorder documentId={documentId} blocks={blocks} isOwner={isOwner} />
 
 </div>
     </div>
