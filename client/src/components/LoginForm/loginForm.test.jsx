@@ -88,7 +88,7 @@ describe('LoginForm', () => {
     //     fireEvent.change(screen.getByLabelText(/username/i), { target: { value: 'John' } });
     //     fireEvent.change(screen.getByLabelText(/password/i), { target: { value: 'securepassword' } });
 
-    //     // Mocking fetch response for verified user
+
     //     vi.spyOn(window, 'fetch').mockResolvedValueOnce({
     //         ok: true,
     //         json: async () => ({
@@ -110,19 +110,16 @@ describe('LoginForm', () => {
 
     //     await new Promise((resolve) => setTimeout(resolve, 0));
 
-    //     // Check if setUser function was called with the expected user data
     //     expect(setUserSpy).toHaveBeenCalledWith({
     //         firstName: 'John',
     //         lastName: 'Doe',
     //         userId: '123'
     //     });
 
-    //     // Check if localStorage.setItem was called with the expected data
     //     expect(localStorageSpy).toHaveBeenCalledWith('token', 'mockToken');
     //     expect(localStorageSpy).toHaveBeenCalledWith('id', '123');
     //     expect(localStorageSpy).toHaveBeenCalledWith('firstname', 'John');
 
-    //     // Check if navigate function was called with the expected path
     //     expect(navigateSpy).toHaveBeenCalledWith('/dash');
     // });
 

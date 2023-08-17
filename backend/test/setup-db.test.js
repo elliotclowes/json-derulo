@@ -1,4 +1,4 @@
-const { setupDB } = require('../path-to/setup-db'); // Update the path
+const { setupDB } = require('../path-to/setup-db');
 
 describe('Database Setup', () => {
     afterEach(() => {

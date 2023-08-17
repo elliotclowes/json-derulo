@@ -31,44 +31,44 @@ const TeacherInput = () => {
   };
 
   const addStudentToList = async () => {
-  if (studentEmail.trim() !== '') {
-    try {
-      const response = await fetch('http://localhost:3000/user');
-      const users = await response.json();
-      
-      const validEmails = users.map(user => user.email);
-      
-      if (validEmails.includes(studentEmail)) {
-        setStudentList([...studentList, studentEmail]);
-        setStudentEmail('');
-      } else {
-        alert('Invalid student email. Please enter a valid email.');
+    if (studentEmail.trim() !== '') {
+      try {
+        const response = await fetch('http://localhost:3000/user');
+        const users = await response.json();
+
+        const validEmails = users.map(user => user.email);
+
+        if (validEmails.includes(studentEmail)) {
+          setStudentList([...studentList, studentEmail]);
+          setStudentEmail('');
+        } else {
+          alert('Invalid student email. Please enter a valid email.');
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
       }
-    } catch (error) {
-      console.error('Error fetching user data:', error);
     }
-  }
-};
+  };
 
   const getUserID = async () => {
     const token = localStorage.getItem('token');
     if (!token) return null;
-  
+
     const response = await fetch(`http://localhost:3000/token/get/${token}`);
     const data = await response.json();
-  
+
     return data.user_id.toString();
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
+
     const userID = await getUserID();
     if (userID === null) {
       console.error('User not logged in');
       return;
     }
-  
+
     const data = {
       blockOrder: ["block1"],
       blocks: {
@@ -88,11 +88,11 @@ const TeacherInput = () => {
       visibility: 'public',
       viewers: studentList,
     };
-  
+
     try {
-      const docRef = await addDoc(collection(db, 'summaries'), data); 
+      const docRef = await addDoc(collection(db, 'summaries'), data);
       console.log('Document written with ID:', docRef.id);
-      
+
       navigate(`/teacher/${docRef.id}`);
     } catch (error) {
       console.error('Error adding document:', error);
@@ -113,7 +113,7 @@ const TeacherInput = () => {
           />
         </div>
         <div className="tag-container">
-          <label>Select Tags:</label>
+          <label htmlFor="select">Select Tags:</label>
           <div className="tag-list">
             {predefinedTags.map((tag) => (
               <span
@@ -127,9 +127,10 @@ const TeacherInput = () => {
           </div>
         </div>
         <div className="student-container">
-          <label>Allow Students to View:</label>
+          <label htmlFor="view-students">Allow Students to View:</label>
           <input
             type="text"
+            id="view-students"
             value={studentEmail}
             onChange={handleStudentEmailChange}
             placeholder="Enter student email"

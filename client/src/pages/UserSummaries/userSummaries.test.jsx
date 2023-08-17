@@ -17,7 +17,7 @@ describe('UserSummaries', () => {
     // it('renders the Footer component', () => {
     //     render(<BrowserRouter><UserSummariesList /></BrowserRouter>);
 
-    //     const footerContent = screen.getByText('Copyright © 2023. All right reserved'); // Example content in Footer
+    //     const footerContent = screen.getByText('Copyright © 2023. All right reserved'); 
     //     expect(footerContent).toBeInTheDocument();
     // });
 

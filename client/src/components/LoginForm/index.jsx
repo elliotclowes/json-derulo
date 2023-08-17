@@ -10,7 +10,7 @@ export default function LoginForm() {
   useEffect(() => {
     const storedId = localStorage.getItem('id');
     if (storedId) {
-      navigate('/dash');
+      // navigate('/dash');
     }
   }, [navigate]);
 

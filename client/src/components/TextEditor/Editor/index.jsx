@@ -12,26 +12,26 @@ import { withHistory } from 'slate-history';
 import HoveringToolbar from '../Toolbar'
 
 
-const HoveringMenuEditor = ({document, onChange}) => {
+const HoveringMenuEditor = ({ document, onChange }) => {
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
 
 
   const renderElement = useCallback(props => {
     const { element, children, attributes } = props;
-  switch (element.type) {
-    case "paragraph":
-      return <p {...attributes}>{children}</p>;
-    case "h1":
-      return <h1 {...attributes}>{children}</h1>;
-    case "h2":
-      return <h2 {...attributes}>{children}</h2>;
-    case "h3":
-      return <h3 {...attributes}>{children}</h3>;
-    case "h4":
-      return <h4 {...attributes}>{children}</h4>;
-    default:
-      // For the default case, we delegate to Slate's default rendering. 
-      return <p {...props.attributes}>{props.children}</p>;
+    switch (element.type) {
+      case "paragraph":
+        return <p {...attributes}>{children}</p>;
+      case "h1":
+        return <h1 {...attributes}>{children}</h1>;
+      case "h2":
+        return <h2 {...attributes}>{children}</h2>;
+      case "h3":
+        return <h3 {...attributes}>{children}</h3>;
+      case "h4":
+        return <h4 {...attributes}>{children}</h4>;
+      default:
+        // For the default case, we delegate to Slate's default rendering. 
+        return <p {...props.attributes}>{props.children}</p>;
     }
   }, [])
 
@@ -39,25 +39,25 @@ const HoveringMenuEditor = ({document, onChange}) => {
     if (leaf.bold) {
       children = <strong>{children}</strong>;
     }
-  
+
     if (leaf.italic) {
       children = <em>{children}</em>;
     }
-  
+
     if (leaf.underlined) {
       children = <u>{children}</u>;
     }
     if (leaf.highlight) {
-      children = <span style={{backgroundColor: 'cornflowerblue'}} {...attributes}>{children}</span>;
+      children = <span style={{ backgroundColor: 'cornflowerblue' }} {...attributes}>{children}</span>;
     }
 
-  
+
     return <span {...attributes}>{children}</span>;
   };
 
   return (
     <Slate editor={editor} initialValue={document} onChange={onChange}>
-      <HoveringToolbar />
+      <HoveringToolbar data-testid="format-bold" />
       <Editable
         renderElement={renderElement}
         renderLeaf={props => <Leaf {...props} />}

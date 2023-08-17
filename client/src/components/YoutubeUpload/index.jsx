@@ -4,23 +4,23 @@ import React, { useState } from 'react';
 function App() {
   const [youtubeUrl, setYoutubeUrl] = useState('');
   const [subtitles, setSubtitles] = useState('');
-  const [isLoading, setIsLoading] = useState(false);  
-  
+  const [isLoading, setIsLoading] = useState(false);
+
   const currentDate = new Date();
-const formattedDate = currentDate.toISOString();
+  const formattedDate = currentDate.toISOString();
 
   const handleProcessVideo = async () => {
     try {
       setIsLoading(true); // Set loading to true when starting to fetch subtitles
       const getuserID = async () => {
-        const token =localStorage.getItem('token');
-        if(!token) return null;
-        const response = await fetch (`http://localhost:3000/token/get/${token}`);
+        const token = localStorage.getItem('token');
+        if (!token) return null;
+        const response = await fetch(`http://localhost:3000/token/get/${token}`);
         const data = await response.json();
         console.log(data, 'fish')
         return data.user_id.toString()
       };
-      console.log( await getuserID(),'hello')
+      console.log(await getuserID(), 'hello')
       const user_id = await getuserID(); // Fetch the user ID
       if (!user_id) {
         console.error("Failed to fetch user ID.");
@@ -28,23 +28,23 @@ const formattedDate = currentDate.toISOString();
         return;
       }
       const response = await fetch('http://localhost:3000/video/fetch_subtitles', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        url: youtubeUrl,
-        user_id: user_id,
-        timestamp: formattedDate
-      })
-});
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          url: youtubeUrl,
+          user_id: user_id,
+          timestamp: formattedDate
+        })
+      });
 
       const data = await response.json();
       console.log(data);
 
       // Update subtitles state with the fetched data
       setSubtitles(data.summary); // Assuming data.summary is the correct property
-      
+
       setIsLoading(false); // Set loading to false after fetching subtitles
 
     } catch (error) {
@@ -56,7 +56,7 @@ const formattedDate = currentDate.toISOString();
   return (
     <div className="App">
       {isLoading && (
-        <div className="loading-overlay" id="loadingOverlay">
+        <div className="loading-overlay" id="loadingOverlay" data-testid="loading-overlay">
           <div className="loading-icon"></div>
         </div>
       )}
@@ -70,7 +70,7 @@ const formattedDate = currentDate.toISOString();
       <button className="loadButton" onClick={handleProcessVideo}>
         Process Video
       </button>
-      
+
       <div
         id="content"
         className={isLoading ? 'hidden' : ''}
@@ -80,7 +80,7 @@ const formattedDate = currentDate.toISOString();
       </div>
 
       {/* Display subtitles below the button */}
-      {subtitles && <div>{subtitles}</div>}
+      {subtitles && <div data-testid="subtitles">{subtitles}</div>}
     </div>
   );
 }

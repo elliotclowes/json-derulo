@@ -144,7 +144,7 @@ function Settings() {
 
 
     return (
-        <div className="settings-container">
+        <div data-testid="settings-container" className="settings-container">
             <h1>Account Settings</h1>
             <h2>Welcome, {String(editedUser.firstName.charAt(0).toUpperCase()) + String(editedUser.firstName.slice(1))}!</h2>
             {loading ? (
@@ -152,27 +152,30 @@ function Settings() {
             ) : user ? (
                 <form className="settings-form" onSubmit={handleSubmit}>
                     <div>
-                        <label>First Name:</label>
+                        <label htmlFor="firstName">First Name:</label>
                         <input
                             type="text"
+                            id="firstName"  // Add an ID to the form control
                             name="firstName"
                             value={editedUser.firstName}
                             onChange={handleEditChange}
                         />
                     </div>
                     <div>
-                        <label>Last Name:</label>
+                        <label htmlFor="lastName">Last Name:</label>
                         <input
                             type="text"
+                            id="lastName"  // Add an ID to the form control
                             name="lastName"
                             value={editedUser.lastName}
                             onChange={handleEditChange}
                         />
                     </div>
                     <div>
-                        <label>Email:</label>
+                        <label htmlFor="email">Email:</label>
                         <input
                             type="email"
+                            id="email"  // Add an ID to the form control
                             name="email"
                             value={editedUser.email}
                             onChange={handleEditChange}
@@ -180,32 +183,36 @@ function Settings() {
                         {emailError && <p className="error-message">{emailError}</p>}
                     </div>
                     <div>
-                        <label>Username:</label>
+                        <label htmlFor="username">Username:</label>
                         <input
                             type="text"
+                            id="username"  // Add an ID to the form control
                             name="username"
                             value={editedUser.username}
                             onChange={handleEditChange}
                         />
                     </div>
                     <div>
-                        <label>New Password:</label>
+                        <label htmlFor="newPassword">New Password:</label>
                         <input
                             type="password"
+                            id="newPassword"  // Add an ID to the form control
                             name="newPassword"
                             value={newPassword}
                             onChange={(e) => setNewPassword(e.target.value)}
                         />
                     </div>
                     <div>
-                        <label>Confirm Password:</label>
+                        <label htmlFor="confirmPassword">Confirm Password:</label>
                         <input
                             type="password"
+                            id="confirmPassword"  // Add an ID to the form control
                             name="confirmPassword"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                         />
                     </div>
+
                     <button type="submit">Save Changes</button>
                     <button type="button" onClick={handleDeleteAccount} className="delete-button">
                         Delete Account

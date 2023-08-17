@@ -14,15 +14,15 @@ function CombinedSummaryNotes() {
     // Get the Firestore reference to the specific document
     const summariesCollection = collection(db, 'summaries');
     const summariesRef = doc(summariesCollection, documentId);
-  
+
     // Create a path to the specific block you want to update
     const blockPath = `blocks.${blockId}.text`;
-  
+
     // Create an object representing the update
     const updateObject = {
       [blockPath]: newText,
     };
-  
+
     // Update the text of the specific block
     await updateDoc(summariesRef, updateObject).catch(error => {
       console.error('Error updating block:', error);
@@ -52,18 +52,18 @@ function CombinedSummaryNotes() {
 
   return (
     <div>
-     <div id="blocks-display">
-{blocks.map((blockText, index) => (
-  <div key={index}>
-    <TextEditor 
-      document={blockText} 
-      onChange={(newText) => updateSummaryBlock(`block${index + 1}`, newText)} 
-      onSubmit={(newText) => handleBlockSubmit(index, newText)} 
-    />
-  </div>
-))}
+      <div id="blocks-display">
+        {blocks.map((blockText, index) => (
+          <div data-testid="text-editor-component" key={index}>
+            <TextEditor
+              document={blockText}
+              onChange={(newText) => updateSummaryBlock(`block${index + 1}`, newText)}
+              onSubmit={(newText) => handleBlockSubmit(index, newText)}
+            />
+          </div>
+        ))}
 
-</div>
+      </div>
     </div>
   );
 }

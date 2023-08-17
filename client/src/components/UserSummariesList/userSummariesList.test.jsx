@@ -12,14 +12,14 @@ vi.mock('./index', async () => {
   const actual = await vi.importActual('./index');
   return {
     ...actual,
-    UserSummariesList: actual.default // Assuming UserSummariesList is the default export
+    UserSummariesList: actual.default
   };
 });
 
 
 import { UserSummariesList } from './index';
 
-// Mocking Firebase Firestore functions
+
 vi.mock('firebase/firestore', () => ({
   getFirestore: vi.fn(() => ({
     collection: vi.fn(() => ({
@@ -44,7 +44,7 @@ vi.mock('firebase/firestore', () => ({
                 created: new Date(1640995200000), // January 1, 2022
               }),
             },
-            // Add more mock data entries as needed
+
           ],
         })),
       })),
@@ -112,9 +112,9 @@ describe('UserSummariesList', () => {
     };
   };
 
-  // Implement fetch summaries
+
   const fetchSummaries = async (userId) => {
-    // Simulate API call or use mock data
+
     const mockSummaries = [
       {
         id: '1',
@@ -130,7 +130,7 @@ describe('UserSummariesList', () => {
         visibility: 'Private',
         created: new Date(1640995200000), // January 1, 2022
       },
-      // Add more mock summaries as needed
+
     ];
 
     return mockSummaries;
@@ -140,16 +140,15 @@ describe('UserSummariesList', () => {
   it('displays summaries', async () => {
 
 
-    // Render the component
+
     render(
       <MemoryRouter>
         <UserSummariesList />
       </MemoryRouter>
     );
 
-    // Wait for the asynchronous operations in useEffect to complete
     await waitFor(() => {
-      // Now you can perform your assertions
+
       const titleColumnHeader = screen.getByRole('columnheader', { name: /Title/i });
       const tagsColumnHeader = screen.getByRole('columnheader', { name: /Tags/i });
       const visibilityColumnHeader = screen.getByRole('columnheader', { name: /Visibility/i });

@@ -17,7 +17,7 @@ export default function SignupForm() {
   useEffect(() => {
     const storedId = localStorage.getItem('id');
     if (storedId) {
-      navigate('/dash');
+      // navigate('/dash');
     }
   }, [navigate]);
 

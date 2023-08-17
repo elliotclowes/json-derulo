@@ -147,6 +147,8 @@ const TitleInput = () => {
             {userTags.map((tag) => (
               <span
                 key={tag}
+                data-testid="tag-element"
+                id="tag-element"
                 className={`px-3 py-1 text-sm rounded-lg cursor-pointer ${selectedTags.includes(tag) ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}
                 onClick={() => handleTagClick(tag)}
               >
