@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import { app } from '../../../firebase-config'; 
 
 function App() {
   const [youtubeUrl, setYoutubeUrl] = useState('');
@@ -22,25 +24,41 @@ function App() {
       };
       const user_id = await getuserID();
       if (!user_id) {
-        console.error("Failed to fetch user ID.");
+        console.error('Failed to fetch user ID.');
         setIsLoading(false);
         return;
       }
+
+      let requestData = {
+        url: youtubeUrl,
+        user_id: user_id,
+        timestamp: formattedDate,
+      };
+
+      if (typeof requestData === 'object') {
+        requestData = JSON.stringify(requestData);
+      }
+
       const response = await fetch('http://localhost:3000/video/fetch_subtitles', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          url: youtubeUrl,
-          user_id: user_id,
-          timestamp: formattedDate
-        })
+        body: requestData,
       });
 
       const data = await response.json();
       setSubtitles(data.summary);
       setIsLoading(false);
+
+      // Store the data in Firestore
+      const firestore = getFirestore(app);
+      await addDoc(collection(firestore, 'Media-Summaries'), {
+        content: data.summary,
+        userID: user_id,
+        timestamp: formattedDate,
+        type: 'video',
+      });
 
     } catch (error) {
       console.error('Error processing video:', error);
