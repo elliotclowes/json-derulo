@@ -7,53 +7,13 @@ const AudioRecorder = ({ documentId }) => {
 
   const [audiosContainer, setAudiosContainer] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
 
   const captureUserMedia = (mediaConstraints, successCallback, errorCallback) => {
     navigator.mediaDevices.getUserMedia(mediaConstraints).then(successCallback).catch(errorCallback);
   };
 
   const indexRef = useRef(1); // Use a ref to store the index
-
-  // OLD VERSION WHICH SHOWS PLAYER AND FILES
-  // const onMediaSuccess = (stream) => {
-  //                   var audio = document.createElement('audio');
-  //                   audio.controls = true;
-  //                   audio.muted = true;
-  //                   audio.srcObject = stream;
-  //                   audio.play();
-
-  //                   audiosContainer.appendChild(audio);
-  //                   audiosContainer.appendChild(document.createElement('hr'));
-
-  //                   const newMediaRecorder = new MediaStreamRecorder(stream);
-  //                   newMediaRecorder.stream = stream;
-  //                   newMediaRecorder.recorderType = MediaRecorderWrapper;
-  //                   newMediaRecorder.audioChannels = !!document.getElementById('left-channel').checked ? 1 : 2;
-
-  //                   newMediaRecorder.ondataavailable = function (blob) {
-  //                       var a = document.createElement('a');
-  //                       a.target = '_blank';
-  //                       a.innerHTML = 'Audio file ' + indexRef.current + ' (Size: ' + bytesToSize(blob.size) + ')';
-  //                       a.href = URL.createObjectURL(blob);
-  //                       audiosContainer.appendChild(a);
-  //                       audiosContainer.appendChild(document.createElement('hr'));
-  //                       indexRef.current += 1; // Increment the index using the ref
-                      
-  //                       uploadAudio(blob); // Upload the audio blob to the server
-  //                     };
-
-  //   var timeInterval = document.querySelector('#time-interval').value;
-  //   if (timeInterval) timeInterval = parseInt(timeInterval) * 1000; // Convert seconds to milliseconds
-  //   else timeInterval = 5 * 1000; // Default value if not provided
-    
-  //   newMediaRecorder.start(timeInterval);
-                      
-
-  //   setMediaRecorder(newMediaRecorder);
-  //   setIsRecording(true);
-  //   setIsPaused(false);
-  // };
-
 
   const onMediaSuccess = (stream) => {
     const newMediaRecorder = new MediaStreamRecorder(stream);
@@ -133,11 +93,23 @@ const AudioRecorder = ({ documentId }) => {
       setIsRecording(false);
       setIsPaused(false);
     },
+    pauseRecording: () => {
+      mediaRecorder.pause();
+      setIsPaused(true);
+    },
+    resumeRecording: () => {
+      mediaRecorder.resume();
+      setIsPaused(false);
+    },
+    saveRecording: () => {
+    mediaRecorder.stop();
+      mediaRecorder.save();
+    },
   };
 
   return (
     <div className="container mx-auto px-4">
-      <Controls handlers={handlers} isRecording={isRecording} />
+      <Controls handlers={handlers} isRecording={isRecording} isPaused={isPaused} />
       <AudioContainer />
     </div>
   );

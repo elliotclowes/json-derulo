@@ -9,6 +9,7 @@ function App() {
   return (
     <>
       <AuthProvider>
+      <ExtractedTextProvider>
       {/* <Navigation /> */}
         <Routes>
           {/* <Route path="/" element={<Navigation />} /> */}
@@ -39,6 +40,7 @@ function App() {
             }
           />
         </Routes>
+      </ExtractedTextProvider>
       </AuthProvider>
     </>
   );
