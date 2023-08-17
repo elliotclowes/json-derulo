@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Editor from "./Editor";
 
-export default function TextEditor({ document: initialDocument, onChange }) {
+export default function TextEditor({ document: initialDocument, onChange, blockId }) {
   const [document, updateDocument] = useState(initialDocument);
 
   useEffect(() => {
@@ -22,6 +22,7 @@ export default function TextEditor({ document: initialDocument, onChange }) {
         onChange={(newDocument) => {
           updateDocument(newDocument);
         }}
+        blockId={blockId}
       />
     </div>
   );
