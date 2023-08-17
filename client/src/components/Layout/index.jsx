@@ -23,6 +23,8 @@ const navigation = [
 const teams = [
   { id: 1, name: 'History', href: '#', initial: 'H', current: false },
   { id: 2, name: 'Geography', href: '#', initial: 'G', current: false },
+  { id: 3, name: 'Physics', href: '#', initial: 'P', current: false },
+  { id: 4, name: 'Maths', href: '#', initial: 'M', current: false },
 ]
 const newClasses = [
   { id: 1, name: 'Record Live', href: '/summary', initial: '+', current: false },
@@ -154,6 +156,7 @@ export default function Layout({ children }) {
                           </ul>
                         </li>
                         <li>
+                          <br></br>
                           <div className="text-xs font-semibold leading-6 text-gray-400">Your Classes</div>
                           <ul role="list" className="-mx-2 mt-2 space-y-1">
                             {teams.map((team) => (
@@ -269,6 +272,7 @@ export default function Layout({ children }) {
     </li>
   ))}
 </ul>
+<br></br>
 <div className="text-xs font-semibold leading-6 text-gray-400">Your Classes</div>
                   <ul role="list" className="-mx-2 mt-2 space-y-1">
                     {teams.map((team) => (

@@ -26,3 +26,4 @@ export { default as PageHeading } from './PageHeading';
 export { default as Playback } from './Playback';
 export { default as Start } from './Start';
 export { default as Features } from './Features';
+export { default as Dashboard } from './Dashboard';
