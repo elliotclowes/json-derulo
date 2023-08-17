@@ -1,7 +1,7 @@
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import { Login, ProtectedRoute, Signup, Homepage, Dash, Summary, Recorder, Notes, CreateSummary, YoutubeUpload, TeacherSummary, FinalSummary, UserSummaries, UserTagSummaries, SearchResults, UserSettings, SignOut , AudioUpload , NotFound} from "./pages";
-import { AuthProvider } from "./contexts";
+import { AuthProvider, ExtractedTextProvider } from "./contexts";
 
 
 
