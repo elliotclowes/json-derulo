@@ -119,8 +119,7 @@ const AudioRecorder = ({ documentId, blocks, isOwner }) => {
     },
   };
 
-  console.log('OWNERRRRR', isOwner)
-
+  
 
   const handleLearnMore = async () => {
     console.log("Entering handleLearnMore");
@@ -179,11 +178,14 @@ const AudioRecorder = ({ documentId, blocks, isOwner }) => {
 
   return (
     <>
-      <div className="container mx-auto px-4">
-        <Controls handlers={handlers} isRecording={isRecording} isPaused={isPaused} />
-        <AudioContainer />
-        <br />
-      </div>
+    {
+  isOwner &&
+  <div className="container mx-auto px-4">
+    <Controls handlers={handlers} isRecording={isRecording} isPaused={isPaused} />
+    <AudioContainer />
+    <br />
+  </div>
+}
   
       {hasGPTResponse ? (
    <div className="bg-white shadow py-8 sm:py-12 rounded-lg">
@@ -204,7 +206,7 @@ const AudioRecorder = ({ documentId, blocks, isOwner }) => {
       ) : (
         // Conditionally render the "Learn this next..." section based on blocks.length
         blocks.length > 3 && !isRecording && (
-          <div className="bg-white py-24 sm:py-6 rounded-lg shadow">
+          <div className="mt-14 bg-white py-24 sm:py-6 rounded-lg shadow">
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
               <div className="mx-auto max-w-2xl lg:text-center">
                 <p className="mt-2 text-2xl font-bold tracking-tight text-indigo-600 sm:text-3xl">
