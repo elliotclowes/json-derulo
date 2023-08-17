@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import Controls from '../Controls';
 import AudioContainer from '../AudioContainer';
 
-const AudioRecorder = ({ documentId }) => {
+const AudioRecorder = ({ documentId, blocks }) => {
+  console.log("🚀 ~ file: index.jsx:6 ~ AudioRecorder ~ blocks:", blocks)
   const [isLoading, setIsLoading] = useState(false);
   const [nextSteps, setNextSteps] = useState([]);
   const [mediaRecorder, setMediaRecorder] = useState(null);
@@ -118,10 +119,17 @@ const AudioRecorder = ({ documentId }) => {
 
 
   const handleLearnMore = async () => {
+    console.log("Entering handleLearnMore");
     try {
       setIsLoading(true);
-      const prompt = "Please provide 3 bullet points on what to learn next and make them 1-4 word each :";
-      const combinedText = blocks.join(' ');
+      const prompt = "Here is the summary of a lecture. Based on its content I want you to suggest what I should learn next. Don't say 'Based on the content of the lecture' or anything like that. Just give me actionable advice on what to learn next. For example, if the lecture is on physics you could suggest what concepts to look into next and some books to read. Or if it's on programming you could suggest more advanced parts of it to look into.";
+      const combinedText = blocks.flatMap(block => 
+        block[0].children.map(innerBlock => innerBlock.text)
+    ).join(' ');
+    
+      console.log("Prompt:", prompt);
+      console.log("Combined Text:", combinedText);
+
       const response = await fetch('http://localhost:3000/audio/chatgpt', {
         method: 'POST',
         headers: {
@@ -132,6 +140,7 @@ const AudioRecorder = ({ documentId }) => {
           content: combinedText
         })
       });
+      console.log("API Response:", response);
 
       if (!response.ok) {
         throw new Error('Error fetching next steps');
@@ -158,6 +167,7 @@ const AudioRecorder = ({ documentId }) => {
     } finally {
       setIsLoading(false);
     }
+    console.log("Exiting handleLearnMore");
   };
 
   return (

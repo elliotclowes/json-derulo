@@ -153,7 +153,7 @@ function CombinedSummaryNotes() {
         <div className="flex flex-col items-center justify-center px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-6">
 
 
-        <AudioRecorder documentId={documentId} />
+        <AudioRecorder documentId={documentId} blocks={blocks} />
 
 </div>
     </div>
