@@ -5,8 +5,8 @@ import { SpeakerWaveIcon, SpeakerXMarkIcon } from '@heroicons/react/20/solid';
 
 export default function Playback({ documentId, blockId }) {
   const [audioUrl, setAudioUrl] = useState('');  
-  const [isMuted, setIsMuted] = useState(true);  // Initialize as true since audio isn't playing initially
-  const audioRef = useRef(null);  // Create a ref for the audio element
+  const [isMuted, setIsMuted] = useState(true);
+  const audioRef = useRef(null);
 
   const db = getFirestore(app);
 
@@ -39,6 +39,10 @@ export default function Playback({ documentId, blockId }) {
     }
   }
 
+  const handleAudioEnded = () => {
+    setIsMuted(true);
+  }
+
   return (
     <>
       <button
@@ -49,9 +53,14 @@ export default function Playback({ documentId, blockId }) {
         {isMuted ? <SpeakerWaveIcon className="h-5 w-5" aria-hidden="true" /> : <SpeakerXMarkIcon className="h-5 w-5" aria-hidden="true" />}
       </button>
 
-      <audio ref={audioRef} className="hidden" key={audioUrl}>  {/* Remove the autoPlay attribute */}
+      <audio 
+        ref={audioRef} 
+        className="hidden" 
+        key={audioUrl} 
+        onEnded={handleAudioEnded}
+      >
         <source src={audioUrl} type="audio/wav" />
-        Your browser does not support the audio element.
+
       </audio>
     </>
   )
