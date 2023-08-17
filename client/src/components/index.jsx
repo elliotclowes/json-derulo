@@ -24,3 +24,5 @@ export { default as WriteComment } from './WriteComment';
 export { default as InfoBox } from './InfoBox';
 export { default as PageHeading } from './PageHeading';
 export { default as Playback } from './Playback';
+export { default as Start } from './Start';
+export { default as Features } from './Features';

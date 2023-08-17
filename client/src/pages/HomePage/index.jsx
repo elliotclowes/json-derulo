@@ -1,11 +1,13 @@
 import React from 'react';
-import { Layout, Footer } from '../../components';
+import { Layout, Footer, Start, Features } from '../../components';
 
 const CreateSummary = () => {
   return (
-    <Layout>
-      <Footer />
-    </Layout>
+    <>
+    <Start />
+    <Features />
+    <Footer />
+    </>
   );
 };
 
