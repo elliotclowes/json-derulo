@@ -60,8 +60,28 @@ function CombinedSummaryNotes() {
   const handleLearnMore = async () => {
     try {
       setIsLoading(true);
+  
+      const getuserID = async () => {
+        const token = localStorage.getItem('token');
+        if (!token) return null;
+        const response = await fetch(`http://localhost:3000/token/get/${token}`);
+        const data = await response.json();
+        return data.user_id.toString();
+      };
+  
+      const user_id = await getuserID();
+      if (!user_id) {
+        console.error('Failed to fetch user ID.');
+        setIsLoading(false);
+        return;
+      }
+  
       const prompt = "Please provide 3 bullet points on what to learn next and make them 1-4 word each :";
       const combinedText = blocks.join(' ');
+  
+      // im turningn it in a string the combinedText
+      const stringText = combinedText.toString();
+  
       const response = await fetch('http://localhost:3000/audio/chatgpt', {
         method: 'POST',
         headers: {
@@ -69,19 +89,19 @@ function CombinedSummaryNotes() {
         },
         body: JSON.stringify({
           prompt: prompt,
-          content: combinedText
+          content: stringText
         })
       });
-
+  
       if (!response.ok) {
         throw new Error('Error fetching next steps');
       }
-
+  
       const contentType = response.headers.get('content-type');
-
+  
       if (contentType && contentType.includes('application/json')) {
         const data = await response.json();
-
+  
         if (data && data.nextSteps) {
           setNextSteps(data.nextSteps);
         } else {
@@ -92,7 +112,7 @@ function CombinedSummaryNotes() {
         const sentences = plainTextResponse.split('. '); 
         setNextSteps(sentences);
       }
-
+  
     } catch (error) {
       console.error('Error fetching next steps:', error);
     } finally {
