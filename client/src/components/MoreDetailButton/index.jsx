@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from "react";
 
 
-function ShortenData({onDetailButtonClick, document}) {
-    // const { documentId } = useParams();
-    const [blocks, setBlocks] = useState([]);
+function AddMoreDetailButton({onDetailButtonClick, document}) {
+
     const [dataAsString, setDataAsString] = useState("");
     const [summary, setSummary] = useState('');
     const [sendableData, setSendableData] = useState({
-        "prompt": `Please summarize the following text:`,
+        "prompt": `Please add more detail to the following text`,
         "content": dataAsString
     })
-    const [buttonTag, setButtonTag] = useState("Less Detail")
-
+    const [buttonTag, setButtonTag] = useState("More Detail")
 
     const makeDataJson = async (document) => {
         let compiledData = await dataAsString
@@ -29,7 +27,7 @@ function ShortenData({onDetailButtonClick, document}) {
         }
         setDataAsString(compiledData)
         setSendableData({
-            "prompt": `Please summarize the following text:`,
+            "prompt": `Please add more detail to the following text`,
             "content": compiledData
         })
         return dataAsString,sendableData
@@ -40,14 +38,15 @@ function ShortenData({onDetailButtonClick, document}) {
     }, [dataAsString])
 
 const sendBackData = async () => {
-    setButtonTag('Less Detail')
+    setButtonTag('More Detail')
     const data = await handleShortenSummary()
     console.log(data, "   summary")
     setDataAsString('')
     setSendableData({
-        "prompt": `Please summarize the following text:`,
+        "prompt": `Please add more detail to the following text`,
         "content": ''
     })
+    
     
 
     console.log("hello!!!!!")
@@ -56,10 +55,10 @@ const sendBackData = async () => {
 
 //when the user doesn't want a shorter summary just update state variables to reset all
 const noButton = () => {
-    setButtonTag('Less Detail')
+    setButtonTag('More Detail')
     setDataAsString('')
     setSendableData({
-        "prompt": `Please summarize the following text:`,
+        "prompt": `Please add more detail to the following text`,
         "content": ''
     })
     console.log('no!!!!')
@@ -67,13 +66,13 @@ const noButton = () => {
     
 const handleShortenSummary = async () => {
     console.log("this is the document:", document)
-    if(buttonTag == 'Less Detail'){setButtonTag(`Confirm?`)} 
+    if(buttonTag == 'More Detail'){setButtonTag(`Confirm?`)} 
     if(buttonTag == 'Confirm?') {
-    setButtonTag('Less Detail');
+    setButtonTag('More Detail');
     setDataAsString('');
     setSummary('');
     setSendableData({
-        "prompt": `Please summarize the following text:`,
+        "prompt": `Please add more detail to the following text:`,
         "content": dataAsString
         })
     }
@@ -116,7 +115,8 @@ const handleShortenSummary = async () => {
     );
 }
 
-export default ShortenData;
+export default AddMoreDetailButton;
+
 
 
 

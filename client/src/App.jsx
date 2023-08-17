@@ -1,7 +1,12 @@
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
+<<<<<<< HEAD
 import { Login, ProtectedRoute, Signup, Homepage, Dash, Summary, Recorder, Notes, CreateSummary, YoutubeUpload, TeacherSummary, FinalSummary, UserSummaries, UserTagSummaries, SearchResults, UserSettings, SignOut , AudioUpload , NotFound} from "./pages";
 import { AuthProvider } from "./contexts";
+=======
+import { Login, ProtectedRoute, Signup, Homepage, Dash, Summary, Recorder, Notes, CreateSummary, YoutubeUpload, TeacherSummary, FinalSummary, UserSummaries, UserTagSummaries, SearchResults, UserSettings, SignOut } from "./pages";
+import { AuthProvider, ExtractedTextProvider } from "./contexts";
+>>>>>>> 6190a1ae526f2630b1b846cb0ead19fa0578c58f
 
 
 
@@ -9,6 +14,7 @@ function App() {
   return (
     <>
       <AuthProvider>
+      <ExtractedTextProvider>
       {/* <Navigation /> */}
         <Routes>
           {/* <Route path="/" element={<Navigation />} /> */}
@@ -39,6 +45,7 @@ function App() {
             }
           />
         </Routes>
+      </ExtractedTextProvider>
       </AuthProvider>
     </>
   );
