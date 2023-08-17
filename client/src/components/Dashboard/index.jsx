@@ -12,42 +12,42 @@ const statuses = {
 const summaries = [
   {
     id: 1,
-    name: 'GraphQL API',
+    name: 'Audify.me Presentation',
     href: '#',
     status: 'Live',
-    dueDate: 'March 17, 2023',
+    dueDate: 'August 18, 2023',
     dueDateTime: '2023-03-17T00:00Z',
   },
   {
     id: 2,
-    name: 'New benefits plan',
+    name: 'Operation Mincemeat and D-Day',
     href: '#',
     status: 'Audio',
-    dueDate: 'May 5, 2023',
+    dueDate: 'August 15, 2023',
     dueDateTime: '2023-05-05T00:00Z',
   },
   {
     id: 3,
-    name: 'Onboarding emails',
+    name: 'Trigonometry 101: Part 1',
     href: '#',
     status: 'Video',
-    dueDate: 'May 25, 2023',
+    dueDate: 'August 11, 2023',
     dueDateTime: '2023-05-25T00:00Z',
   },
   {
     id: 4,
-    name: 'iOS app',
+    name: '10 Steps to Mastering Firebase',
     href: '#',
-    status: 'Video',
-    dueDate: 'June 7, 2023',
+    status: 'Audio',
+    dueDate: 'March 29, 2023',
     dueDateTime: '2023-06-07T00:00Z',
   },
   {
     id: 5,
-    name: 'Marketing site redesign',
+    name: 'JavaScript Explained in 100 seconds',
     href: '#',
-    status: 'Audio',
-    dueDate: 'June 10, 2023',
+    status: 'Video',
+    dueDate: 'March 17, 2023',
     dueDateTime: '2023-06-10T00:00Z',
   },
 ]
@@ -163,7 +163,7 @@ aria-hidden="true"
         <li key={project.id} className="flex items-center justify-between gap-x-6 py-5">
           <div className="min-w-0">
             <div className="flex items-start gap-x-3">
-              <p className="text-sm font-semibold leading-6 text-gray-900">{project.name}</p>
+              <a href="/"><p className="text-m font-semibold leading-6 text-gray-900">{project.name}</p></a>
               <p
                 className={classNames(
                   statuses[project.status],
@@ -173,7 +173,7 @@ aria-hidden="true"
                 {project.status}
               </p>
             </div>
-            <div className="mt-1 flex items-center gap-x-2 text-xs leading-5 text-gray-500">
+            <div className="mt-1 flex items-center gap-x-2 text-sm leading-5 text-gray-500">
               <p className="whitespace-nowrap">
                 <time dateTime={project.dueDateTime}>{project.dueDate}</time>
               </p>
