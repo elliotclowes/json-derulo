@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getFirestore, collection, doc, updateDoc, onSnapshot } from 'firebase/firestore';
 import { app } from '/firebase-config.js';
-import { Footer, AudioRecorder, TextEditor, WriteComment, InfoBox } from "../../components";
+import { Footer, AudioRecorder, TextEditor, WriteComment, InfoBox, Playback } from "../../components";
 import { useExtractedText } from "../../contexts/";
 import DetailButton  from '../DetailButton';
 import AddMoreDetailButton from '../MoreDetailButton'
@@ -168,10 +168,7 @@ function CombinedSummaryNotes() {
     blockId={`block${index + 1}`} 
     extractedText={extractedTexts[`block${index + 1}`]}
   />
-     <audio class="w-64" controls autoPlay>
-            <source src="https://storage.googleapis.com/learnt-me-test.appspot.com/audio/part2-ebjcncafkcjxrrrmlysd.wav" type="audio/wav" />
-            Your browser does not support the audio element.
-        </audio>
+     <Playback documentId={documentId} blockId={`block${index + 1}`} />
 </div>
   
               {/* Main content */}
