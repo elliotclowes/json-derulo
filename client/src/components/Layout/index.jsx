@@ -25,9 +25,9 @@ const teams = [
   { id: 2, name: 'Geography', href: '#', initial: 'G', current: false },
 ]
 const newClasses = [
-  { id: 1, name: 'Record Live', href: '#', initial: '+', current: false },
-  { id: 2, name: 'Upload Audio', href: '#', initial: '+', current: false },
-  { id: 3, name: 'Summarise Video', href: '#', initial: '+', current: false },
+  { id: 1, name: 'Record Live', href: '/summary', initial: '+', current: false },
+  { id: 2, name: 'Upload Audio', href: '/audio', initial: '+', current: false },
+  { id: 3, name: 'Summarise Video', href: '/video', initial: '+', current: false },
 ]
 const userNavigation = [
   { name: 'Settings', href: '/settings' },
