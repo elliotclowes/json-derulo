@@ -111,10 +111,10 @@ return (
         {buttonTag !== 'Confirm?' && (
             <button
                 type="button"
-                className="rounded-full bg-indigo-600 p-1.5 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="relative inline-flex items-center rounded-l-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
                 onClick={handleShortenSummary}
             >
-                <MinusIcon className="h-5 w-5" aria-hidden="true" />
+                Shorten
             </button>
         )}
 
