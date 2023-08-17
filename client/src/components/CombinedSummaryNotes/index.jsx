@@ -163,12 +163,13 @@ function CombinedSummaryNotes() {
                   <DetailButton document={blockText} onDetailButtonClick={handleDetailButtonClick} index={index}/>
                   <AddMoreDetailButton document={blockText} onDetailButtonClick={handleDetailButtonClick} index={index}/>
                 </>:null}
+                <Playback documentId={documentId} blockId={`block${index + 1}`} />
   {/* InfoBox for Each Block */}
   <InfoBox
     blockId={`block${index + 1}`} 
     extractedText={extractedTexts[`block${index + 1}`]}
   />
-     <Playback documentId={documentId} blockId={`block${index + 1}`} />
+     
 </div>
   
               {/* Main content */}
