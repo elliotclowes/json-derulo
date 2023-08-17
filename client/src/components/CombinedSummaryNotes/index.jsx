@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getFirestore, collection, doc, updateDoc, onSnapshot } from 'firebase/firestore';
 import { app } from '/firebase-config.js';
-import { Footer, AudioRecorder, TextEditor, WriteComment, InfoBox } from "../../components";
+import { Footer, AudioRecorder, TextEditor, WriteComment, InfoBox, Playback } from "../../components";
 import { useExtractedText } from "../../contexts/";
 import DetailButton  from '../DetailButton';
 import AddMoreDetailButton from '../MoreDetailButton'
@@ -17,6 +17,7 @@ function CombinedSummaryNotes() {
   const db = getFirestore(app);
   const [isLoading, setIsLoading] = useState(false);
   const [nextSteps, setNextSteps] = useState([]);
+  const [detailIndex, setDetailIndex] = useState(1)
 
 
   const updateSummaryBlock = async (blockId, newText) => {
@@ -99,12 +100,12 @@ function CombinedSummaryNotes() {
     }
   };
 
-  const handleDetailButtonClick = async (data) => {
+  const handleDetailButtonClick = async (data, index) => {
     console.log("preUpdate",dataFromDetailButton)
     // Update the state with the extracted data
     console.log("LOOL",data)
     await setDataFromDetailButton(data);
-
+    await setDetailIndex(index)
     await setShortSummary(true)
     console.log(shortSummary)
   };
@@ -117,8 +118,9 @@ function CombinedSummaryNotes() {
   useEffect(() => {
     if (!shortSummary && dataFromDetailButton && blocks.length > 0 && blocks[0].length > 0) {
       setBlocks(prevBlocks => {
+        console.log(blocks)
         const updatedBlocks = [...prevBlocks];
-        updatedBlocks[0][0].children[0].text = dataFromDetailButton;
+        updatedBlocks[detailIndex][0].children[0].text = dataFromDetailButton;
         return updatedBlocks;
       });
     }
@@ -150,25 +152,25 @@ function CombinedSummaryNotes() {
         </header>
     {/* Wrapper */}
         <div className="mx-auto w-full max-w-7xl grow xl:px-2">
+
         {blocks.map((blockText, index) => (
   <div key={index} className="lg:flex">
 
     
     {/* Left Sidebar (Shorten & InfoBox) */}
 <div className="w-1/4 border-b border-gray-200 px-4 py-6 sm:px-6 lg:pl-8 xl:w-84 xl:border-b-0 xl:border-r xl:pl-6">
-  {index !== 0 && <DetailButton document={blockText} onDetailButtonClick={handleDetailButtonClick} />}
-  {index !== 0 && <AddMoreDetailButton document={blockText} onDetailButtonClick={handleDetailButtonClick} />}
+  {index!=0?<>
+                  <DetailButton document={blockText} onDetailButtonClick={handleDetailButtonClick} index={index}/>
+                  <AddMoreDetailButton document={blockText} onDetailButtonClick={handleDetailButtonClick} index={index}/>
+                </>:null}
+                <Playback documentId={documentId} blockId={`block${index + 1}`} />
   {/* InfoBox for Each Block */}
   <InfoBox
     blockId={`block${index + 1}`} 
     extractedText={extractedTexts[`block${index + 1}`]}
   />
-     <audio class="w-64" controls autoPlay>
-            <source src="https://storage.googleapis.com/learnt-me-test.appspot.com/audio/part2-ebjcncafkcjxrrrmlysd.wav" type="audio/wav" />
-            Your browser does not support the audio element.
-        </audio>
+     
 </div>
-
   
               {/* Main content */}
 <div className="flex-1 px-4 py-6 sm:px-6 lg:pl-8">

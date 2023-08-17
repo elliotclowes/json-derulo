@@ -23,3 +23,4 @@ export { default as AudioUpload } from './AudioUpload';
 export { default as WriteComment } from './WriteComment';
 export { default as InfoBox } from './InfoBox';
 export { default as PageHeading } from './PageHeading';
+export { default as Playback } from './Playback';

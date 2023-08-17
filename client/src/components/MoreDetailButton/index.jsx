@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
+import { PlusIcon } from '@heroicons/react/20/solid'
 
 
-function AddMoreDetailButton({onDetailButtonClick, document}) {
+function AddMoreDetailButton({onDetailButtonClick, document, index}) {
 
     const [dataAsString, setDataAsString] = useState("");
     const [summary, setSummary] = useState('');
     const [sendableData, setSendableData] = useState({
-        "prompt": `Please add more detail to the following text`,
+        "prompt": `Please add more detail to the following text with some extra facts`,
         "content": dataAsString
     })
     const [buttonTag, setButtonTag] = useState("More Detail")
@@ -27,7 +28,7 @@ function AddMoreDetailButton({onDetailButtonClick, document}) {
         }
         setDataAsString(compiledData)
         setSendableData({
-            "prompt": `Please add more detail to the following text`,
+            "prompt": `Please add more detail to the following text with some extra facts`,
             "content": compiledData
         })
         return dataAsString,sendableData
@@ -43,14 +44,14 @@ const sendBackData = async () => {
     console.log(data, "   summary")
     setDataAsString('')
     setSendableData({
-        "prompt": `Please add more detail to the following text`,
+        "prompt": `Please add more detail to the following text with some extra facts`,
         "content": ''
     })
     
     
 
     console.log("hello!!!!!")
-    onDetailButtonClick(data)
+    onDetailButtonClick(data, index)
 }
 
 //when the user doesn't want a shorter summary just update state variables to reset all
@@ -58,7 +59,7 @@ const noButton = () => {
     setButtonTag('More Detail')
     setDataAsString('')
     setSendableData({
-        "prompt": `Please add more detail to the following text`,
+        "prompt": `Please add more detail to the following text with some extra facts`,
         "content": ''
     })
     console.log('no!!!!')
@@ -72,7 +73,7 @@ const handleShortenSummary = async () => {
     setDataAsString('');
     setSummary('');
     setSendableData({
-        "prompt": `Please add more detail to the following text:`,
+        "prompt": `Please add more detail to the following text with some extra facts:`,
         "content": dataAsString
         })
     }
@@ -103,20 +104,28 @@ const handleShortenSummary = async () => {
     
 };
 
-    return (
-        <>
-        <button disabled={buttonTag == 'Confirm?'? true: false} onClick={handleShortenSummary}>{buttonTag}</button>
-        {buttonTag == 'Confirm?'? <><button onClick={sendBackData}>Yes</button> 
-        <button onClick={noButton}>No</button>
-        <p style={{fontSize: '10px',color: 'red'}}>Warning! Clicking 'Yes' will overwrite your current changes and produce a new summary</p>
-        
-        </>: null}
-        </>
-    );
+return (
+    <>
+        {buttonTag !== 'Confirm?' 
+            ? 
+                <button
+                    type="button"
+                    className="rounded-full bg-indigo-600 p-1.5 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    onClick={handleShortenSummary}
+                >
+                    <PlusIcon className="h-5 w-5" aria-hidden="true" />
+                </button>
+            : 
+                <>
+                    <button onClick={sendBackData}>Yes</button> 
+                    <button onClick={noButton}>No</button>
+                    <p style={{fontSize: '10px',color: 'red'}}>
+                        Warning! Clicking 'Yes' will overwrite your current changes and produce a new summary
+                    </p>
+                </>
+        }
+    </>
+);
 }
 
 export default AddMoreDetailButton;
-
-
-
-
