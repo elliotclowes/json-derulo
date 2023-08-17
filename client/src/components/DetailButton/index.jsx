@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 
-function ShortenData({onDetailButtonClick, document}) {
+function ShortenData({onDetailButtonClick, document, index}) {
     // const { documentId } = useParams();
     const [blocks, setBlocks] = useState([]);
     const [dataAsString, setDataAsString] = useState("");
@@ -51,7 +51,7 @@ const sendBackData = async () => {
     
 
     console.log("hello!!!!!")
-    onDetailButtonClick(data)
+    onDetailButtonClick(data, index)
 }
 
 //when the user doesn't want a shorter summary just update state variables to reset all
