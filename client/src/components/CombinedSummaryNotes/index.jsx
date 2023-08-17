@@ -49,6 +49,9 @@ function CombinedSummaryNotes() {
       } else {
         console.log("No such document!");
       }
+
+
+
     });
     return () => unsubscribe();
   }, [documentId, db]);

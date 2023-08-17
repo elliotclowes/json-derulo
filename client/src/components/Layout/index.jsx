@@ -5,22 +5,29 @@ import {
   PlusCircleIcon,
   Cog6ToothIcon,
   DocumentDuplicateIcon,
-  FolderIcon,
+  DocumentArrowUpIcon,
   HomeIcon,
+  VideoCameraIcon,
   UsersIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 
 const navigation = [
-  { name: 'Dashboard', href: '/dash', icon: HomeIcon, current: true },
+  { name: 'Dashboard', href: '/dash', icon: HomeIcon, current: false },
   { name: 'Classes', href: '#', icon: UsersIcon, current: false },
-  { name: 'Summaries', href: '/summaries', icon: DocumentDuplicateIcon, current: false },
-  { name: 'New Summary', href: '/summary', icon: PlusCircleIcon, current: false },
+  { name: 'Recorded Summaries', href: '/summaries', icon: DocumentDuplicateIcon, current: false },
+  { name: 'Uploaded Summaries', href: '/summaries/audio', icon: DocumentArrowUpIcon, current: false },
+  { name: 'Video Summaries', href: '/summaries/video', icon: VideoCameraIcon, current: false },
 ]
 const teams = [
   { id: 1, name: 'History', href: '#', initial: 'H', current: false },
   { id: 2, name: 'Geography', href: '#', initial: 'G', current: false },
+]
+const newClasses = [
+  { id: 1, name: 'Record Live', href: '#', initial: '+', current: false },
+  { id: 2, name: 'Upload Audio', href: '#', initial: '+', current: false },
+  { id: 3, name: 'Summarise Video', href: '#', initial: '+', current: false },
 ]
 const userNavigation = [
   { name: 'Settings', href: '/settings' },
@@ -155,6 +162,27 @@ export default function Layout({ children }) {
                               </li>
                             ))}
                           </ul>
+                          <div className="text-xs font-semibold leading-6 text-gray-400">Start A New Summary</div>
+<ul role="list" className="-mx-2 mt-2 space-y-1">
+  {newClasses.map((newClass) => (
+    <li key={newClass.name}>
+      <a
+        href={newClass.href}
+        className={classNames(
+          newClass.current
+            ? 'bg-gray-800 text-white'
+            : 'text-gray-400 hover:text-white hover:bg-gray-800',
+          'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
+        )}
+      >
+        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-gray-700 bg-gray-800 text-[0.625rem] font-medium text-gray-400 group-hover:text-white">
+          {newClass.initial}
+        </span>
+        <span className="truncate">{newClass.name}</span>
+      </a>
+    </li>
+  ))}
+</ul>
                         </li>
                         <li className="mt-auto">
                           <a
@@ -206,7 +234,29 @@ export default function Layout({ children }) {
                   </ul>
                 </li>
                 <li>
-                  <div className="text-xs font-semibold leading-6 text-gray-400">Your Classes</div>
+                
+                  <div className="text-xs font-semibold leading-6 text-gray-400">Start A New Summary</div>
+<ul role="list" className="-mx-2 mt-2 space-y-1">
+  {newClasses.map((newClass) => (
+    <li key={newClass.name}>
+      <a
+        href={newClass.href}
+        className={classNames(
+          newClass.current
+            ? 'bg-gray-800 text-white'
+            : 'text-gray-400 hover:text-white hover:bg-gray-800',
+          'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
+        )}
+      >
+        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-gray-700 bg-gray-800 text-[0.625rem] font-medium text-gray-400 group-hover:text-white">
+          {newClass.initial}
+        </span>
+        <span className="truncate">{newClass.name}</span>
+      </a>
+    </li>
+  ))}
+</ul>
+<div className="text-xs font-semibold leading-6 text-gray-400">Your Classes</div>
                   <ul role="list" className="-mx-2 mt-2 space-y-1">
                     {teams.map((team) => (
                       <li key={team.name}>
