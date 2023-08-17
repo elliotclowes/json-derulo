@@ -16,6 +16,7 @@ export default function WriteComment({ documentId, blockId }) {
   const [commentText, setCommentText] = useState('');
   const [imageUrl, setImageUrl] = useState("");
 
+ 
 
 
   const getUserID = async () => {
@@ -178,6 +179,7 @@ const handleCommentSubmit = async (e) => {
 
   return (
     <>
+    {blockId !== 'block1' && (
     <div className="hoverWrapper relative group">
       <ul role="list" className="space-y-6">
         {activity.map((activityItem, activityItemIdx) => (
@@ -281,6 +283,7 @@ const handleCommentSubmit = async (e) => {
       </div>
       )}
       </div>
+      )}
     </>
   )
 }
