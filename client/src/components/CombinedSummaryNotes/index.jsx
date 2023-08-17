@@ -4,9 +4,9 @@ import { getFirestore, collection, doc, updateDoc, onSnapshot } from 'firebase/f
 import { app } from '/firebase-config.js';
 import { Footer, AudioRecorder, TextEditor, WriteComment, InfoBox } from "../../components";
 import { useExtractedText } from "../../contexts/";
-import { BellIcon } from '@heroicons/react/24/outline'
 import DetailButton  from '../DetailButton';
 import AddMoreDetailButton from '../MoreDetailButton'
+import { PlusIcon } from '@heroicons/react/20/solid'
 
 function CombinedSummaryNotes() {
   const { extractedTexts } = useExtractedText();
@@ -152,60 +152,88 @@ function CombinedSummaryNotes() {
         </header>
     {/* Wrapper */}
         <div className="mx-auto w-full max-w-7xl grow xl:px-2">
-          {blocks.map((blockText, index) => (
-            <div key={index} className="lg:flex">
-              {/* Left Sidebar (Shorten & InfoBox) */}
-              <div className="border-b border-gray-200 px-4 py-6 sm:px-6 lg:pl-8 xl:w-64 xl:shrink-0 xl:border-b-0 xl:border-r xl:pl-6">
-                {index!=0?<>
+
+        {blocks.map((blockText, index) => (
+  <div key={index} className="lg:flex">
+
+    
+    {/* Left Sidebar (Shorten & InfoBox) */}
+<div className="w-1/4 border-b border-gray-200 px-4 py-6 sm:px-6 lg:pl-8 xl:w-84 xl:border-b-0 xl:border-r xl:pl-6">
+  {index!=0?<>
                   <DetailButton document={blockText} onDetailButtonClick={handleDetailButtonClick} index={index}/>
                   <AddMoreDetailButton document={blockText} onDetailButtonClick={handleDetailButtonClick} index={index}/>
                 </>:null}
-                {/* InfoBox for Each Block */}
-                <InfoBox
-  blockId={`block${index + 1}`} 
-  extractedText={extractedTexts[`block${index + 1}`]}
-/>
-              </div>
+  {/* InfoBox for Each Block */}
+  <InfoBox
+    blockId={`block${index + 1}`} 
+    extractedText={extractedTexts[`block${index + 1}`]}
+  />
+     <audio class="w-64" controls autoPlay>
+            <source src="https://storage.googleapis.com/learnt-me-test.appspot.com/audio/part2-ebjcncafkcjxrrrmlysd.wav" type="audio/wav" />
+            Your browser does not support the audio element.
+        </audio>
+</div>
   
               {/* Main content */}
-              <div className="px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-6">
-                <TextEditor 
-                  document={blockText} 
-                  onChange={(newText) => updateSummaryBlock(`block${index + 1}`, newText)} 
-                  onSubmit={(newText) => handleBlockSubmit(index, newText)} 
-                  blockId={`block${index + 1}`}
-                />
-              </div>
-  
-              {/* Right sidebar */}
-              <div className="shrink-0 border-t border-gray-200 px-4 py-6 sm:px-6 lg:w-96 lg:border-l lg:border-t-0 lg:pr-8 xl:pr-6">
-                <WriteComment documentId={documentId} blockId={`block${index + 1}`} />
-              </div>
+<div className="flex-1 px-4 py-6 sm:px-6 lg:pl-8">
+  <TextEditor 
+    document={blockText} 
+    onChange={(newText) => updateSummaryBlock(`block${index + 1}`, newText)} 
+    onSubmit={(newText) => handleBlockSubmit(index, newText)} 
+    blockId={`block${index + 1}`}
+  />
+</div>
+
+{/* Right sidebar */}
+<div className="shrink-0 border-t border-gray-200 px-4 py-6 sm:px-6 lg:w-1/4 lg:border-l lg:border-t-0 lg:pr-8 xl:w-84">
+  <WriteComment documentId={documentId} blockId={`block${index + 1}`} />
+</div>
             </div>
           ))}
         </div>
   
         {/* Audio and Next Steps */}
-        <div className="px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-6">
-          <AudioRecorder documentId={documentId} />
-          <button className="learnMoreButton" onClick={handleLearnMore} disabled={isLoading}>
-            Learn More
-          </button>
+        <div className="flex flex-col items-center justify-center px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-6">
+
+
+        <AudioRecorder documentId={documentId} />
+          
+        <div className="bg-gray-100 py-24 sm:py-6 rounded-lg shadow">
+  <div className="mx-auto max-w-7xl shadowpx-6 lg:px-8">
+    <div className="mx-auto max-w-2xl lg:text-center">
+      <p className="mt-2 text-2xl font-bold tracking-tight text-blue-700 sm:text-3xl">
+        Learn this next...
+      </p>
+      <p className="mt-6 text-m leading-8 text-gray-700">
+        We'll use AI to analyse your summary and give<br></br> you some suggestions on what you should learn next!
+      </p>
+      
+      <button type="button" className="rounded-md bg-blue-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 mt-4" onClick={handleLearnMore} disabled={isLoading}>
+        Look into the future
+      </button>
+
   
-          <div className="nextSteps">
-            {nextSteps.length > 0 && (
-              <div>
-                <h2>What to Learn Next:</h2>
-                <ul>
-                  {nextSteps.map((step, index) => (
-                    <li key={index}>{step}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
+      <div className="nextSteps mt-4">
+        {nextSteps.length > 0 && (
+          <div>
+            <h2>What to Learn Next:</h2>
+            <ul>
+              {nextSteps.map((step, index) => (
+                <li key={index}>{step}</li>
+              ))}
+            </ul>
           </div>
+        )}
       </div>
     </div>
+  </div>
+</div>
+
+
+</div>
+    </div>
+    <Footer />
+    <br></br>
     </>
   );
 }
