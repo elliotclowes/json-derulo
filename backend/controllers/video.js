@@ -18,9 +18,11 @@ async function fetchSubtitles(req, res) {
    
     const transcript = JSON.stringify(transcriptData);
     
-    console.log(transcript, 'fish');
+    console.log(transcript);
 
-    const summary = await summarizeTranscript('summarise this transcript',  transcript); 
+    const prompt = "The following is a transcript from a YouTube video. I don't have time to watch it. So I need you to explain the video to me. Us your intuition and knowledge to decide how much text to return and how to format it. For example, for a recipe video you might give an overview, the needed ingredients and the steps to cook it. Or for a technical guide you might list of the command line instructions. Whenever you've gone to a new line I want you to put '/n' at the end of the previous one."
+
+    const summary = await summarizeTranscript(prompt,  transcript); 
     const summaryRef = db.collection('summaries.fish').doc();
     await summaryRef.set({ 
       summary: summary,
