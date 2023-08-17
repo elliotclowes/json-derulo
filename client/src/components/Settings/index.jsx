@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { useAuth } from "../../contexts";
 import { useNavigate } from "react-router-dom";
 import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
+import axios from "axios";
 
 function Settings() {
 	const navigate = useNavigate();
@@ -17,6 +18,10 @@ function Settings() {
 	const [newPassword, setNewPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
 	const [emailError, setEmailError] = useState("");
+
+	const [selectedImage, setSelectedImage] = useState(null);
+  	const [uploadProgress, setUploadProgress] = useState(0);
+	const [imageUrl, setImageUrl] = useState(null)
 
 	const getUserID = async () => {
 		const token = localStorage.getItem('token');
@@ -139,6 +144,40 @@ function Settings() {
 		}
 	};
 
+	const handleImageChange = (event) => {
+		const selectedFile = event.target.files[0];
+		setSelectedImage(selectedFile);
+    	setImageUrl(URL.createObjectURL(selectedFile))
+	  };
+
+	const handleUploadImage = async (e) => {
+		e.preventDefault()
+	if (selectedImage) {
+		const formData = new FormData();
+		formData.append("file", selectedImage);
+
+		try {
+		const response = await axios.post("http://localhost:3000/user/upload", formData, {
+			headers: {
+			"type": "multipart/form-data",
+			},
+			onUploadProgress: (progressEvent) => {
+			const progress = Math.round(
+				(progressEvent.loaded * 100) / progressEvent.total
+			);
+			setUploadProgress(progress);
+			},
+		});
+
+		if (response.data) {
+			// Handle success, e.g., update user's profile picture
+			console.log("Image uploaded successfully:", response.data);
+		}
+		} catch (error) {
+		console.error("Error uploading image:", error);
+		}
+	}
+	};
 
 
 	return (
@@ -151,9 +190,35 @@ function Settings() {
 						<h2 className="text-base font-semibold leading-7 text-gray-900">Account Information</h2>
 						<p className="mt-1 text-sm leading-6 text-gray-600">Make any changes.</p>
 					</div>
+					<form onSubmit={handleUploadImage} className="space-y-6">
+						<div className="flex flex-col items-center justify-center">	
+							<label
+								htmlFor="image-upload"
+								className="block text-sm font-medium text-gray-700"
+								>
+								Change Profile Picture
+							</label>
+							<input
+								type="file"
+								id="image-upload"
+								accept="image/*"
+								onChange={handleImageChange}
+								className="hidden"
+								/>
+							{imageUrl && (
+								<img
+								src={imageUrl}
+								alt="Selected"
+								className="mt-2 rounded-full w-16 h-16 object-cover"
+								/>
+							)}
+							</div>
+						<button type="submit" className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" >Save</button>
+						{uploadProgress > 0 && (<p className="text-indigo-600">Uploading: {uploadProgress}%</p>)}
+					</form>
 					<form className="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2" onSubmit={handleSubmit}>
 						<div className="px-4 py-6 sm:p-8">
-							
+
 							<div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
 
 								{/* First Name Input */}
