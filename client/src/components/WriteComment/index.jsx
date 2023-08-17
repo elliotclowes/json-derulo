@@ -235,15 +235,13 @@ const handleCommentSubmit = async (e) => {
 
       {/* Clickable text to toggle comment box */}
       {!commentBoxVisible &&
-      <div className="mt-4 cursor-pointer text-indigo-600 flex justify-center items-center transition-opacity duration-500 ease-in-out opacity-0 group-hover:opacity-100 group-hover:visible invisible" onClick={toggleCommentBox}>
-
-
-  <button
-    type="button"
-    className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-    Add a comment
-  </button>
-</div>
+  <div className="mt-4 cursor-pointer text-indigo-600 flex justify-center items-center transition-opacity duration-500 ease-in-out" onClick={toggleCommentBox}>
+    <button
+      type="button"
+      className="rounded-full bg-white px-2 py-2 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+      <PlusIcon className="h-3 w-3" aria-hidden="true" />
+    </button>
+  </div>
 }
       {/* Conditionally render the comment form based on the commentBoxVisible state */}
       {commentBoxVisible && (
