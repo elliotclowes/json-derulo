@@ -58,7 +58,7 @@ export default function InfoBox({ blockId }) {
     <br></br><br></br>
     <div className="bg-gray-50 sm:rounded-lg shadow">
       <div className="px-2 py-3 sm:p-4">
-        <h3 className="text-m font-semibold leading-6 text-gray-900">{extractedText}</h3>
+        <h3 className="text-xl font-semibold leading-6 text-gray-900">{extractedText}</h3>
         <div className="mt-2 max-w-xl text-sm text-gray-700">
           {
             isLoading ?

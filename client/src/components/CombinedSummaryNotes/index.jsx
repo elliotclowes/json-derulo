@@ -24,9 +24,8 @@ const navigation = [
   { name: 'Record Live', href: '/summary', current: true },
 ]
 const userNavigation = [
-  { name: 'Your Profile', href: '#' },
-  { name: 'Settings', href: '#' },
-  { name: 'Sign out', href: '#' },
+  { name: 'Settings', href: '/settings' },
+  { name: 'Sign out', href: '/signout' },
 ]
 
 function classNames(...classes) {
@@ -41,6 +40,8 @@ function CombinedSummaryNotes() {
   const [shortSummary, setShortSummary] = useState(false)
   const db = getFirestore(app);
   const [detailIndex, setDetailIndex] = useState(1);
+  const [username, setUsername] = useState(""); // For the user's name
+  const [userImage, setUserImage] = useState(""); // For the user's image URL
 
 
   const updateSummaryBlock = async (blockId, newText) => {
@@ -109,6 +110,15 @@ function CombinedSummaryNotes() {
       });
     }
   }, [shortSummary, dataFromDetailButton]);
+
+  useEffect(() => {
+    const firstname = localStorage.getItem('firstname');
+    const imageUrl = localStorage.getItem('imageUrl');
+
+    if (firstname) setUsername(firstname);
+    if (imageUrl) setUserImage(imageUrl);
+
+  }, []);
     
 
 
@@ -136,7 +146,7 @@ function CombinedSummaryNotes() {
                     <div className="flex-shrink-0">
                       <img
                         className="h-8 w-8"
-                        src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+                        src="https://firebasestorage.googleapis.com/v0/b/learnt-me-test.appspot.com/o/manual%2Flogo.svg?alt=media&token=1b976e10-5cf3-42e0-827a-136ced55ba58"
                         alt="Your Company"
                       />
                     </div>
@@ -162,22 +172,13 @@ function CombinedSummaryNotes() {
                   </div>
                   <div className="hidden md:block">
                     <div className="ml-4 flex items-center md:ml-6">
-                      <button
-                        type="button"
-                        className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                      >
-                        <span className="absolute -inset-1.5" />
-                        <span className="sr-only">View notifications</span>
-                        <BellIcon className="h-6 w-6" aria-hidden="true" />
-                      </button>
-
                       {/* Profile dropdown */}
                       <Menu as="div" className="relative ml-3">
                         <div>
                           <Menu.Button className="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                             <span className="absolute -inset-1.5" />
                             <span className="sr-only">Open user menu</span>
-                            <img className="h-8 w-8 rounded-full" src={user.imageUrl} alt="" />
+                            <img className="h-8 w-8 rounded-full" src={userImage || "https://firebasestorage.googleapis.com/v0/b/learnt-me-test.appspot.com/o/manual%2Fwhite-avatar.jpg?alt=media&token=d5ae6e0e-7848-4b33-be13-4ea6dc19159d"} alt="" />
                           </Menu.Button>
                         </div>
                         <Transition
@@ -245,11 +246,10 @@ function CombinedSummaryNotes() {
                 <div className="border-t border-gray-700 pb-3 pt-4">
                   <div className="flex items-center px-5">
                     <div className="flex-shrink-0">
-                      <img className="h-10 w-10 rounded-full" src={user.imageUrl} alt="" />
+                      <img className="h-10 w-10 rounded-full" src={userImage || "https://firebasestorage.googleapis.com/v0/b/learnt-me-test.appspot.com/o/manual%2Fwhite-avatar.jpg?alt=media&token=d5ae6e0e-7848-4b33-be13-4ea6dc19159d"} alt="" />
                     </div>
                     <div className="ml-3">
-                      <div className="text-base font-medium leading-none text-white">{user.name}</div>
-                      <div className="text-sm font-medium leading-none text-gray-400">{user.email}</div>
+                      <div className="text-base font-medium leading-none text-white">{`Welcome ${username}!` || "No user logged in"}</div>
                     </div>
                     <button
                       type="button"
