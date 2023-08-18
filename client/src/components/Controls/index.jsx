@@ -9,7 +9,7 @@ const Controls = ({ handlers, isRecording }) => {
   return (
     <section className="experiment py-5 flex justify-center items-center">
       <label htmlFor="time-interval" style={{ display: 'none' }}>Time Interval (seconds):</label>
-      <input type="text" id="time-interval" defaultValue="180" className="border p-2 my-2 rounded" style={{ display: 'none' }} />
+      <input type="text" id="time-interval" defaultValue="60" className="border p-2 my-2 rounded" style={{ display: 'none' }} />
       <input id="left-channel" type="checkbox" defaultChecked style={{ display: 'none' }} />
       
       <div className="flex">

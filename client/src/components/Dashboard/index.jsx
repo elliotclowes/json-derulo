@@ -163,7 +163,7 @@ aria-hidden="true"
         <li key={project.id} className="flex items-center justify-between gap-x-6 py-5">
           <div className="min-w-0">
             <div className="flex items-start gap-x-3">
-              <a href="/"><p className="text-m font-semibold leading-6 text-gray-900">{project.name}</p></a>
+              <a href="http://localhost:5173/summary/Lh1c0hwpc71JpN7z1Rh1"><p className="text-m font-semibold leading-6 text-gray-900">{project.name}</p></a>
               <p
                 className={classNames(
                   statuses[project.status],
