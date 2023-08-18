@@ -22,7 +22,7 @@ function Settings() {
 		const token = localStorage.getItem('token');
 		if (!token) return null;
 
-		const response = await fetch(`http://localhost:3000/token/get/${token}`);
+		const response = await fetch(`https://learnt-me.onrender.com/token/get/${token}`);
 		const data = await response.json();
 
 		return data.user_id.toString();
@@ -44,7 +44,7 @@ function Settings() {
 					setLoading(false);
 				} else {
 					const userId = await getUserID();
-					const response = await fetch(`http://localhost:3000/user/${userId}`);
+					const response = await fetch(`https://learnt-me.onrender.com/user/${userId}`);
 					const userData = await response.json();
 
 					setUser(userData);
@@ -95,7 +95,7 @@ function Settings() {
 				...(newPassword && { password: await bcrypt.hash(newPassword, 10) }),
 			};
 
-			const response = await fetch(`http://localhost:3000/user/${userId}`, {
+			const response = await fetch(`https://learnt-me.onrender.com/user/${userId}`, {
 				method: 'PUT',
 				headers: {
 					'Content-Type': 'application/json',
@@ -121,7 +121,7 @@ function Settings() {
 		if (window.confirm("Are you sure you want to delete your account? This action is irreversible.")) {
 			try {
 				const userId = await getUserID();
-				const response = await fetch(`http://localhost:3000/user/${userId}`, {
+				const response = await fetch(`https://learnt-me.onrender.com/user/${userId}`, {
 					method: 'DELETE',
 				});
 

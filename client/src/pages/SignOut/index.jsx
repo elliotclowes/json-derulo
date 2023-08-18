@@ -15,7 +15,7 @@ function SignOut() {
     }
 
     // Make a GET request to the logout endpoint
-    fetch('http://localhost:3000/user/logout', {
+    fetch('https://learnt-me.onrender.com/user/logout', {
       method: 'GET',
       headers: {
         'Accept': 'application/json',

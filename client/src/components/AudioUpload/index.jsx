@@ -18,7 +18,7 @@ function AudioUpload() {
       const formData = new FormData();
       formData.append('audio', selectedFile);
   
-      const response = await fetch('http://localhost:3000/audio/audioup', {
+      const response = await fetch('https://learnt-me.onrender.com/audio/audioup', {
         method: 'POST',
         body: formData
       });

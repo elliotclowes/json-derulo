@@ -22,7 +22,7 @@ function App() {
       const getuserID = async () => {
         const token = localStorage.getItem('token');
         if (!token) return null;
-        const response = await fetch(`http://localhost:3000/token/get/${token}`);
+        const response = await fetch(`https://learnt-me.onrender.com/token/get/${token}`);
         const data = await response.json();
         return data.user_id.toString();
       };
@@ -43,7 +43,7 @@ function App() {
         requestData = JSON.stringify(requestData);
       }
 
-      const response = await fetch('http://localhost:3000/video/fetch_subtitles', {
+      const response = await fetch('https://learnt-me.onrender.com/video/fetch_subtitles', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -77,7 +77,7 @@ function App() {
   
       const prompt = "The following is a transcript from a YouTube video. I don't have time to watch it. So I need you to explain the video to me. Us your intuition and knowledge to decide how much text to return and how to format it. For example, for a recipe video you might give an overview, the needed ingredients and the steps to cook it. Or for a technical guide you might list of the command line instructions. Go into as much detail as possible.";
   
-      const response = await fetch('http://localhost:3000/audio/chatgpt', {
+      const response = await fetch('https://learnt-me.onrender.com/audio/chatgpt', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

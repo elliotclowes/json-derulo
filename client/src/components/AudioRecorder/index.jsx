@@ -83,7 +83,7 @@ const AudioRecorder = ({ documentId, blocks, isOwner }) => {
     formData.append('audio', blob, `part${indexRef.current}-` + randomFileName);
     formData.append('documentId', documentId); // Append the documentId to the request
 
-    fetch('http://localhost:3000/audio/save', {
+    fetch('https://learnt-me.onrender.com/audio/save', {
       method: 'POST',
       body: formData
     })
@@ -133,7 +133,7 @@ const AudioRecorder = ({ documentId, blocks, isOwner }) => {
       console.log("Prompt:", prompt);
       console.log("Combined Text:", combinedText);
 
-      const response = await fetch('http://localhost:3000/audio/chatgpt', {
+      const response = await fetch('https://learnt-me.onrender.com/audio/chatgpt', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

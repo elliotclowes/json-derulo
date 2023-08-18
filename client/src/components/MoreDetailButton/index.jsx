@@ -81,7 +81,7 @@ const handleShortenSummary = async () => {
     }
     try {
         await makeDataJson(document)
-        const response = await fetch('http://localhost:3000/audio/chatgpt', {
+        const response = await fetch('https://learnt-me.onrender.com/audio/chatgpt', {
             method: 'POST',
             body: JSON.stringify(sendableData),
             headers: {

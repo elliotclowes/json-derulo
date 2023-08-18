@@ -26,7 +26,7 @@ export default function InfoBox({ blockId }) {
 	  try {
 		setIsLoading(true);
 		const prompt = "In 1 to 3 sentences explain the following:";
-		const response = await fetch('http://localhost:3000/audio/chatgpt', {
+		const response = await fetch('https://learnt-me.onrender.com/audio/chatgpt', {
 		  method: 'POST',
 		  headers: {
 			'Content-Type': 'application/json'
