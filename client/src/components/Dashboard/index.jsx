@@ -1,4 +1,4 @@
-import { EllipsisVerticalIcon, ArrowRightCircleIcon } from '@heroicons/react/20/solid'
+import { EllipsisVerticalIcon, ExclamationTriangleIcon } from '@heroicons/react/20/solid'
 import { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 
@@ -77,9 +77,23 @@ const stats = [
       <div>
         <div className="mx-auto max-w-7xl px-2 sm:px-2 lg:px-4">
 
+        <div className="border-l-4 border-yellow-400 bg-yellow-50 p-4">
+      <div className="flex">
+        <div className="flex-shrink-0">
+          <ExclamationTriangleIcon className="h-5 w-5 text-yellow-400" aria-hidden="true" />
+        </div>
+        <div className="ml-3">
+          <p className="text-sm text-yellow-700">
+            This dashboard and other parts of the site are currently inactive for you as this site is still in beta.{' '}
+            <a href="https://github.com/elliotclowes/json-derulo/" className="font-medium text-yellow-700 underline hover:text-yellow-600">
+              Check us out on GitHub.
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
 
-
-
+<br></br>
                 <div>
             <h2 className="text-lg font-semibold leading-6 text-gray-900">Your Classes</h2>
             <ul role="list" className="mt-3 grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
